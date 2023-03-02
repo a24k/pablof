@@ -1,6 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'pablof'
+description: 'Productive Assistant for GitHub'
+author: 'Atsushi KAWASAKI'
 inputs:
   milliseconds: # change this
     required: true
