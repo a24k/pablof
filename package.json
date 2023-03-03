@@ -1,6 +1,6 @@
 {
   "name": "pablof",
-  "version": "0.1.0-mi.1.1",
+  "version": "0.1.0-mi.1.2",
   "description": "Productive Assistant for GitHub",
   "author": "Atsushi KAWASAKI",
   "private": true,
@@ -31,7 +31,10 @@
     "graphql": "^16.6.0"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^4.0.1",
     "@graphql-codegen/cli": "3.2.1",
+    "@graphql-codegen/client-preset": "2.1.0",
+    "@graphql-codegen/introspection": "3.0.1",
     "@graphql-codegen/typescript": "^3.0.1",
     "@graphql-codegen/typescript-generic-sdk": "^3.1.0",
     "@graphql-codegen/typescript-operations": "^3.0.1",
@@ -45,8 +48,6 @@
     "js-yaml": "^4.1.0",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
-    "typescript": "^4.9.5",
-    "@graphql-codegen/introspection": "3.0.1",
-    "@graphql-codegen/client-preset": "2.1.0"
+    "typescript": "^4.9.5"
   }
 }

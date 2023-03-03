@@ -7,5 +7,11 @@ generates:
       - typescript
       - typescript-operations
       - typescript-generic-sdk
+      - add:
+          content: "/* eslint-disable no-undef, no-shadow, no-irregular-whitespace */"
+      - add:
+          content: "/* eslint-disable @typescript-eslint/array-type, @typescript-eslint/promise-function-async */"
+      - add:
+          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type */"
     config:
       documentMode: string
