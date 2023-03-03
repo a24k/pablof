@@ -1,6 +1,6 @@
 overwrite: true
 schema: https://docs.github.com/public/schema.docs.graphql
-documents: src/graphql-docs/**/*.graphql
+documents: src/graphql/docs/**/*.graphql
 generates:
   src/graphql/index.ts:
     plugins:
