@@ -15,3 +15,4 @@ generates:
           content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type */"
     config:
       documentMode: string
+      immutableTypes: true
