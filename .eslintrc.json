@@ -63,7 +63,7 @@
     "semi": "off",
     "@typescript-eslint/semi": [
       "error",
-      "never"
+      "always"
     ],
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/unbound-method": "error"
