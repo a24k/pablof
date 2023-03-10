@@ -1,5 +1,5 @@
-import { context } from "@actions/github";
-type Context = typeof context;
+import type { Context } from "../main";
+import type { Sdk } from "../graphql";
 
 export abstract class TriggerableAction {
   private triggerName: string;
@@ -25,4 +25,6 @@ export abstract class TriggerableAction {
   canHandleContext(context: Context): boolean {
     return this.canHandle(context.eventName, context.payload.action);
   }
+
+  abstract handle(context: Context, sdk: Sdk): Promise<void>;
 }

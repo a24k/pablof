@@ -2975,6 +2975,98 @@ exports.getSdk = getSdk;
 
 /***/ }),
 
+/***/ 3554:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TriggerableAction = void 0;
+class TriggerableAction {
+    constructor(name, action) {
+        this.triggerName = name;
+        this.triggerAction = action;
+    }
+    canHandle(name, action) {
+        return (this.triggerName === name &&
+            (this.triggerAction === undefined ||
+                (Array.isArray(this.triggerAction)
+                    ? action === undefined
+                        ? false
+                        : this.triggerAction.includes(action)
+                    : this.triggerAction === action)));
+    }
+    canHandleContext(context) {
+        return this.canHandle(context.eventName, context.payload.action);
+    }
+}
+exports.TriggerableAction = TriggerableAction;
+
+
+/***/ }),
+
+/***/ 886:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MilestoneAction = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const action_1 = __nccwpck_require__(3554);
+class MilestoneAction extends action_1.TriggerableAction {
+    constructor() {
+        super("milestone");
+    }
+    handle(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            const milestone = yield sdk.milestone({
+                owner: payload.repository.owner.login,
+                repository: payload.repository.name,
+                number: payload.milestone.number,
+            });
+            core.info(JSON.stringify(milestone, null, 2));
+        });
+    }
+}
+exports.MilestoneAction = MilestoneAction;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -3016,35 +3108,16 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const graphql_1 = __nccwpck_require__(7064);
+const milestone_1 = __nccwpck_require__(886);
 const token = core.getInput("token");
 const octokit = github.getOctokit(token);
 const ghq = (0, graphql_1.getSdk)(octokit.graphql);
-function milestone(event) {
-    return __awaiter(this, void 0, void 0, function* () {
-        switch (event.action) {
-            case "created":
-            case "edited":
-                const milestone = yield ghq.milestone({
-                    owner: event.repository.owner.login,
-                    repository: event.repository.name,
-                    number: event.milestone.number,
-                });
-                core.info(JSON.stringify(milestone, null, 2));
-                break;
-            default:
-                break;
-        }
-    });
-}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            switch (github.context.eventName) {
-                case "milestone":
-                    milestone(github.context.payload);
-                    break;
-                default:
-                    break;
+            const action = new milestone_1.MilestoneAction();
+            if (action.canHandleContext(github.context)) {
+                action.handle(github.context, ghq);
             }
         }
         catch (error) {
