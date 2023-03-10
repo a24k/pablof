@@ -3019,15 +3019,15 @@ const graphql_1 = __nccwpck_require__(7064);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const token = core.getInput('token');
+            const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
             const milestone = yield sdk.milestone({
                 owner: github.context.payload.repository.owner.login,
                 repository: github.context.payload.repository.name,
-                number: 1
+                number: 1,
             });
-            core.debug('milestone(1):');
+            core.debug("milestone(1):");
             core.debug(JSON.stringify(milestone, null, 2));
         }
         catch (error) {
