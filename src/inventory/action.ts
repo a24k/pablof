@@ -9,8 +9,8 @@ export abstract class TriggerableAction {
 
   canHandle(name: string, action?: string): boolean {
     return (
-      name == this.triggerName &&
-      (this.triggerAction === undefined || action == this.triggerAction)
+      name === this.triggerName &&
+      (this.triggerAction === undefined || action === this.triggerAction)
     );
   }
 }
