@@ -3022,6 +3022,7 @@ function main() {
             switch (github.context.eventName) {
                 case "milestone":
                     const event = github.context.payload;
+                    core.info(JSON.stringify(event, null, 2));
                     break;
                 default:
                     break;

@@ -8,6 +8,7 @@ async function main(): Promise<void> {
     switch (github.context.eventName) {
       case "milestone":
         const event = github.context.payload as MilestoneEvent;
+        core.info(JSON.stringify(event, null, 2));
         break;
       default:
         break;
