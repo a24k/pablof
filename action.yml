@@ -3,7 +3,7 @@ description: 'Productive Assistant for GitHub'
 author: 'Atsushi KAWASAKI'
 inputs:
   token:
-    description: GitHub Personal Access Token with write access to repo and project
+    description: 'GitHub Personal Access Token with write access to repo and project'
     required: true
 runs:
   using: 'node16'
