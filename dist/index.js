@@ -3025,7 +3025,7 @@ function main() {
             const milestone = sdk.milestone({
                 owner: github.context.payload.repository.owner.login,
                 repository: github.context.payload.repository.name,
-                number: 1,
+                number: 1
             });
             core.debug('milestone(1):');
             core.debug(JSON.stringify(milestone, null, 2));
