@@ -15165,6 +15165,8 @@ export type ProjectV2 = Closable &
     readonly shortDescription?: Maybe<Scalars['String']>
     /** The teams the project is linked to. */
     readonly teams: TeamConnection
+    /** Returns true if this project is a template. */
+    readonly template: Scalars['Boolean']
     /** The project's name. */
     readonly title: Scalars['String']
     /** Identifies the date and time when the object was last updated. */
