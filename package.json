@@ -1,6 +1,6 @@
 {
   "name": "pablof",
-  "version": "0.1.0-mi.2.0",
+  "version": "0.1.0-mi.2.1",
   "description": "Productive Assistant for GitHub",
   "author": "Atsushi KAWASAKI",
   "private": true,
@@ -28,7 +28,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "@octokit/webhooks-definitions": "^3.67.3",
+    "@octokit/webhooks-types": "^6.10.0",
     "graphql": "^16.6.0"
   },
   "devDependencies": {

@@ -3019,6 +3019,13 @@ const graphql_1 = __nccwpck_require__(7064);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            switch (github.context.eventName) {
+                case "milestone":
+                    const event = github.context.payload;
+                    break;
+                default:
+                    break;
+            }
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
