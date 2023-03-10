@@ -1,19 +1,26 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
+import {getSdk} from './graphql'
 
-async function run(): Promise<void> {
+async function main(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const token = core.getInput('token')
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const octokit = github.getOctokit(token)
 
-    core.setOutput('time', new Date().toTimeString())
+    const sdk = getSdk(octokit.graphql)
+
+    const milestone = await sdk.milestone({
+      owner: github.context.payload.repository!.owner.login,
+      repository: github.context.payload.repository!.name,
+      number: 1
+    })
+
+    core.debug('milestone(1):')
+    core.debug(JSON.stringify(milestone, null, 2))
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
-run()
+main()
