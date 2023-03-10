@@ -1,3 +1,6 @@
+import { context } from "@actions/github";
+type Context = typeof context;
+
 export abstract class TriggerableAction {
   private triggerName: string;
   private triggerAction?: string;
@@ -12,5 +15,9 @@ export abstract class TriggerableAction {
       name === this.triggerName &&
       (this.triggerAction === undefined || action === this.triggerAction)
     );
+  }
+
+  canHandleContext(context: Context): boolean {
+    return this.canHandle(context.eventName, context.payload.action);
   }
 }
