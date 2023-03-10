@@ -3016,27 +3016,36 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const graphql_1 = __nccwpck_require__(7064);
+const token = core.getInput("token");
+const octokit = github.getOctokit(token);
+const ghq = (0, graphql_1.getSdk)(octokit.graphql);
+function milestone(event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        switch (event.action) {
+            case "created":
+            case "edited":
+                const milestone = yield ghq.milestone({
+                    owner: event.repository.owner.login,
+                    repository: event.repository.name,
+                    number: event.milestone.number,
+                });
+                core.info(JSON.stringify(milestone, null, 2));
+                break;
+            default:
+                break;
+        }
+    });
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             switch (github.context.eventName) {
                 case "milestone":
-                    const event = github.context.payload;
-                    core.info(JSON.stringify(event, null, 2));
+                    milestone(github.context.payload);
                     break;
                 default:
                     break;
             }
-            const token = core.getInput("token");
-            const octokit = github.getOctokit(token);
-            const sdk = (0, graphql_1.getSdk)(octokit.graphql);
-            const milestone = yield sdk.milestone({
-                owner: github.context.payload.repository.owner.login,
-                repository: github.context.payload.repository.name,
-                number: 1,
-            });
-            core.debug("milestone(1):");
-            core.debug(JSON.stringify(milestone, null, 2));
         }
         catch (error) {
             if (error instanceof Error)

@@ -3,31 +3,35 @@ import * as github from "@actions/github";
 import { getSdk } from "./graphql";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
+const token = core.getInput("token");
+const octokit = github.getOctokit(token);
+const ghq = getSdk(octokit.graphql);
+
+async function milestone(event: MilestoneEvent): Promise<void> {
+  switch (event.action) {
+    case "created":
+    case "edited":
+      const milestone = await ghq.milestone({
+        owner: event.repository.owner.login,
+        repository: event.repository.name,
+        number: event.milestone.number,
+      });
+      core.info(JSON.stringify(milestone, null, 2));
+      break;
+    default:
+      break;
+  }
+}
+
 async function main(): Promise<void> {
   try {
     switch (github.context.eventName) {
       case "milestone":
-        const event = github.context.payload as MilestoneEvent;
-        core.info(JSON.stringify(event, null, 2));
+        milestone(github.context.payload as MilestoneEvent);
         break;
       default:
         break;
     }
-
-    const token = core.getInput("token");
-
-    const octokit = github.getOctokit(token);
-
-    const sdk = getSdk(octokit.graphql);
-
-    const milestone = await sdk.milestone({
-      owner: github.context.payload.repository!.owner.login,
-      repository: github.context.payload.repository!.name,
-      number: 1,
-    });
-
-    core.debug("milestone(1):");
-    core.debug(JSON.stringify(milestone, null, 2));
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }
