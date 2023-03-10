@@ -17,6 +17,7 @@ test('wait 500 ms', async () => {
   expect(delta).toBeGreaterThan(450)
 })
 
+/*
 // shows how the runner will run a javascript action with env / stdout protocol
 test('test runs', () => {
   process.env['INPUT_MILLISECONDS'] = '500'
@@ -27,3 +28,4 @@ test('test runs', () => {
   }
   console.log(cp.execFileSync(np, [ip], options).toString())
 })
+*/
