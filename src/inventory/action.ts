@@ -3,17 +3,22 @@ type Context = typeof context;
 
 export abstract class TriggerableAction {
   private triggerName: string;
-  private triggerAction?: string;
+  private triggerAction?: string | string[];
 
-  constructor(name: string, action?: string) {
+  constructor(name: string, action?: string | string[]) {
     this.triggerName = name;
     this.triggerAction = action;
   }
 
   canHandle(name: string, action?: string): boolean {
     return (
-      name === this.triggerName &&
-      (this.triggerAction === undefined || action === this.triggerAction)
+      this.triggerName === name &&
+      (this.triggerAction === undefined ||
+        (Array.isArray(this.triggerAction)
+          ? action === undefined
+            ? false
+            : this.triggerAction.includes(action)
+          : this.triggerAction === action))
     );
   }
 

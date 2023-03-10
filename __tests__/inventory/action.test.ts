@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import { TriggerableAction } from "../../src/inventory/action";
 
 class TestAction extends TriggerableAction {
-  constructor(name: string, action?: string) {
+  constructor(name: string, action?: string | string[]) {
     super(name, action);
   }
 }
@@ -44,6 +44,22 @@ describe("trigger matching", () => {
     (expected: boolean, name: string, action?: string) => {
       const actionMilestoneEdited = new TestAction("milestone", "edited");
       expect(actionMilestoneEdited.canHandle(name, action)).toBe(expected);
+    }
+  );
+
+  test.each([
+    [false, "milestone", undefined],
+    [false, "issue", undefined],
+    [true, "milestone", "created"],
+    [true, "milestone", "edited"],
+  ])(
+    "action(milestone, created|edited) is matched %p with trigger(%s, %s)",
+    (expected: boolean, name: string, action?: string) => {
+      const actionMilestoneCreated = new TestAction("milestone", [
+        "created",
+        "edited",
+      ]);
+      expect(actionMilestoneCreated.canHandle(name, action)).toBe(expected);
     }
   );
 });
