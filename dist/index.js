@@ -3022,7 +3022,7 @@ function main() {
             const token = core.getInput('token');
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
-            const milestone = sdk.milestone({
+            const milestone = yield sdk.milestone({
                 owner: github.context.payload.repository.owner.login,
                 repository: github.context.payload.repository.name,
                 number: 1
