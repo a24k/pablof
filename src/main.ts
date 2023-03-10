@@ -10,7 +10,7 @@ async function main(): Promise<void> {
 
     const sdk = getSdk(octokit.graphql)
 
-    const milestone = sdk.milestone({
+    const milestone = await sdk.milestone({
       owner: github.context.payload.repository!.owner.login,
       repository: github.context.payload.repository!.name,
       number: 1
