@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-async function run(): Promise<void> {
+async function main(): Promise<void> {
   try {
     core.notice('some notice for you')
     core.debug('github.context:')
@@ -11,4 +11,4 @@ async function run(): Promise<void> {
   }
 }
 
-run()
+main()
