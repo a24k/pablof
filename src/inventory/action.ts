@@ -1,5 +1,8 @@
-import type { Context } from "../main";
+import * as github from "@actions/github";
+
 import type { Sdk } from "../graphql";
+
+export type Context = typeof github.context;
 
 export abstract class TriggerableAction {
   private triggerName: string;

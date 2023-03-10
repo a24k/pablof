@@ -3109,15 +3109,15 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const graphql_1 = __nccwpck_require__(7064);
 const milestone_1 = __nccwpck_require__(886);
-const token = core.getInput("token");
-const octokit = github.getOctokit(token);
-const ghq = (0, graphql_1.getSdk)(octokit.graphql);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const token = core.getInput("token");
+            const octokit = github.getOctokit(token);
+            const sdk = (0, graphql_1.getSdk)(octokit.graphql);
             const action = new milestone_1.MilestoneAction();
             if (action.canHandleContext(github.context)) {
-                action.handle(github.context, ghq);
+                action.handle(github.context, sdk);
             }
         }
         catch (error) {
