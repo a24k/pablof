@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { ActionInventory } from "../../src/actions/inventory";
-import { TriggerableAction } from "../../src/actions/triggerable";
+import { ActionInventory, TriggerableAction } from "../../src/actions";
 import type { Context } from "../../src/actions";
+import { ActionResult, ok } from "../../src/actions/result";
 
 describe("ActionInventory", () => {
   class TestActionA extends TriggerableAction {
@@ -10,7 +10,9 @@ describe("ActionInventory", () => {
       super("nameA", "actionA");
     }
 
-    protected async handle(_: Context): Promise<void> {}
+    protected async handle(_: Context): Promise<ActionResult> {
+      return ok("ok");
+    }
   }
 
   class TestActionB extends TriggerableAction {
@@ -18,7 +20,9 @@ describe("ActionInventory", () => {
       super("nameB", "actionB");
     }
 
-    protected async handle(_: Context): Promise<void> {}
+    protected async handle(_: Context): Promise<ActionResult> {
+      return ok("ok");
+    }
   }
 
   describe("submit", () => {

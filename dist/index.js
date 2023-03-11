@@ -7,12 +7,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.collect = void 0;
+exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
+const milestone_1 = __nccwpck_require__(5674);
 const inventory_1 = __nccwpck_require__(6253);
-const milestone_1 = __nccwpck_require__(8347);
+Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
+const triggerable_1 = __nccwpck_require__(4953);
+Object.defineProperty(exports, "TriggerableAction", ({ enumerable: true, get: function () { return triggerable_1.TriggerableAction; } }));
 function collect() {
     const inventory = new inventory_1.ActionInventory();
-    inventory.submit(new milestone_1.MilestoneAction());
+    inventory.submit(new milestone_1.CreateMilestoneIssue());
     return inventory;
 }
 exports.collect = collect;
@@ -21,45 +24,6 @@ exports.collect = collect;
 /***/ }),
 
 /***/ 6253:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ActionInventory = void 0;
-class ActionInventory {
-    constructor() {
-        this.items = [];
-    }
-    submit(item) {
-        this.items.push(item);
-    }
-    length() {
-        return this.items.length;
-    }
-    handleContext(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (const item of this.items) {
-                yield item.handleContext(context, sdk);
-            }
-        });
-    }
-}
-exports.ActionInventory = ActionInventory;
-
-
-/***/ }),
-
-/***/ 8347:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -97,14 +61,97 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MilestoneAction = void 0;
+exports.ActionInventory = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+class ActionInventory {
+    constructor() {
+        this.items = [];
+    }
+    submit(item) {
+        this.items.push(item);
+    }
+    length() {
+        return this.items.length;
+    }
+    handleContext(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const item of this.items) {
+                const title = item.description();
+                core.debug(`handleContext on ${title}`);
+                const result = yield item.handleContext(context, sdk);
+                result.match((res) => {
+                    switch (res.type) {
+                        case "Success":
+                            core.notice(res.message, { title });
+                            break;
+                        case "Skip":
+                        default:
+                            core.debug("skipped");
+                            break;
+                    }
+                }, (err) => {
+                    core.error(err.message, { title });
+                });
+            }
+        });
+    }
+}
+exports.ActionInventory = ActionInventory;
+
+
+/***/ }),
+
+/***/ 4775:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateMilestoneIssue = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const triggerable_1 = __nccwpck_require__(4953);
-class MilestoneAction extends triggerable_1.TriggerableAction {
+const result_1 = __nccwpck_require__(4983);
+class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
-        super("milestone");
+        super("milestone", "created");
+    }
+    description() {
+        return `CreateMilestoneIssue for ${super.description()}`;
     }
     handle(context, sdk) {
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             const milestone = yield sdk.queryMilestone({
@@ -112,17 +159,66 @@ class MilestoneAction extends triggerable_1.TriggerableAction {
                 repository: payload.repository.name,
                 number: payload.milestone.number,
             });
-            core.info(JSON.stringify(milestone, null, 2));
+            core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
+            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
+                return (0, result_1.err)("No repository or milestone found.");
+            const issue = yield sdk.createIssueWithMilestone({
+                repository: milestone.repository.id,
+                title: payload.milestone.title,
+                body: payload.milestone.description,
+                milestone: milestone.repository.milestone.id,
+            });
+            core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+            if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
+                return (0, result_1.err)("Fail to create issue.");
+            return (0, result_1.ok)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
 }
-exports.MilestoneAction = MilestoneAction;
+exports.CreateMilestoneIssue = CreateMilestoneIssue;
+
+
+/***/ }),
+
+/***/ 5674:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateMilestoneIssue = void 0;
+const create_issue_1 = __nccwpck_require__(4775);
+Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
+
+
+/***/ }),
+
+/***/ 4983:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.err = exports.skip = exports.ok = void 0;
+const neverthrow_1 = __nccwpck_require__(8591);
+function ok(message) {
+    return (0, neverthrow_1.ok)({ type: "Success", message });
+}
+exports.ok = ok;
+function skip() {
+    return (0, neverthrow_1.ok)({ type: "Skip" });
+}
+exports.skip = skip;
+function err(message) {
+    return (0, neverthrow_1.err)({ type: "Failure", message });
+}
+exports.err = err;
 
 
 /***/ }),
 
 /***/ 4953:
-/***/ (function(__unused_webpack_module, exports) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -137,10 +233,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TriggerableAction = void 0;
+const result_1 = __nccwpck_require__(4983);
 class TriggerableAction {
     constructor(name, action) {
         this.triggerName = name;
         this.triggerAction = action;
+    }
+    description() {
+        return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
     }
     canHandle(name, action) {
         return (this.triggerName === name &&
@@ -159,6 +259,9 @@ class TriggerableAction {
             if (this.canHandleContext(context)) {
                 return yield this.handle(context, sdk);
             }
+            else {
+                return (0, result_1.skip)();
+            }
         });
     }
 }
@@ -176,8 +279,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IssueClosedStateReason = exports.IpAllowListForInstalledAppsEnabledSettingValue = exports.IpAllowListEntryOrderField = exports.IpAllowListEnabledSettingValue = exports.IdentityProviderConfigurationState = exports.GitSignatureState = exports.GistPrivacy = exports.GistOrderField = exports.FundingPlatform = exports.FileViewedState = exports.EnterpriseUserDeployment = exports.EnterpriseUserAccountMembershipRole = exports.EnterpriseServerUserAccountsUploadSyncState = exports.EnterpriseServerUserAccountsUploadOrderField = exports.EnterpriseServerUserAccountOrderField = exports.EnterpriseServerUserAccountEmailOrderField = exports.EnterpriseServerInstallationOrderField = exports.EnterpriseMembersCanMakePurchasesSettingValue = exports.EnterpriseMembersCanCreateRepositoriesSettingValue = exports.EnterpriseMemberOrderField = exports.EnterpriseEnabledSettingValue = exports.EnterpriseEnabledDisabledSettingValue = exports.EnterpriseDefaultRepositoryPermissionSettingValue = exports.EnterpriseAllowPrivateRepositoryForkingPolicyValue = exports.EnterpriseAdministratorRole = exports.EnterpriseAdministratorInvitationOrderField = exports.DismissReason = exports.DiscussionPollOptionOrderField = exports.DiscussionOrderField = exports.DiffSide = exports.DeploymentStatusState = exports.DeploymentState = exports.DeploymentReviewState = exports.DeploymentProtectionRuleType = exports.DeploymentOrderField = exports.DependencyGraphEcosystem = exports.DefaultRepositoryPermissionField = exports.ContributionLevel = exports.ComparisonStatus = exports.CommitContributionOrderField = exports.CommentCannotUpdateReason = exports.CommentAuthorAssociation = exports.CollaboratorAffiliation = exports.CheckStatusState = exports.CheckRunType = exports.CheckRunState = exports.CheckConclusionState = exports.CheckAnnotationLevel = exports.AuditLogOrderField = exports.ActorType = void 0;
 exports.ProjectCardState = exports.ProjectCardArchivedState = exports.PinnedDiscussionPattern = exports.PinnedDiscussionGradient = exports.PinnableItemType = exports.PatchStatus = exports.PackageVersionOrderField = exports.PackageType = exports.PackageOrderField = exports.PackageFileOrderField = exports.OrganizationOrderField = exports.OrganizationMigrationState = exports.OrganizationMembersCanCreateRepositoriesSettingValue = exports.OrganizationMemberRole = exports.OrganizationInvitationType = exports.OrganizationInvitationSource = exports.OrganizationInvitationRole = exports.OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility = exports.OrgUpdateMemberAuditEntryPermission = exports.OrgUpdateDefaultRepositoryPermissionAuditEntryPermission = exports.OrgRemoveOutsideCollaboratorAuditEntryReason = exports.OrgRemoveOutsideCollaboratorAuditEntryMembershipType = exports.OrgRemoveMemberAuditEntryReason = exports.OrgRemoveMemberAuditEntryMembershipType = exports.OrgRemoveBillingManagerAuditEntryReason = exports.OrgEnterpriseOwnerOrderField = exports.OrgCreateAuditEntryBillingPlan = exports.OrgAddMemberAuditEntryPermission = exports.OrderDirection = exports.OperationType = exports.OauthApplicationCreateAuditEntryState = exports.OidcProviderType = exports.NotificationRestrictionSettingValue = exports.MilestoneState = exports.MilestoneOrderField = exports.MigrationState = exports.MigrationSourceType = exports.MergeableState = exports.MergeStateStatus = exports.MergeCommitTitle = exports.MergeCommitMessage = exports.MannequinOrderField = exports.LockReason = exports.LanguageOrderField = exports.LabelOrderField = exports.IssueTimelineItemsItemType = exports.IssueStateReason = exports.IssueState = exports.IssueOrderField = exports.IssueCommentOrderField = void 0;
 exports.RepositoryVisibility = exports.RepositoryPrivacy = exports.RepositoryPermission = exports.RepositoryOrderField = exports.RepositoryMigrationOrderField = exports.RepositoryMigrationOrderDirection = exports.RepositoryLockReason = exports.RepositoryInvitationOrderField = exports.RepositoryInteractionLimitOrigin = exports.RepositoryInteractionLimitExpiry = exports.RepositoryInteractionLimit = exports.RepositoryContributionType = exports.RepositoryAffiliation = exports.ReportedContentClassifiers = exports.RepoRemoveMemberAuditEntryVisibility = exports.RepoDestroyAuditEntryVisibility = exports.RepoCreateAuditEntryVisibility = exports.RepoChangeMergeSettingAuditEntryMergeType = exports.RepoArchivedAuditEntryVisibility = exports.RepoAddMemberAuditEntryVisibility = exports.RepoAccessAuditEntryVisibility = exports.ReleaseOrderField = exports.RefOrderField = exports.ReactionOrderField = exports.ReactionContent = exports.PullRequestUpdateState = exports.PullRequestTimelineItemsItemType = exports.PullRequestState = exports.PullRequestReviewState = exports.PullRequestReviewEvent = exports.PullRequestReviewDecision = exports.PullRequestReviewCommentState = exports.PullRequestOrderField = exports.PullRequestMergeMethod = exports.ProjectV2WorkflowsOrderField = exports.ProjectV2ViewOrderField = exports.ProjectV2ViewLayout = exports.ProjectV2State = exports.ProjectV2SingleSelectFieldOptionColor = exports.ProjectV2OrderField = exports.ProjectV2ItemType = exports.ProjectV2ItemOrderField = exports.ProjectV2ItemFieldValueOrderField = exports.ProjectV2FieldType = exports.ProjectV2FieldOrderField = exports.ProjectV2CustomFieldType = exports.ProjectTemplate = exports.ProjectState = exports.ProjectOrderField = exports.ProjectColumnPurpose = void 0;
-exports.QueryProjectFieldsDocument = exports.QueryMilestoneDocument = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
-exports.getSdk = exports.QueryProjectDocument = void 0;
+exports.QueryMilestoneDocument = exports.CreateIssueWithMilestoneDocument = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
+exports.getSdk = exports.QueryProjectDocument = exports.QueryProjectFieldsDocument = void 0;
 /** The actor's type. */
 var ActorType;
 (function (ActorType) {
@@ -3046,6 +3149,29 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
+exports.CreateIssueWithMilestoneDocument = `
+    mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
+  createIssue(
+    input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
+  ) {
+    issue {
+      id
+      number
+      title
+      body
+      state
+      milestone {
+        id
+        number
+        title
+        description
+        state
+        dueOn
+      }
+    }
+  }
+}
+    `;
 exports.QueryMilestoneDocument = `
     query queryMilestone($owner: String!, $repository: String!, $number: Int!) {
   repository(owner: $owner, name: $repository) {
@@ -3125,6 +3251,9 @@ exports.QueryProjectDocument = `
     `;
 function getSdk(requester) {
     return {
+        createIssueWithMilestone(variables, options) {
+            return requester(exports.CreateIssueWithMilestoneDocument, variables, options);
+        },
         queryMilestone(variables, options) {
             return requester(exports.QueryMilestoneDocument, variables, options);
         },
@@ -7797,6 +7926,396 @@ function isPlainObject(o) {
 }
 
 exports.isPlainObject = isPlainObject;
+
+
+/***/ }),
+
+/***/ 8591:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+var defaultErrorConfig = {
+    withStackTrace: false
+};
+// Custom error object
+// Context / discussion: https://github.com/supermacro/neverthrow/pull/215
+var createNeverThrowError = function (message, result, config) {
+    if (config === void 0) { config = defaultErrorConfig; }
+    var data = result.isOk()
+        ? { type: 'Ok', value: result.value }
+        : { type: 'Err', value: result.error };
+    var maybeStack = config.withStackTrace ? new Error().stack : undefined;
+    return {
+        data: data,
+        message: message,
+        stack: maybeStack
+    };
+};
+
+var ResultAsync = /** @class */ (function () {
+    function ResultAsync(res) {
+        this._promise = res;
+    }
+    ResultAsync.fromSafePromise = function (promise) {
+        var newPromise = promise.then(function (value) { return new Ok(value); });
+        return new ResultAsync(newPromise);
+    };
+    ResultAsync.fromPromise = function (promise, errorFn) {
+        var newPromise = promise
+            .then(function (value) { return new Ok(value); })["catch"](function (e) { return new Err(errorFn(e)); });
+        return new ResultAsync(newPromise);
+    };
+    ResultAsync.combine = function (asyncResultList) {
+        return combineResultAsyncList(asyncResultList);
+    };
+    ResultAsync.combineWithAllErrors = function (asyncResultList) {
+        return combineResultAsyncListWithAllErrors(asyncResultList);
+    };
+    ResultAsync.prototype.map = function (f) {
+        var _this = this;
+        return new ResultAsync(this._promise.then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (res.isErr()) {
+                            return [2 /*return*/, new Err(res.error)];
+                        }
+                        _a = Ok.bind;
+                        return [4 /*yield*/, f(res.value)];
+                    case 1: return [2 /*return*/, new (_a.apply(Ok, [void 0, _b.sent()]))()];
+                }
+            });
+        }); }));
+    };
+    ResultAsync.prototype.mapErr = function (f) {
+        var _this = this;
+        return new ResultAsync(this._promise.then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (res.isOk()) {
+                            return [2 /*return*/, new Ok(res.value)];
+                        }
+                        _a = Err.bind;
+                        return [4 /*yield*/, f(res.error)];
+                    case 1: return [2 /*return*/, new (_a.apply(Err, [void 0, _b.sent()]))()];
+                }
+            });
+        }); }));
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    ResultAsync.prototype.andThen = function (f) {
+        return new ResultAsync(this._promise.then(function (res) {
+            if (res.isErr()) {
+                return new Err(res.error);
+            }
+            var newValue = f(res.value);
+            return newValue instanceof ResultAsync ? newValue._promise : newValue;
+        }));
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    ResultAsync.prototype.orElse = function (f) {
+        var _this = this;
+        return new ResultAsync(this._promise.then(function (res) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (res.isErr()) {
+                    return [2 /*return*/, f(res.error)];
+                }
+                return [2 /*return*/, new Ok(res.value)];
+            });
+        }); }));
+    };
+    ResultAsync.prototype.match = function (ok, _err) {
+        return this._promise.then(function (res) { return res.match(ok, _err); });
+    };
+    ResultAsync.prototype.unwrapOr = function (t) {
+        return this._promise.then(function (res) { return res.unwrapOr(t); });
+    };
+    // Makes ResultAsync implement PromiseLike<Result>
+    ResultAsync.prototype.then = function (successCallback, failureCallback) {
+        return this._promise.then(successCallback, failureCallback);
+    };
+    return ResultAsync;
+}());
+var okAsync = function (value) {
+    return new ResultAsync(Promise.resolve(new Ok(value)));
+};
+var errAsync = function (err) {
+    return new ResultAsync(Promise.resolve(new Err(err)));
+};
+var fromPromise = ResultAsync.fromPromise;
+var fromSafePromise = ResultAsync.fromSafePromise;
+
+var appendValueToEndOfList = function (value) { return function (list) { return __spreadArray(__spreadArray([], __read(list), false), [value], false); }; };
+/**
+ * Short circuits on the FIRST Err value that we find
+ */
+var combineResultList = function (resultList) {
+    return resultList.reduce(function (acc, result) {
+        return acc.isOk()
+            ? result.isErr()
+                ? err(result.error)
+                : acc.map(appendValueToEndOfList(result.value))
+            : acc;
+    }, ok([]));
+};
+/* This is the typesafe version of Promise.all
+ *
+ * Takes a list of ResultAsync<T, E> and success if all inner results are Ok values
+ * or fails if one (or more) of the inner results are Err values
+ */
+var combineResultAsyncList = function (asyncResultList) {
+    return ResultAsync.fromSafePromise(Promise.all(asyncResultList)).andThen(combineResultList);
+};
+/**
+ * Give a list of all the errors we find
+ */
+var combineResultListWithAllErrors = function (resultList) {
+    return resultList.reduce(function (acc, result) {
+        return result.isErr()
+            ? acc.isErr()
+                ? err(__spreadArray(__spreadArray([], __read(acc.error), false), [result.error], false))
+                : err([result.error])
+            : acc.isErr()
+                ? acc
+                : ok(__spreadArray(__spreadArray([], __read(acc.value), false), [result.value], false));
+    }, ok([]));
+};
+var combineResultAsyncListWithAllErrors = function (asyncResultList) {
+    return ResultAsync.fromSafePromise(Promise.all(asyncResultList)).andThen(combineResultListWithAllErrors);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+exports.Result = void 0;
+(function (Result) {
+    /**
+     * Wraps a function with a try catch, creating a new function with the same
+     * arguments but returning `Ok` if successful, `Err` if the function throws
+     *
+     * @param fn function to wrap with ok on success or err on failure
+     * @param errorFn when an error is thrown, this will wrap the error result if provided
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function fromThrowable(fn, errorFn) {
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            try {
+                var result = fn.apply(void 0, __spreadArray([], __read(args), false));
+                return ok(result);
+            }
+            catch (e) {
+                return err(errorFn ? errorFn(e) : e);
+            }
+        };
+    }
+    Result.fromThrowable = fromThrowable;
+    function combine(resultList) {
+        return combineResultList(resultList);
+    }
+    Result.combine = combine;
+    function combineWithAllErrors(resultList) {
+        return combineResultListWithAllErrors(resultList);
+    }
+    Result.combineWithAllErrors = combineWithAllErrors;
+})(exports.Result || (exports.Result = {}));
+var ok = function (value) { return new Ok(value); };
+var err = function (err) { return new Err(err); };
+var Ok = /** @class */ (function () {
+    function Ok(value) {
+        this.value = value;
+    }
+    Ok.prototype.isOk = function () {
+        return true;
+    };
+    Ok.prototype.isErr = function () {
+        return !this.isOk();
+    };
+    Ok.prototype.map = function (f) {
+        return ok(f(this.value));
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Ok.prototype.mapErr = function (_f) {
+        return ok(this.value);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    Ok.prototype.andThen = function (f) {
+        return f(this.value);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    Ok.prototype.orElse = function (_f) {
+        return ok(this.value);
+    };
+    Ok.prototype.asyncAndThen = function (f) {
+        return f(this.value);
+    };
+    Ok.prototype.asyncMap = function (f) {
+        return ResultAsync.fromSafePromise(f(this.value));
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Ok.prototype.unwrapOr = function (_v) {
+        return this.value;
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Ok.prototype.match = function (ok, _err) {
+        return ok(this.value);
+    };
+    Ok.prototype._unsafeUnwrap = function (_) {
+        return this.value;
+    };
+    Ok.prototype._unsafeUnwrapErr = function (config) {
+        throw createNeverThrowError('Called `_unsafeUnwrapErr` on an Ok', this, config);
+    };
+    return Ok;
+}());
+var Err = /** @class */ (function () {
+    function Err(error) {
+        this.error = error;
+    }
+    Err.prototype.isOk = function () {
+        return false;
+    };
+    Err.prototype.isErr = function () {
+        return !this.isOk();
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Err.prototype.map = function (_f) {
+        return err(this.error);
+    };
+    Err.prototype.mapErr = function (f) {
+        return err(f(this.error));
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    Err.prototype.andThen = function (_f) {
+        return err(this.error);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    Err.prototype.orElse = function (f) {
+        return f(this.error);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Err.prototype.asyncAndThen = function (_f) {
+        return errAsync(this.error);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Err.prototype.asyncMap = function (_f) {
+        return errAsync(this.error);
+    };
+    Err.prototype.unwrapOr = function (v) {
+        return v;
+    };
+    Err.prototype.match = function (_ok, err) {
+        return err(this.error);
+    };
+    Err.prototype._unsafeUnwrap = function (config) {
+        throw createNeverThrowError('Called `_unsafeUnwrap` on an Err', this, config);
+    };
+    Err.prototype._unsafeUnwrapErr = function (_) {
+        return this.error;
+    };
+    return Err;
+}());
+var fromThrowable = exports.Result.fromThrowable;
+//#endregion
+
+exports.Err = Err;
+exports.Ok = Ok;
+exports.ResultAsync = ResultAsync;
+exports.err = err;
+exports.errAsync = errAsync;
+exports.fromPromise = fromPromise;
+exports.fromSafePromise = fromSafePromise;
+exports.fromThrowable = fromThrowable;
+exports.ok = ok;
+exports.okAsync = okAsync;
 
 
 /***/ }),
