@@ -71,4 +71,20 @@ describe("TriggerableAction", () => {
       }
     );
   });
+
+  describe("description", () => {
+    test.each([
+      ["milestone", "milestone", undefined],
+      ["issue", "issue", undefined],
+      ["milestone-created", "milestone", "created"],
+      ["milestone-edited", "milestone", "edited"],
+      ["milestone-created,edited", "milestone", ["created", "edited"]],
+    ])(
+      "'%s' describes trigger(%s, %s)",
+      (expected: string, name: string, action?: string | string[]) => {
+        const testAction = new TestAction(name, action);
+        expect(testAction.description()).toBe(expected);
+      }
+    );
+  });
 });

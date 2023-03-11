@@ -79,19 +79,21 @@ class ActionInventory {
     handleContext(context, sdk) {
         return __awaiter(this, void 0, void 0, function* () {
             for (const item of this.items) {
+                const title = item.description();
+                core.debug(`handleContext on ${title}`);
                 const result = yield item.handleContext(context, sdk);
                 result.match((res) => {
                     switch (res.type) {
                         case "Success":
-                            core.notice(res.message, { title: item.description() });
+                            core.notice(res.message, { title });
                             break;
                         case "Skip":
                         default:
-                            core.notice("skip", { title: item.description() });
+                            core.debug("skipped");
                             break;
                     }
                 }, (err) => {
-                    core.error(err.message, { title: item.description() });
+                    core.error(err.message, { title });
                 });
             }
         });
