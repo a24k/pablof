@@ -148,6 +148,9 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
         super("milestone", "created");
     }
+    description() {
+        return `CreateMilestoneIssue for ${super.description()}`;
+    }
     handle(context, sdk) {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
@@ -212,9 +215,11 @@ class Failure extends triggerable_1.TriggerableAction {
     constructor() {
         super("pull_request");
     }
-    handle(context, sdk) {
+    description() {
+        return `Failure for ${super.description()}`;
+    }
+    handle(_context, _sdk) {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = context.payload;
             return (0, result_1.err)("failure");
         });
     }
@@ -261,9 +266,11 @@ class Success extends triggerable_1.TriggerableAction {
     constructor() {
         super("pull_request");
     }
-    handle(context, sdk) {
+    description() {
+        return `Success for ${super.description()}`;
+    }
+    handle(_context, _sdk) {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = context.payload;
             return (0, result_1.ok)("success");
         });
     }
@@ -320,7 +327,7 @@ class TriggerableAction {
         this.triggerAction = action;
     }
     description() {
-        return `TriggerableAction for ${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
+        return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
     }
     canHandle(name, action) {
         return (this.triggerName === name &&

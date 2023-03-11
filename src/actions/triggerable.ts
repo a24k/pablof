@@ -11,7 +11,7 @@ export abstract class TriggerableAction {
   }
 
   description(): string {
-    return `TriggerableAction for ${this.triggerName}${
+    return `${this.triggerName}${
       this.triggerAction === undefined ? "" : `-${this.triggerAction}`
     }`;
   }

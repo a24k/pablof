@@ -11,6 +11,10 @@ export class CreateMilestoneIssue extends TriggerableAction {
     super("milestone", "created");
   }
 
+  description(): string {
+    return `CreateMilestoneIssue for ${super.description()}`;
+  }
+
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
 

@@ -1,8 +1,5 @@
-import * as core from "@actions/core";
-import type { PullRequestEvent } from "@octokit/webhooks-types";
-
 import { TriggerableAction } from "../triggerable";
-import { ActionResult, ok, err } from "../result";
+import { ActionResult, ok } from "../result";
 
 import type { Context, Sdk } from "../";
 
@@ -11,8 +8,11 @@ export class Success extends TriggerableAction {
     super("pull_request");
   }
 
-  protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
-    const payload = context.payload as PullRequestEvent;
+  description(): string {
+    return `Success for ${super.description()}`;
+  }
+
+  protected async handle(_context: Context, _sdk: Sdk): Promise<ActionResult> {
     return ok("success");
   }
 }
