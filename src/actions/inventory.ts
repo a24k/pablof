@@ -22,16 +22,16 @@ export class ActionInventory {
         (res: ActionOk) => {
           switch (res.type) {
             case "Success":
-              core.notice(res.message, { title: (typeof item).toString() });
+              core.notice(res.message, { title: item.description() });
               break;
             case "Skip":
             default:
-              core.notice("skip", { title: (typeof item).toString() });
+              core.notice("skip", { title: item.description() });
               break;
           }
         },
         (err: ActionErr) => {
-          core.error(err.message, { title: (typeof item).toString() });
+          core.error(err.message, { title: item.description() });
         }
       );
     }

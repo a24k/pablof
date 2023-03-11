@@ -10,6 +10,12 @@ export abstract class TriggerableAction {
     this.triggerAction = action;
   }
 
+  description(): string {
+    return `TriggerableAction for ${this.triggerName}${
+      this.triggerAction === undefined ? "" : `-${this.triggerAction}`
+    }`;
+  }
+
   canHandle(name: string, action?: string): boolean {
     return (
       this.triggerName === name &&

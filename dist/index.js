@@ -83,15 +83,15 @@ class ActionInventory {
                 result.match((res) => {
                     switch (res.type) {
                         case "Success":
-                            core.notice(res.message, { title: (typeof item).toString() });
+                            core.notice(res.message, { title: item.description() });
                             break;
                         case "Skip":
                         default:
-                            core.notice("skip", { title: (typeof item).toString() });
+                            core.notice("skip", { title: item.description() });
                             break;
                     }
                 }, (err) => {
-                    core.error(err.message, { title: (typeof item).toString() });
+                    core.error(err.message, { title: item.description() });
                 });
             }
         });
@@ -318,6 +318,9 @@ class TriggerableAction {
     constructor(name, action) {
         this.triggerName = name;
         this.triggerAction = action;
+    }
+    description() {
+        return `TriggerableAction for ${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
     }
     canHandle(name, action) {
         return (this.triggerName === name &&
