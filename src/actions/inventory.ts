@@ -31,7 +31,7 @@ export class ActionInventory {
           }
         },
         (err: ActionErr) => {
-          core.error(err.message);
+          core.error(err.message, { title: "title" });
         }
       );
     }

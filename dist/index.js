@@ -91,7 +91,7 @@ class ActionInventory {
                             break;
                     }
                 }, (err) => {
-                    core.error(err.message);
+                    core.error(err.message, { title: "title" });
                 });
             }
         });
