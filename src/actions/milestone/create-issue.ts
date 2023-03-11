@@ -3,8 +3,7 @@ import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { TriggerableAction } from "../triggerable";
 
-import type { Sdk } from "../../graphql";
-import type { Context } from "../";
+import type { Context, Sdk } from "../";
 
 export class CreateMilestoneIssue extends TriggerableAction {
   constructor() {
@@ -13,11 +12,20 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   protected async handle(context: Context, sdk: Sdk): Promise<void> {
     const payload = context.payload as MilestoneEvent;
+
     const milestone = await sdk.queryMilestone({
       owner: payload.repository.owner.login,
       repository: payload.repository.name,
       number: payload.milestone.number,
     });
+
+    const issue = await sdk.createIssueWithMilestone({
+      repository: milestone.repository!.id,
+      title: payload.milestone.title,
+      milestone: milestone.repository!.milestone!.id,
+    });
+
     core.info(JSON.stringify(milestone, null, 2));
+    core.info(JSON.stringify(issue, null, 2));
   }
 }

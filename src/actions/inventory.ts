@@ -1,7 +1,5 @@
 import { TriggerableAction } from "./";
-
-import type { Context } from "./";
-import type { Sdk } from "../graphql";
+import type { Context, Sdk } from "./";
 
 export class ActionInventory {
   protected items: TriggerableAction[] = [];

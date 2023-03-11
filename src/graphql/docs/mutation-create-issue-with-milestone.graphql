@@ -1,0 +1,11 @@
+mutation createIssueWithMilestone($repository: ID!, $title: String!, $milestone: ID!) {
+  createIssue(input: { title: $title, repositoryId: $repository, milestoneId: $milestone }) {
+    clientMutationId
+    issue {
+      id number title state
+      milestone {
+        id number title description state dueOn
+      }
+    }
+  }
+}

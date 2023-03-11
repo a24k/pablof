@@ -27779,6 +27779,36 @@ export enum WorkflowRunOrderField {
   CreatedAt = "CREATED_AT",
 }
 
+export type CreateIssueWithMilestoneMutationVariables = Exact<{
+  repository: Scalars["ID"];
+  title: Scalars["String"];
+  milestone: Scalars["ID"];
+}>;
+
+export type CreateIssueWithMilestoneMutation = {
+  readonly __typename?: "Mutation";
+  readonly createIssue?: {
+    readonly __typename?: "CreateIssuePayload";
+    readonly clientMutationId?: string | null;
+    readonly issue?: {
+      readonly __typename?: "Issue";
+      readonly id: string;
+      readonly number: number;
+      readonly title: string;
+      readonly state: IssueState;
+      readonly milestone?: {
+        readonly __typename?: "Milestone";
+        readonly id: string;
+        readonly number: number;
+        readonly title: string;
+        readonly description?: string | null;
+        readonly state: MilestoneState;
+        readonly dueOn?: any | null;
+      } | null;
+    } | null;
+  } | null;
+};
+
 export type QueryMilestoneQueryVariables = Exact<{
   owner: Scalars["String"];
   repository: Scalars["String"];
@@ -27894,6 +27924,29 @@ export type QueryProjectQuery = {
   } | null;
 };
 
+export const CreateIssueWithMilestoneDocument = `
+    mutation createIssueWithMilestone($repository: ID!, $title: String!, $milestone: ID!) {
+  createIssue(
+    input: {title: $title, repositoryId: $repository, milestoneId: $milestone}
+  ) {
+    clientMutationId
+    issue {
+      id
+      number
+      title
+      state
+      milestone {
+        id
+        number
+        title
+        description
+        state
+        dueOn
+      }
+    }
+  }
+}
+    `;
 export const QueryMilestoneDocument = `
     query queryMilestone($owner: String!, $repository: String!, $number: Int!) {
   repository(owner: $owner, name: $repository) {
@@ -27978,6 +28031,19 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
+    createIssueWithMilestone(
+      variables: CreateIssueWithMilestoneMutationVariables,
+      options?: C
+    ): Promise<CreateIssueWithMilestoneMutation> {
+      return requester<
+        CreateIssueWithMilestoneMutation,
+        CreateIssueWithMilestoneMutationVariables
+      >(
+        CreateIssueWithMilestoneDocument,
+        variables,
+        options
+      ) as Promise<CreateIssueWithMilestoneMutation>;
+    },
     queryMilestone(
       variables: QueryMilestoneQueryVariables,
       options?: C
