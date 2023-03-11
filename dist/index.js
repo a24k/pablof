@@ -43,6 +43,9 @@ class ActionInventory {
     submit(item) {
         this.items.push(item);
     }
+    length() {
+        return this.items.length;
+    }
     handleContext(context, sdk) {
         return __awaiter(this, void 0, void 0, function* () {
             for (const item of this.items) {

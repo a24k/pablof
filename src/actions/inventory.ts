@@ -10,6 +10,10 @@ export class ActionInventory {
     this.items.push(item);
   }
 
+  length(): number {
+    return this.items.length;
+  }
+
   async handleContext(context: Context, sdk: Sdk): Promise<void> {
     for (const item of this.items) {
       await item.handleContext(context, sdk);
