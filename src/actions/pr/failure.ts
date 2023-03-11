@@ -5,7 +5,7 @@ import type { Context, Sdk } from "../";
 
 export class Failure extends TriggerableAction {
   constructor() {
-    super("pull_request");
+    super("pull_request", ["opened", "synchronize"]);
   }
 
   description(): string {

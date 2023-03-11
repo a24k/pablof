@@ -213,7 +213,7 @@ const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class Failure extends triggerable_1.TriggerableAction {
     constructor() {
-        super("pull_request");
+        super("pull_request", ["opened", "synchronize"]);
     }
     description() {
         return `Failure for ${super.description()}`;
