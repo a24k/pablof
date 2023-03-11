@@ -83,15 +83,15 @@ class ActionInventory {
                 result.match((res) => {
                     switch (res.type) {
                         case "Success":
-                            core.notice(res.message);
+                            core.notice(res.message, { title: typeof item });
                             break;
                         case "Skip":
                         default:
-                            core.notice("skip");
+                            core.notice("skip", { title: typeof item });
                             break;
                     }
                 }, (err) => {
-                    core.error(err.message, { title: "title" });
+                    core.error(err.message, { title: typeof item });
                 });
             }
         });
