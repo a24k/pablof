@@ -27782,6 +27782,7 @@ export enum WorkflowRunOrderField {
 export type CreateIssueWithMilestoneMutationVariables = Exact<{
   repository: Scalars["ID"];
   title: Scalars["String"];
+  body?: InputMaybe<Scalars["String"]>;
   milestone: Scalars["ID"];
 }>;
 
@@ -27794,6 +27795,7 @@ export type CreateIssueWithMilestoneMutation = {
       readonly id: string;
       readonly number: number;
       readonly title: string;
+      readonly body: string;
       readonly state: IssueState;
       readonly milestone?: {
         readonly __typename?: "Milestone";
@@ -27924,14 +27926,15 @@ export type QueryProjectQuery = {
 };
 
 export const CreateIssueWithMilestoneDocument = `
-    mutation createIssueWithMilestone($repository: ID!, $title: String!, $milestone: ID!) {
+    mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
   createIssue(
-    input: {title: $title, repositoryId: $repository, milestoneId: $milestone}
+    input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
   ) {
     issue {
       id
       number
       title
+      body
       state
       milestone {
         id

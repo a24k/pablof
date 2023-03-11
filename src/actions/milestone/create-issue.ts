@@ -25,17 +25,22 @@ export class CreateMilestoneIssue extends TriggerableAction {
     });
 
     core.info(JSON.stringify(milestone, null, 2));
-    if (milestone.repository?.milestone?.id === undefined) return err("err");
+    if (milestone.repository?.milestone?.id === undefined)
+      return err("No repository or milestone found.");
 
     const issue = await sdk.createIssueWithMilestone({
       repository: milestone.repository.id,
       title: payload.milestone.title,
+      body: payload.milestone.description,
       milestone: milestone.repository.milestone.id,
     });
 
     core.info(JSON.stringify(issue, null, 2));
-    if (issue.createIssue?.issue?.id === undefined) return err("err");
+    if (issue.createIssue?.issue?.id === undefined)
+      return err("Fail to create issue.");
 
-    return ok("ok");
+    return ok(
+      `MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`
+    );
   }
 }

@@ -161,16 +161,17 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             core.info(JSON.stringify(milestone, null, 2));
             if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
-                return (0, result_1.err)("err");
+                return (0, result_1.err)("No repository or milestone found.");
             const issue = yield sdk.createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: payload.milestone.title,
+                body: payload.milestone.description,
                 milestone: milestone.repository.milestone.id,
             });
             core.info(JSON.stringify(issue, null, 2));
             if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
-                return (0, result_1.err)("err");
-            return (0, result_1.ok)("ok");
+                return (0, result_1.err)("Fail to create issue.");
+            return (0, result_1.ok)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
 }
@@ -3149,14 +3150,15 @@ var WorkflowRunOrderField;
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
 exports.CreateIssueWithMilestoneDocument = `
-    mutation createIssueWithMilestone($repository: ID!, $title: String!, $milestone: ID!) {
+    mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
   createIssue(
-    input: {title: $title, repositoryId: $repository, milestoneId: $milestone}
+    input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
   ) {
     issue {
       id
       number
       title
+      body
       state
       milestone {
         id
