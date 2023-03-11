@@ -1,10 +1,12 @@
 {
   "plugins": [
     "jest",
+    "neverthrow",
     "@typescript-eslint"
   ],
   "extends": [
-    "plugin:github/recommended"
+    "plugin:github/recommended",
+    "plugin:neverthrow/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -13,6 +15,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "neverthrow/must-use-result": "error",
     "i18n-text/no-en": "off",
     "eslint-comments/no-use": "off",
     "import/no-namespace": "off",

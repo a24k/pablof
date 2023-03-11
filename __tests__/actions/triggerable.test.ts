@@ -2,6 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 
 import { TriggerableAction } from "../../src/actions";
 import type { Context } from "../../src/actions";
+import { ActionResult, ok } from "../../src/actions/result";
 
 describe("TriggerableAction", () => {
   class TestAction extends TriggerableAction {
@@ -9,7 +10,9 @@ describe("TriggerableAction", () => {
       super(name, action);
     }
 
-    protected async handle(_: Context): Promise<void> {}
+    protected async handle(_: Context): Promise<ActionResult> {
+      return ok("ok");
+    }
   }
 
   describe("matching", () => {
@@ -65,6 +68,22 @@ describe("TriggerableAction", () => {
           "edited",
         ]);
         expect(actionMilestoneCreated.canHandle(name, action)).toBe(expected);
+      }
+    );
+  });
+
+  describe("description", () => {
+    test.each([
+      ["milestone", "milestone", undefined],
+      ["issue", "issue", undefined],
+      ["milestone-created", "milestone", "created"],
+      ["milestone-edited", "milestone", "edited"],
+      ["milestone-created,edited", "milestone", ["created", "edited"]],
+    ])(
+      "'%s' describes trigger(%s, %s)",
+      (expected: string, name: string, action?: string | string[]) => {
+        const testAction = new TestAction(name, action);
+        expect(testAction.description()).toBe(expected);
       }
     );
   });
