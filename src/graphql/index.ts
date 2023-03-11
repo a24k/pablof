@@ -27789,7 +27789,6 @@ export type CreateIssueWithMilestoneMutation = {
   readonly __typename?: "Mutation";
   readonly createIssue?: {
     readonly __typename?: "CreateIssuePayload";
-    readonly clientMutationId?: string | null;
     readonly issue?: {
       readonly __typename?: "Issue";
       readonly id: string;
@@ -27929,7 +27928,6 @@ export const CreateIssueWithMilestoneDocument = `
   createIssue(
     input: {title: $title, repositoryId: $repository, milestoneId: $milestone}
   ) {
-    clientMutationId
     issue {
       id
       number

@@ -19,13 +19,14 @@ export class CreateMilestoneIssue extends TriggerableAction {
       number: payload.milestone.number,
     });
 
+    core.info(JSON.stringify(milestone, null, 2));
+
     const issue = await sdk.createIssueWithMilestone({
       repository: milestone.repository!.id,
       title: payload.milestone.title,
       milestone: milestone.repository!.milestone!.id,
     });
 
-    core.info(JSON.stringify(milestone, null, 2));
     core.info(JSON.stringify(issue, null, 2));
   }
 }

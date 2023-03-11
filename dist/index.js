@@ -115,12 +115,12 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 repository: payload.repository.name,
                 number: payload.milestone.number,
             });
+            core.info(JSON.stringify(milestone, null, 2));
             const issue = yield sdk.createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: payload.milestone.title,
                 milestone: milestone.repository.milestone.id,
             });
-            core.info(JSON.stringify(milestone, null, 2));
             core.info(JSON.stringify(issue, null, 2));
         });
     }
@@ -3073,7 +3073,6 @@ exports.CreateIssueWithMilestoneDocument = `
   createIssue(
     input: {title: $title, repositoryId: $repository, milestoneId: $milestone}
   ) {
-    clientMutationId
     issue {
       id
       number
