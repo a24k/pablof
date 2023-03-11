@@ -1,9 +1,8 @@
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
-import { Result, ok, err } from "neverthrow";
-
 import { TriggerableAction } from "../triggerable";
+import { ActionResult, ok, err } from "../result";
 
 import type { Context, Sdk } from "../";
 
@@ -12,10 +11,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     super("milestone", "created");
   }
 
-  protected async handle(
-    context: Context,
-    sdk: Sdk
-  ): Promise<Result<string, string>> {
+  protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
 
     const milestone = await sdk.queryMilestone({

@@ -1,6 +1,5 @@
-import { Result, ok } from "neverthrow";
-
-import type { Context, Sdk } from "./";
+import { skip } from "./result";
+import type { Context, Sdk, ActionResult } from "./";
 
 export abstract class TriggerableAction {
   private triggerName: string;
@@ -27,18 +26,12 @@ export abstract class TriggerableAction {
     return this.canHandle(context.eventName, context.payload.action);
   }
 
-  protected abstract handle(
-    context: Context,
-    sdk: Sdk
-  ): Promise<Result<string, string>>;
+  protected abstract handle(context: Context, sdk: Sdk): Promise<ActionResult>;
 
-  async handleContext(
-    context: Context,
-    sdk: Sdk
-  ): Promise<Result<string, string>> {
+  async handleContext(context: Context, sdk: Sdk): Promise<ActionResult> {
     if (this.canHandleContext(context)) {
       return await this.handle(context, sdk);
     }
-    return ok("skip");
+    return skip();
   }
 }

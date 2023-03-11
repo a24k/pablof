@@ -102,8 +102,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const neverthrow_1 = __nccwpck_require__(8591);
 const triggerable_1 = __nccwpck_require__(4953);
+const result_1 = __nccwpck_require__(4983);
 class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
         super("milestone", "created");
@@ -119,7 +119,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             core.info(JSON.stringify(milestone, null, 2));
             if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
-                return (0, neverthrow_1.err)("err");
+                return (0, result_1.err)("err");
             const issue = yield sdk.createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: payload.milestone.title,
@@ -127,8 +127,8 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             core.info(JSON.stringify(issue, null, 2));
             if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
-                return (0, neverthrow_1.err)("err");
-            return (0, neverthrow_1.ok)("ok");
+                return (0, result_1.err)("err");
+            return (0, result_1.ok)("ok");
         });
     }
 }
@@ -150,6 +150,30 @@ Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get:
 
 /***/ }),
 
+/***/ 4983:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.err = exports.skip = exports.ok = void 0;
+const neverthrow_1 = __nccwpck_require__(8591);
+function ok(message) {
+    return (0, neverthrow_1.ok)({ type: "Success", message });
+}
+exports.ok = ok;
+function skip() {
+    return (0, neverthrow_1.ok)({ type: "Skip" });
+}
+exports.skip = skip;
+function err(message) {
+    return (0, neverthrow_1.err)({ type: "Failure", message });
+}
+exports.err = err;
+
+
+/***/ }),
+
 /***/ 4953:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -166,7 +190,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TriggerableAction = void 0;
-const neverthrow_1 = __nccwpck_require__(8591);
+const result_1 = __nccwpck_require__(4983);
 class TriggerableAction {
     constructor(name, action) {
         this.triggerName = name;
@@ -189,7 +213,7 @@ class TriggerableAction {
             if (this.canHandleContext(context)) {
                 return yield this.handle(context, sdk);
             }
-            return (0, neverthrow_1.ok)("skip");
+            return (0, result_1.skip)();
         });
     }
 }

@@ -1,8 +1,8 @@
-import { Result, ok } from "neverthrow";
 import { describe, expect, test } from "@jest/globals";
 
 import { ActionInventory, TriggerableAction } from "../../src/actions";
 import type { Context } from "../../src/actions";
+import { ActionResult, ok } from "../../src/actions/result";
 
 describe("ActionInventory", () => {
   class TestActionA extends TriggerableAction {
@@ -10,7 +10,7 @@ describe("ActionInventory", () => {
       super("nameA", "actionA");
     }
 
-    protected async handle(_: Context): Promise<Result<string, string>> {
+    protected async handle(_: Context): Promise<ActionResult> {
       return ok("ok");
     }
   }
@@ -20,7 +20,7 @@ describe("ActionInventory", () => {
       super("nameB", "actionB");
     }
 
-    protected async handle(_: Context): Promise<Result<string, string>> {
+    protected async handle(_: Context): Promise<ActionResult> {
       return ok("ok");
     }
   }
