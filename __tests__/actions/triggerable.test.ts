@@ -1,3 +1,4 @@
+import { Result, ok } from "neverthrow";
 import { describe, expect, test } from "@jest/globals";
 
 import { TriggerableAction } from "../../src/actions";
@@ -9,7 +10,9 @@ describe("TriggerableAction", () => {
       super(name, action);
     }
 
-    protected async handle(_: Context): Promise<void> {}
+    protected async handle(_: Context): Promise<Result<string, string>> {
+      return ok("ok");
+    }
   }
 
   describe("matching", () => {
