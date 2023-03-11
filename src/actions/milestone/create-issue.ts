@@ -24,7 +24,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
       number: payload.milestone.number,
     });
 
-    core.info(JSON.stringify(milestone, null, 2));
+    core.debug(JSON.stringify(milestone, null, 2));
+
     if (milestone.repository?.milestone?.id === undefined)
       return err("No repository or milestone found.");
 
@@ -35,7 +36,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
       milestone: milestone.repository.milestone.id,
     });
 
-    core.info(JSON.stringify(issue, null, 2));
+    core.debug(JSON.stringify(issue, null, 2));
+
     if (issue.createIssue?.issue?.id === undefined)
       return err("Fail to create issue.");
 

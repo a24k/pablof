@@ -159,7 +159,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 repository: payload.repository.name,
                 number: payload.milestone.number,
             });
-            core.info(JSON.stringify(milestone, null, 2));
+            core.debug(JSON.stringify(milestone, null, 2));
             if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
                 return (0, result_1.err)("No repository or milestone found.");
             const issue = yield sdk.createIssueWithMilestone({
@@ -168,7 +168,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 body: payload.milestone.description,
                 milestone: milestone.repository.milestone.id,
             });
-            core.info(JSON.stringify(issue, null, 2));
+            core.debug(JSON.stringify(issue, null, 2));
             if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
                 return (0, result_1.err)("Fail to create issue.");
             return (0, result_1.ok)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
