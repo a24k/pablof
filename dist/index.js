@@ -2976,10 +2976,19 @@ exports.getSdk = getSdk;
 /***/ }),
 
 /***/ 3554:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TriggerableAction = void 0;
 class TriggerableAction {
@@ -2998,6 +3007,13 @@ class TriggerableAction {
     }
     canHandleContext(context) {
         return this.canHandle(context.eventName, context.payload.action);
+    }
+    handleContext(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.canHandleContext(context)) {
+                return yield this.handle(context, sdk);
+            }
+        });
     }
 }
 exports.TriggerableAction = TriggerableAction;
@@ -3067,6 +3083,42 @@ exports.MilestoneAction = MilestoneAction;
 
 /***/ }),
 
+/***/ 4598:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ActionInventory = void 0;
+class ActionInventory {
+    constructor() {
+        this.items = [];
+    }
+    submit(item) {
+        this.items.push(item);
+    }
+    handleContext(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const item of this.items) {
+                yield item.handleContext(context, sdk);
+            }
+        });
+    }
+}
+exports.ActionInventory = ActionInventory;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -3108,6 +3160,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const graphql_1 = __nccwpck_require__(7064);
+const inventory_1 = __nccwpck_require__(4598);
 const milestone_1 = __nccwpck_require__(886);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -3115,10 +3168,9 @@ function main() {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
-            const action = new milestone_1.MilestoneAction();
-            if (action.canHandleContext(github.context)) {
-                action.handle(github.context, sdk);
-            }
+            const inventory = new inventory_1.ActionInventory();
+            inventory.submit(new milestone_1.MilestoneAction());
+            yield inventory.handleContext(github.context, sdk);
         }
         catch (error) {
             if (error instanceof Error)

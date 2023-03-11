@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import { getSdk } from "./graphql";
+import { ActionInventory } from "./inventory";
 import { MilestoneAction } from "./inventory/actions/milestone";
 
 async function main(): Promise<void> {
@@ -10,10 +11,10 @@ async function main(): Promise<void> {
     const octokit = github.getOctokit(token);
     const sdk = getSdk(octokit.graphql);
 
-    const action = new MilestoneAction();
-    if (action.canHandleContext(github.context)) {
-      action.handle(github.context, sdk);
-    }
+    const inventory = new ActionInventory();
+    inventory.submit(new MilestoneAction());
+
+    await inventory.handleContext(github.context, sdk);
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }

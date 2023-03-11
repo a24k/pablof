@@ -29,5 +29,11 @@ export abstract class TriggerableAction {
     return this.canHandle(context.eventName, context.payload.action);
   }
 
-  abstract handle(context: Context, sdk: Sdk): Promise<void>;
+  protected abstract handle(context: Context, sdk: Sdk): Promise<void>;
+
+  async handleContext(context: Context, sdk: Sdk): Promise<void> {
+    if (this.canHandleContext(context)) {
+      return await this.handle(context, sdk);
+    }
+  }
 }
