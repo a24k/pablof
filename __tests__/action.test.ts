@@ -1,14 +1,14 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { TriggerableAction } from "../../src/inventory/action";
-import type { Context } from "../../src/inventory/action";
+import { TriggerableAction } from "../src/actions/triggerable";
+import type { Context } from "../src/actions";
 
 class TestAction extends TriggerableAction {
   constructor(name: string, action?: string | string[]) {
     super(name, action);
   }
 
-  async handle(_: Context): Promise<void> {
+  protected async handle(_: Context): Promise<void> {
     // empty
   }
 }

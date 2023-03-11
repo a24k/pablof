@@ -1,10 +1,12 @@
-import type { Context, TriggerableAction } from "./action";
+import { TriggerableAction } from "./triggerable";
+
+import type { Context } from "./";
 import type { Sdk } from "../graphql";
 
-export class ActionInventory<T extends TriggerableAction> {
-  protected items: T[] = [];
+export class ActionInventory {
+  protected items: TriggerableAction[] = [];
 
-  submit(item: T): void {
+  submit(item: TriggerableAction): void {
     this.items.push(item);
   }
 

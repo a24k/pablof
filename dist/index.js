@@ -1,6 +1,169 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 9024:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.collect = void 0;
+const inventory_1 = __nccwpck_require__(6253);
+const milestone_1 = __nccwpck_require__(8347);
+function collect() {
+    const inventory = new inventory_1.ActionInventory();
+    inventory.submit(new milestone_1.MilestoneAction());
+    return inventory;
+}
+exports.collect = collect;
+
+
+/***/ }),
+
+/***/ 6253:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ActionInventory = void 0;
+class ActionInventory {
+    constructor() {
+        this.items = [];
+    }
+    submit(item) {
+        this.items.push(item);
+    }
+    handleContext(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const item of this.items) {
+                yield item.handleContext(context, sdk);
+            }
+        });
+    }
+}
+exports.ActionInventory = ActionInventory;
+
+
+/***/ }),
+
+/***/ 8347:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MilestoneAction = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const triggerable_1 = __nccwpck_require__(4953);
+class MilestoneAction extends triggerable_1.TriggerableAction {
+    constructor() {
+        super("milestone");
+    }
+    handle(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            const milestone = yield sdk.queryMilestone({
+                owner: payload.repository.owner.login,
+                repository: payload.repository.name,
+                number: payload.milestone.number,
+            });
+            core.info(JSON.stringify(milestone, null, 2));
+        });
+    }
+}
+exports.MilestoneAction = MilestoneAction;
+
+
+/***/ }),
+
+/***/ 4953:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TriggerableAction = void 0;
+class TriggerableAction {
+    constructor(name, action) {
+        this.triggerName = name;
+        this.triggerAction = action;
+    }
+    canHandle(name, action) {
+        return (this.triggerName === name &&
+            (this.triggerAction === undefined ||
+                (Array.isArray(this.triggerAction)
+                    ? action === undefined
+                        ? false
+                        : this.triggerAction.includes(action)
+                    : this.triggerAction === action)));
+    }
+    canHandleContext(context) {
+        return this.canHandle(context.eventName, context.payload.action);
+    }
+    handleContext(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.canHandleContext(context)) {
+                return yield this.handle(context, sdk);
+            }
+        });
+    }
+}
+exports.TriggerableAction = TriggerableAction;
+
+
+/***/ }),
+
 /***/ 7064:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -2975,150 +3138,6 @@ exports.getSdk = getSdk;
 
 /***/ }),
 
-/***/ 3554:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TriggerableAction = void 0;
-class TriggerableAction {
-    constructor(name, action) {
-        this.triggerName = name;
-        this.triggerAction = action;
-    }
-    canHandle(name, action) {
-        return (this.triggerName === name &&
-            (this.triggerAction === undefined ||
-                (Array.isArray(this.triggerAction)
-                    ? action === undefined
-                        ? false
-                        : this.triggerAction.includes(action)
-                    : this.triggerAction === action)));
-    }
-    canHandleContext(context) {
-        return this.canHandle(context.eventName, context.payload.action);
-    }
-    handleContext(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.canHandleContext(context)) {
-                return yield this.handle(context, sdk);
-            }
-        });
-    }
-}
-exports.TriggerableAction = TriggerableAction;
-
-
-/***/ }),
-
-/***/ 886:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MilestoneAction = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-const action_1 = __nccwpck_require__(3554);
-class MilestoneAction extends action_1.TriggerableAction {
-    constructor() {
-        super("milestone");
-    }
-    handle(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const payload = context.payload;
-            const milestone = yield sdk.queryMilestone({
-                owner: payload.repository.owner.login,
-                repository: payload.repository.name,
-                number: payload.milestone.number,
-            });
-            core.info(JSON.stringify(milestone, null, 2));
-        });
-    }
-}
-exports.MilestoneAction = MilestoneAction;
-
-
-/***/ }),
-
-/***/ 4598:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ActionInventory = void 0;
-class ActionInventory {
-    constructor() {
-        this.items = [];
-    }
-    submit(item) {
-        this.items.push(item);
-    }
-    handleContext(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (const item of this.items) {
-                yield item.handleContext(context, sdk);
-            }
-        });
-    }
-}
-exports.ActionInventory = ActionInventory;
-
-
-/***/ }),
-
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -3160,16 +3179,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const graphql_1 = __nccwpck_require__(7064);
-const inventory_1 = __nccwpck_require__(4598);
-const milestone_1 = __nccwpck_require__(886);
+const actions_1 = __nccwpck_require__(9024);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
-            const inventory = new inventory_1.ActionInventory();
-            inventory.submit(new milestone_1.MilestoneAction());
+            const inventory = (0, actions_1.collect)();
             yield inventory.handleContext(github.context, sdk);
         }
         catch (error) {

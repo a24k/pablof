@@ -1,9 +1,10 @@
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
-import { TriggerableAction } from "../action";
-import type { Context } from "../action";
-import type { Sdk } from "../../graphql";
+import { TriggerableAction } from "./triggerable";
+
+import type { Context } from "./";
+import type { Sdk } from "../graphql";
 
 export class MilestoneAction extends TriggerableAction {
   constructor() {
