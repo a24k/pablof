@@ -1,4 +1,4 @@
-import { TriggerableAction } from "./triggerable";
+import { TriggerableAction } from "./";
 
 import type { Context } from "./";
 import type { Sdk } from "../graphql";

@@ -1,14 +1,14 @@
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
-import { TriggerableAction } from "./triggerable";
+import { TriggerableAction } from "../triggerable";
 
-import type { Context } from "./";
-import type { Sdk } from "../graphql";
+import type { Sdk } from "../../graphql";
+import type { Context } from "../";
 
-export class MilestoneAction extends TriggerableAction {
+export class CreateMilestoneIssue extends TriggerableAction {
   constructor() {
-    super("milestone");
+    super("milestone", "created");
   }
 
   protected async handle(context: Context, sdk: Sdk): Promise<void> {

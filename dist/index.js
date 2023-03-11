@@ -7,12 +7,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.collect = void 0;
-const inventory_1 = __nccwpck_require__(6253);
+exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
 const milestone_1 = __nccwpck_require__(8347);
+const inventory_1 = __nccwpck_require__(6253);
+Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
+const triggerable_1 = __nccwpck_require__(4953);
+Object.defineProperty(exports, "TriggerableAction", ({ enumerable: true, get: function () { return triggerable_1.TriggerableAction; } }));
 function collect() {
     const inventory = new inventory_1.ActionInventory();
-    inventory.submit(new milestone_1.MilestoneAction());
+    inventory.submit(new milestone_1.CreateMilestoneIssue());
     return inventory;
 }
 exports.collect = collect;

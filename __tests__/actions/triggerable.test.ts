@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { TriggerableAction } from "../../src/actions/triggerable";
+import { TriggerableAction } from "../../src/actions";
 import type { Context } from "../../src/actions";
 
 describe("TriggerableAction", () => {

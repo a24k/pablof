@@ -1,5 +1,5 @@
-import type { Context } from "./";
 import type { Sdk } from "../graphql";
+import type { Context } from "./";
 
 export abstract class TriggerableAction {
   private triggerName: string;
