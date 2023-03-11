@@ -1,4 +1,4 @@
-query projectFields($owner: String!, $number: Int!) { 
+query queryProjectFields($owner: String!, $number: Int!) { 
   user(login: $owner){
     projectV2(number: $number) {
       id title

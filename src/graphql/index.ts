@@ -27779,13 +27779,13 @@ export enum WorkflowRunOrderField {
   CreatedAt = "CREATED_AT",
 }
 
-export type MilestoneQueryVariables = Exact<{
+export type QueryMilestoneQueryVariables = Exact<{
   owner: Scalars["String"];
   repository: Scalars["String"];
   number: Scalars["Int"];
 }>;
 
-export type MilestoneQuery = {
+export type QueryMilestoneQuery = {
   readonly __typename?: "Query";
   readonly repository?: {
     readonly __typename?: "Repository";
@@ -27821,12 +27821,12 @@ export type MilestoneQuery = {
   } | null;
 };
 
-export type ProjectFieldsQueryVariables = Exact<{
+export type QueryProjectFieldsQueryVariables = Exact<{
   owner: Scalars["String"];
   number: Scalars["Int"];
 }>;
 
-export type ProjectFieldsQuery = {
+export type QueryProjectFieldsQuery = {
   readonly __typename?: "Query";
   readonly user?: {
     readonly __typename?: "User";
@@ -27873,12 +27873,12 @@ export type ProjectFieldsQuery = {
   } | null;
 };
 
-export type ProjectQueryVariables = Exact<{
+export type QueryProjectQueryVariables = Exact<{
   owner: Scalars["String"];
   number: Scalars["Int"];
 }>;
 
-export type ProjectQuery = {
+export type QueryProjectQuery = {
   readonly __typename?: "Query";
   readonly user?: {
     readonly __typename?: "User";
@@ -27894,8 +27894,8 @@ export type ProjectQuery = {
   } | null;
 };
 
-export const MilestoneDocument = `
-    query milestone($owner: String!, $repository: String!, $number: Int!) {
+export const QueryMilestoneDocument = `
+    query queryMilestone($owner: String!, $repository: String!, $number: Int!) {
   repository(owner: $owner, name: $repository) {
     id
     name
@@ -27925,8 +27925,8 @@ export const MilestoneDocument = `
   }
 }
     `;
-export const ProjectFieldsDocument = `
-    query projectFields($owner: String!, $number: Int!) {
+export const QueryProjectFieldsDocument = `
+    query queryProjectFields($owner: String!, $number: Int!) {
   user(login: $owner) {
     projectV2(number: $number) {
       id
@@ -27957,8 +27957,8 @@ export const ProjectFieldsDocument = `
   }
 }
     `;
-export const ProjectDocument = `
-    query project($owner: String!, $number: Int!) {
+export const QueryProjectDocument = `
+    query queryProject($owner: String!, $number: Int!) {
   user(login: $owner) {
     id
     name
@@ -27978,35 +27978,38 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
-    milestone(
-      variables: MilestoneQueryVariables,
+    queryMilestone(
+      variables: QueryMilestoneQueryVariables,
       options?: C
-    ): Promise<MilestoneQuery> {
-      return requester<MilestoneQuery, MilestoneQueryVariables>(
-        MilestoneDocument,
+    ): Promise<QueryMilestoneQuery> {
+      return requester<QueryMilestoneQuery, QueryMilestoneQueryVariables>(
+        QueryMilestoneDocument,
         variables,
         options
-      ) as Promise<MilestoneQuery>;
+      ) as Promise<QueryMilestoneQuery>;
     },
-    projectFields(
-      variables: ProjectFieldsQueryVariables,
+    queryProjectFields(
+      variables: QueryProjectFieldsQueryVariables,
       options?: C
-    ): Promise<ProjectFieldsQuery> {
-      return requester<ProjectFieldsQuery, ProjectFieldsQueryVariables>(
-        ProjectFieldsDocument,
+    ): Promise<QueryProjectFieldsQuery> {
+      return requester<
+        QueryProjectFieldsQuery,
+        QueryProjectFieldsQueryVariables
+      >(
+        QueryProjectFieldsDocument,
         variables,
         options
-      ) as Promise<ProjectFieldsQuery>;
+      ) as Promise<QueryProjectFieldsQuery>;
     },
-    project(
-      variables: ProjectQueryVariables,
+    queryProject(
+      variables: QueryProjectQueryVariables,
       options?: C
-    ): Promise<ProjectQuery> {
-      return requester<ProjectQuery, ProjectQueryVariables>(
-        ProjectDocument,
+    ): Promise<QueryProjectQuery> {
+      return requester<QueryProjectQuery, QueryProjectQueryVariables>(
+        QueryProjectDocument,
         variables,
         options
-      ) as Promise<ProjectQuery>;
+      ) as Promise<QueryProjectQuery>;
     },
   };
 }

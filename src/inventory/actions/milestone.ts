@@ -12,7 +12,7 @@ export class MilestoneAction extends TriggerableAction {
 
   async handle(context: Context, sdk: Sdk): Promise<void> {
     const payload = context.payload as MilestoneEvent;
-    const milestone = await sdk.milestone({
+    const milestone = await sdk.queryMilestone({
       owner: payload.repository.owner.login,
       repository: payload.repository.name,
       number: payload.milestone.number,

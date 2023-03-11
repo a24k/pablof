@@ -1,4 +1,4 @@
-query milestone($owner: String!, $repository: String!, $number: Int!) { 
+query queryMilestone($owner: String!, $repository: String!, $number: Int!) { 
   repository(owner: $owner, name: $repository){
     id name
     owner { login }
