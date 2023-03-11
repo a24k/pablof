@@ -8,7 +8,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
-const milestone_1 = __nccwpck_require__(8347);
+const milestone_1 = __nccwpck_require__(5674);
 const inventory_1 = __nccwpck_require__(6253);
 Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
 const triggerable_1 = __nccwpck_require__(4953);
@@ -62,7 +62,7 @@ exports.ActionInventory = ActionInventory;
 
 /***/ }),
 
-/***/ 8347:
+/***/ 4775:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -100,12 +100,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MilestoneAction = void 0;
+exports.CreateMilestoneIssue = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const triggerable_1 = __nccwpck_require__(4953);
-class MilestoneAction extends triggerable_1.TriggerableAction {
+class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
-        super("milestone");
+        super("milestone", "created");
     }
     handle(context, sdk) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -119,7 +119,20 @@ class MilestoneAction extends triggerable_1.TriggerableAction {
         });
     }
 }
-exports.MilestoneAction = MilestoneAction;
+exports.CreateMilestoneIssue = CreateMilestoneIssue;
+
+
+/***/ }),
+
+/***/ 5674:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateMilestoneIssue = void 0;
+const create_issue_1 = __nccwpck_require__(4775);
+Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
 
 
 /***/ }),
