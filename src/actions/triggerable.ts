@@ -31,7 +31,8 @@ export abstract class TriggerableAction {
   async handleContext(context: Context, sdk: Sdk): Promise<ActionResult> {
     if (this.canHandleContext(context)) {
       return await this.handle(context, sdk);
+    } else {
+      return skip();
     }
-    return skip();
   }
 }

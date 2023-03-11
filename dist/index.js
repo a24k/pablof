@@ -299,7 +299,9 @@ class TriggerableAction {
             if (this.canHandleContext(context)) {
                 return yield this.handle(context, sdk);
             }
-            return (0, result_1.skip)();
+            else {
+                return (0, result_1.skip)();
+            }
         });
     }
 }
