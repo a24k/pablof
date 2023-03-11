@@ -20,13 +20,15 @@ export class CreateMilestoneIssue extends TriggerableAction {
     });
 
     core.info(JSON.stringify(milestone, null, 2));
+    if (milestone.repository?.milestone?.id === undefined) return;
 
     const issue = await sdk.createIssueWithMilestone({
-      repository: milestone.repository!.id,
+      repository: milestone.repository.id,
       title: payload.milestone.title,
-      milestone: milestone.repository!.milestone!.id,
+      milestone: milestone.repository.milestone.id,
     });
 
     core.info(JSON.stringify(issue, null, 2));
+    if (issue.createIssue?.issue?.id === undefined) return;
   }
 }

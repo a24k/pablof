@@ -108,6 +108,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         super("milestone", "created");
     }
     handle(context, sdk) {
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             const milestone = yield sdk.queryMilestone({
@@ -116,12 +117,16 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 number: payload.milestone.number,
             });
             core.info(JSON.stringify(milestone, null, 2));
+            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
+                return;
             const issue = yield sdk.createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: payload.milestone.title,
                 milestone: milestone.repository.milestone.id,
             });
             core.info(JSON.stringify(issue, null, 2));
+            if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
+                return;
         });
     }
 }
