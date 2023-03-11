@@ -9,12 +9,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
 const milestone_1 = __nccwpck_require__(5674);
+const pr_1 = __nccwpck_require__(4906);
 const inventory_1 = __nccwpck_require__(6253);
 Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
 const triggerable_1 = __nccwpck_require__(4953);
 Object.defineProperty(exports, "TriggerableAction", ({ enumerable: true, get: function () { return triggerable_1.TriggerableAction; } }));
 function collect() {
     const inventory = new inventory_1.ActionInventory();
+    inventory.submit(new pr_1.Success());
+    inventory.submit(new pr_1.Failure());
     inventory.submit(new milestone_1.CreateMilestoneIssue());
     return inventory;
 }
@@ -146,6 +149,89 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
 const create_issue_1 = __nccwpck_require__(4775);
 Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
+
+
+/***/ }),
+
+/***/ 7341:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Failure = void 0;
+const triggerable_1 = __nccwpck_require__(4953);
+const result_1 = __nccwpck_require__(4983);
+class Failure extends triggerable_1.TriggerableAction {
+    constructor() {
+        super("pull_request");
+    }
+    handle(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            return (0, result_1.err)("failure");
+        });
+    }
+}
+exports.Failure = Failure;
+
+
+/***/ }),
+
+/***/ 4906:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Failure = exports.Success = void 0;
+const success_1 = __nccwpck_require__(7421);
+Object.defineProperty(exports, "Success", ({ enumerable: true, get: function () { return success_1.Success; } }));
+const failure_1 = __nccwpck_require__(7341);
+Object.defineProperty(exports, "Failure", ({ enumerable: true, get: function () { return failure_1.Failure; } }));
+
+
+/***/ }),
+
+/***/ 7421:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Success = void 0;
+const triggerable_1 = __nccwpck_require__(4953);
+const result_1 = __nccwpck_require__(4983);
+class Success extends triggerable_1.TriggerableAction {
+    constructor() {
+        super("pull_request");
+    }
+    handle(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            return (0, result_1.ok)("success");
+        });
+    }
+}
+exports.Success = Success;
 
 
 /***/ }),
