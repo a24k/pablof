@@ -1,5 +1,8 @@
+import * as core from "@actions/core";
+
 import { TriggerableAction } from "./";
 import type { Context, Sdk } from "./";
+import type { ActionOk, ActionErr } from "./result";
 
 export class ActionInventory {
   protected items: TriggerableAction[] = [];
@@ -14,7 +17,23 @@ export class ActionInventory {
 
   async handleContext(context: Context, sdk: Sdk): Promise<void> {
     for (const item of this.items) {
-      await item.handleContext(context, sdk);
+      const result = await item.handleContext(context, sdk);
+      result.match(
+        (res: ActionOk) => {
+          switch (res.type) {
+            case "Success":
+              core.notice(res.message);
+              break;
+            case "Skip":
+            default:
+              core.notice("skip");
+              break;
+          }
+        },
+        (err: ActionErr) => {
+          core.error(err.message);
+        }
+      );
     }
   }
 }
