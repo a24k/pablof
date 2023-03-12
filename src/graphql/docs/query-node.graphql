@@ -1,5 +1,5 @@
-query queryMilestone($id: ID!) { 
-  milestone: node(id: $id) {
+query queryNode($id: ID!) { 
+  node(id: $id) {
     ... on Milestone {
       id number title description state dueOn
       repository {

@@ -27811,13 +27811,13 @@ export type CreateIssueWithMilestoneMutation = {
   } | null;
 };
 
-export type QueryMilestoneQueryVariables = Exact<{
+export type QueryNodeQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type QueryMilestoneQuery = {
+export type QueryNodeQuery = {
   readonly __typename?: "Query";
-  readonly milestone?:
+  readonly node?:
     | { readonly __typename?: "AddedToProjectEvent" }
     | { readonly __typename?: "App" }
     | { readonly __typename?: "AssignedEvent" }
@@ -28182,9 +28182,9 @@ export const CreateIssueWithMilestoneDocument = `
   }
 }
     `;
-export const QueryMilestoneDocument = `
-    query queryMilestone($id: ID!) {
-  milestone: node(id: $id) {
+export const QueryNodeDocument = `
+    query queryNode($id: ID!) {
+  node(id: $id) {
     ... on Milestone {
       id
       number
@@ -28281,15 +28281,15 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         options
       ) as Promise<CreateIssueWithMilestoneMutation>;
     },
-    queryMilestone(
-      variables: QueryMilestoneQueryVariables,
+    queryNode(
+      variables: QueryNodeQueryVariables,
       options?: C
-    ): Promise<QueryMilestoneQuery> {
-      return requester<QueryMilestoneQuery, QueryMilestoneQueryVariables>(
-        QueryMilestoneDocument,
+    ): Promise<QueryNodeQuery> {
+      return requester<QueryNodeQuery, QueryNodeQueryVariables>(
+        QueryNodeDocument,
         variables,
         options
-      ) as Promise<QueryMilestoneQuery>;
+      ) as Promise<QueryNodeQuery>;
     },
     queryProjectFields(
       variables: QueryProjectFieldsQueryVariables,

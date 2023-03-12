@@ -20,19 +20,19 @@ export class SyncMilestoneIssue extends TriggerableAction {
 
     core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const milestone = (
-      await sdk.queryMilestone({
+    const node = (
+      await sdk.queryNode({
         id: payload.milestone.node_id,
       })
-    ).milestone;
+    ).node;
 
-    core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
+    core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    if (milestone == undefined || milestone.__typename !== "Milestone") {
+    if (node == undefined || node.__typename !== "Milestone") {
       return actionErr("No milestone found.");
     }
 
-    const nodes = milestone.issues.nodes;
+    const nodes = node.issues.nodes;
     if (nodes === undefined || nodes === null) {
       return actionErr("No issue found.");
     }
