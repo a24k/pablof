@@ -16,6 +16,7 @@ Object.defineProperty(exports, "TriggerableAction", ({ enumerable: true, get: fu
 function collect() {
     const inventory = new inventory_1.ActionInventory();
     inventory.submit(new milestone_1.CreateMilestoneIssue());
+    inventory.submit(new milestone_1.SyncMilestoneIssue());
     return inventory;
 }
 exports.collect = collect;
@@ -186,9 +187,82 @@ exports.CreateMilestoneIssue = CreateMilestoneIssue;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CreateMilestoneIssue = void 0;
+exports.SyncMilestoneIssue = exports.CreateMilestoneIssue = void 0;
 const create_issue_1 = __nccwpck_require__(4775);
 Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
+const sync_issue_1 = __nccwpck_require__(5417);
+Object.defineProperty(exports, "SyncMilestoneIssue", ({ enumerable: true, get: function () { return sync_issue_1.SyncMilestoneIssue; } }));
+
+
+/***/ }),
+
+/***/ 5417:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SyncMilestoneIssue = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const triggerable_1 = __nccwpck_require__(4953);
+const result_1 = __nccwpck_require__(4983);
+class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
+    constructor() {
+        super("milestone", "edited");
+    }
+    description() {
+        return `SyncMilestoneIssue for ${super.description()}`;
+    }
+    handle(context, sdk) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            const milestone = yield sdk.queryMilestone({
+                owner: payload.repository.owner.login,
+                repository: payload.repository.name,
+                number: payload.milestone.number,
+            });
+            core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
+            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
+                return (0, result_1.err)("No repository or milestone found.");
+            core.debug(`Found ${milestone.repository.milestone.issues.totalCount} issues with milestonr`);
+            return (0, result_1.err)("Not implemented");
+        });
+    }
+}
+exports.SyncMilestoneIssue = SyncMilestoneIssue;
 
 
 /***/ }),
