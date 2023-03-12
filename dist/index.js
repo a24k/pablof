@@ -155,11 +155,12 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
+            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const node = (yield sdk.queryNode({
                 id: payload.milestone.node_id,
             })).node;
             core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Milestone") {
+            if (node == undefined || node.__typename != "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
             const issue = yield sdk.createIssueWithMilestone({
@@ -252,7 +253,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                 id: payload.milestone.node_id,
             })).node;
             core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Milestone") {
+            if (node == undefined || node.__typename != "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
             const nodes = node.issues.nodes;

@@ -17,16 +17,16 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
+    core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
     const node = (
       await sdk.queryNode({
         id: payload.milestone.node_id,
       })
     ).node;
-
     core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    if (node == undefined || node.__typename !== "Milestone") {
+    if (node == undefined || node.__typename != "Milestone") {
       return actionErr("No milestone found.");
     }
 
