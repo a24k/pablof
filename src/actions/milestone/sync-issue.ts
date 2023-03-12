@@ -44,7 +44,7 @@ export class SyncMilestoneIssue extends TriggerableAction {
       return actionErr("No milestone issue found.");
     }
 
-    core.debug(`findMilestoneIssue = ${roots[0]}`);
+    core.debug(`findMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
     return actionErr("Not implemented");
   }
