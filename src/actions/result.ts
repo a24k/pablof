@@ -1,4 +1,4 @@
-import { Result, ok as neverthrow_ok, err as neverthrow_err } from "neverthrow";
+import { Result, ok, err } from "neverthrow";
 
 type ActionResult = Result<ActionOk, ActionErr>;
 
@@ -19,16 +19,16 @@ type ActionFailure = {
   message: string;
 };
 
-function ok(message: string): ActionResult {
-  return neverthrow_ok({ type: "Success", message });
+function actionOk(message: string): ActionResult {
+  return ok({ type: "Success", message });
 }
 
-function skip(): ActionResult {
-  return neverthrow_ok({ type: "Skip" });
+function actionSkip(): ActionResult {
+  return ok({ type: "Skip" });
 }
 
-function err(message: string): ActionResult {
-  return neverthrow_err({ type: "Failure", message });
+function actionErr(message: string): ActionResult {
+  return err({ type: "Failure", message });
 }
 
 export {
@@ -40,4 +40,4 @@ export {
   ActionFailure,
 };
 
-export { ok, skip, err };
+export { actionOk, actionSkip, actionErr };

@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { TriggerableAction } from "../triggerable";
-import { ActionResult, ok, err } from "../result";
+import { ActionResult, actionOk, actionErr } from "../result";
 
 import type { Context, Sdk } from "../";
 
@@ -27,7 +27,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
 
     if (milestone.repository?.milestone?.id === undefined)
-      return err("No repository or milestone found.");
+      return actionErr("No repository or milestone found.");
 
     const issue = await sdk.createIssueWithMilestone({
       repository: milestone.repository.id,
@@ -39,9 +39,9 @@ export class CreateMilestoneIssue extends TriggerableAction {
     core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
 
     if (issue.createIssue?.issue?.id === undefined)
-      return err("Fail to create issue.");
+      return actionErr("Fail to create issue.");
 
-    return ok(
+    return actionOk(
       `MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`
     );
   }

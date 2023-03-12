@@ -1,9 +1,11 @@
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
+import { Result, ok, err } from "neverthrow";
 
 import { TriggerableAction } from "../triggerable";
-import { ActionResult, ok, err } from "../result";
+import { ActionResult, actionOk, actionErr } from "../result";
 
+import type { QueryMilestoneQuery } from "../../graphql";
 import type { Context, Sdk } from "../";
 
 export class SyncMilestoneIssue extends TriggerableAction {
@@ -26,13 +28,24 @@ export class SyncMilestoneIssue extends TriggerableAction {
 
     core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
 
-    if (milestone.repository?.milestone?.id === undefined)
-      return err("No repository or milestone found.");
+    if (milestone.repository?.milestone?.id === undefined) {
+      return actionErr("No repository or milestone found.");
+    }
 
-    core.debug(
-      `Found ${milestone.repository.milestone.issues.totalCount} issues with milestonr`
+    const nodes = milestone.repository.milestone.issues.nodes;
+    if (nodes === undefined || nodes === null) {
+      return actionErr("No issue found.");
+    }
+
+    const roots = nodes.filter(
+      issue => issue !== null && issue.trackedInIssues.totalCount === 0
     );
+    if (roots.length === 0) {
+      return actionErr("No milestone issue found.");
+    }
 
-    return err("Not implemented");
+    core.debug(`findMilestoneIssue = ${roots[0]}`);
+
+    return actionErr("Not implemented");
   }
 }

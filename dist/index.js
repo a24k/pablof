@@ -162,7 +162,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
             if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
-                return (0, result_1.err)("No repository or milestone found.");
+                return (0, result_1.actionErr)("No repository or milestone found.");
             const issue = yield sdk.createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: payload.milestone.title,
@@ -171,8 +171,8 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
             if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
-                return (0, result_1.err)("Fail to create issue.");
-            return (0, result_1.ok)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
+                return (0, result_1.actionErr)("Fail to create issue.");
+            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
 }
@@ -255,10 +255,19 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                 number: payload.milestone.number,
             });
             core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
-            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
-                return (0, result_1.err)("No repository or milestone found.");
-            core.debug(`Found ${milestone.repository.milestone.issues.totalCount} issues with milestonr`);
-            return (0, result_1.err)("Not implemented");
+            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined) {
+                return (0, result_1.actionErr)("No repository or milestone found.");
+            }
+            const nodes = milestone.repository.milestone.issues.nodes;
+            if (nodes === undefined || nodes === null) {
+                return (0, result_1.actionErr)("No issue found.");
+            }
+            const roots = nodes.filter(issue => issue !== null && issue.trackedInIssues.totalCount === 0);
+            if (roots.length === 0) {
+                return (0, result_1.actionErr)("No milestone issue found.");
+            }
+            core.debug(`findMilestoneIssue = ${roots[0]}`);
+            return (0, result_1.actionErr)("Not implemented");
         });
     }
 }
@@ -273,20 +282,20 @@ exports.SyncMilestoneIssue = SyncMilestoneIssue;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.err = exports.skip = exports.ok = void 0;
+exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-function ok(message) {
+function actionOk(message) {
     return (0, neverthrow_1.ok)({ type: "Success", message });
 }
-exports.ok = ok;
-function skip() {
+exports.actionOk = actionOk;
+function actionSkip() {
     return (0, neverthrow_1.ok)({ type: "Skip" });
 }
-exports.skip = skip;
-function err(message) {
+exports.actionSkip = actionSkip;
+function actionErr(message) {
     return (0, neverthrow_1.err)({ type: "Failure", message });
 }
-exports.err = err;
+exports.actionErr = actionErr;
 
 
 /***/ }),
@@ -334,7 +343,7 @@ class TriggerableAction {
                 return yield this.handle(context, sdk);
             }
             else {
-                return (0, result_1.skip)();
+                return (0, result_1.actionSkip)();
             }
         });
     }
