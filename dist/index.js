@@ -249,6 +249,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
+            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const milestone = yield sdk.queryMilestone({
                 owner: payload.repository.owner.login,
                 repository: payload.repository.name,

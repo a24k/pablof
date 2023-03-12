@@ -18,6 +18,8 @@ export class SyncMilestoneIssue extends TriggerableAction {
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
 
+    core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+
     const milestone = await sdk.queryMilestone({
       owner: payload.repository.owner.login,
       repository: payload.repository.name,
