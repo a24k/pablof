@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
+import { IssueState } from "../../graphql";
 import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
@@ -31,18 +32,34 @@ export class SyncMilestoneIssue extends TriggerableAction {
     }
 
     const nodes = node.issues.nodes;
-    if (nodes === undefined || nodes === null) {
+    if (nodes == undefined) {
       return actionErr("No issue found.");
     }
 
     const roots = nodes.filter(
       issue => issue !== null && issue.trackedInIssues.totalCount === 0
     );
-    if (roots.length === 0) {
+    if (roots.length === 0 || roots[0] == undefined) {
       return actionErr("No milestone issue found.");
     }
     core.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
-    return actionErr("Not implemented");
+    const issue = await sdk.updateIssue({
+      issue: roots[0].id,
+      title: payload.milestone.title,
+      state:
+        payload.milestone.state === "open"
+          ? IssueState.Open
+          : IssueState.Closed,
+    });
+    core.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
+
+    if (issue.updateIssue?.issue?.id == undefined) {
+      return actionErr("Fail to update issue.");
+    }
+
+    return actionOk(
+      `MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, number: ${issue.updateIssue.issue.number}, title: ${issue.updateIssue.issue.title}, body: ${issue.updateIssue.issue.body}}`
+    );
   }
 }

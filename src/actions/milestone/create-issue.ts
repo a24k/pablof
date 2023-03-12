@@ -38,7 +38,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     });
     core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
 
-    if (issue.createIssue?.issue?.id === undefined) {
+    if (issue.createIssue?.issue?.id == undefined) {
       return actionErr("Fail to create issue.");
     }
 
