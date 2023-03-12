@@ -25,15 +25,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
       })
     ).node;
     core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-    core.debug(
-      `     type = ${JSON.stringify(
-        node != undefined && node.__typename,
-        null,
-        2
-      )}`
-    );
 
-    if (node == undefined || node.__typename != "Milestone") {
+    if (node == undefined || node.__typename !== "Milestone") {
       return actionErr("No milestone found.");
     }
 
@@ -43,11 +36,11 @@ export class CreateMilestoneIssue extends TriggerableAction {
       body: payload.milestone.description,
       milestone: node.id,
     });
-
     core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
 
-    if (issue.createIssue?.issue?.id === undefined)
+    if (issue.createIssue?.issue?.id === undefined) {
       return actionErr("Fail to create issue.");
+    }
 
     return actionOk(
       `MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`

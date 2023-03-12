@@ -25,15 +25,8 @@ export class SyncMilestoneIssue extends TriggerableAction {
       })
     ).node;
     core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-    core.debug(
-      `     type = ${JSON.stringify(
-        node != undefined && node.__typename,
-        null,
-        2
-      )}`
-    );
 
-    if (node == undefined || node.__typename != "Milestone") {
+    if (node == undefined || node.__typename !== "Milestone") {
       return actionErr("No milestone found.");
     }
 
@@ -48,7 +41,6 @@ export class SyncMilestoneIssue extends TriggerableAction {
     if (roots.length === 0) {
       return actionErr("No milestone issue found.");
     }
-
     core.debug(`findMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
     return actionErr("Not implemented");

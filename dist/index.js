@@ -160,8 +160,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 id: payload.milestone.node_id,
             })).node;
             core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            core.debug(`     type = ${JSON.stringify(node != undefined && node.__typename, null, 2)}`);
-            if (node == undefined || node.__typename != "Milestone") {
+            if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
             const issue = yield sdk.createIssueWithMilestone({
@@ -171,8 +170,9 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 milestone: node.id,
             });
             core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
-            if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) === undefined)
+            if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) === undefined) {
                 return (0, result_1.actionErr)("Fail to create issue.");
+            }
             return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
@@ -254,8 +254,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                 id: payload.milestone.node_id,
             })).node;
             core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            core.debug(`     type = ${JSON.stringify(node != undefined && node.__typename, null, 2)}`);
-            if (node == undefined || node.__typename != "Milestone") {
+            if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
             const nodes = node.issues.nodes;
