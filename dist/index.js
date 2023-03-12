@@ -152,25 +152,24 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         return `CreateMilestoneIssue for ${super.description()}`;
     }
     handle(context, sdk) {
-        var _a, _b, _c, _d;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            const milestone = yield sdk.queryMilestone({
-                owner: payload.repository.owner.login,
-                repository: payload.repository.name,
-                number: payload.milestone.number,
-            });
+            const milestone = (yield sdk.queryMilestone({
+                id: payload.milestone.node_id,
+            })).milestone;
             core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
-            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined)
-                return (0, result_1.actionErr)("No repository or milestone found.");
+            if (milestone == undefined || milestone.__typename !== "Milestone") {
+                return (0, result_1.actionErr)("No milestone found.");
+            }
             const issue = yield sdk.createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: payload.milestone.title,
                 body: payload.milestone.description,
-                milestone: milestone.repository.milestone.id,
+                milestone: milestone.id,
             });
             core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
-            if (((_d = (_c = issue.createIssue) === null || _c === void 0 ? void 0 : _c.issue) === null || _d === void 0 ? void 0 : _d.id) === undefined)
+            if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) === undefined)
                 return (0, result_1.actionErr)("Fail to create issue.");
             return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
@@ -246,20 +245,17 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
         return `SyncMilestoneIssue for ${super.description()}`;
     }
     handle(context, sdk) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const milestone = yield sdk.queryMilestone({
-                owner: payload.repository.owner.login,
-                repository: payload.repository.name,
-                number: payload.milestone.number,
-            });
+            const milestone = (yield sdk.queryMilestone({
+                id: payload.milestone.node_id,
+            })).milestone;
             core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
-            if (((_b = (_a = milestone.repository) === null || _a === void 0 ? void 0 : _a.milestone) === null || _b === void 0 ? void 0 : _b.id) === undefined) {
-                return (0, result_1.actionErr)("No repository or milestone found.");
+            if (milestone == undefined || milestone.__typename !== "Milestone") {
+                return (0, result_1.actionErr)("No milestone found.");
             }
-            const nodes = milestone.repository.milestone.issues.nodes;
+            const nodes = milestone.issues.nodes;
             if (nodes === undefined || nodes === null) {
                 return (0, result_1.actionErr)("No issue found.");
             }
@@ -3257,20 +3253,22 @@ exports.CreateIssueWithMilestoneDocument = `
 }
     `;
 exports.QueryMilestoneDocument = `
-    query queryMilestone($owner: String!, $repository: String!, $number: Int!) {
-  repository(owner: $owner, name: $repository) {
-    id
-    name
-    owner {
-      login
-    }
-    milestone(number: $number) {
+    query queryMilestone($id: ID!) {
+  milestone: node(id: $id) {
+    ... on Milestone {
       id
       number
       title
       description
       state
       dueOn
+      repository {
+        id
+        name
+        owner {
+          login
+        }
+      }
       issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
         totalCount
         nodes {

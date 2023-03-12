@@ -1,16 +1,16 @@
-query queryMilestone($owner: String!, $repository: String!, $number: Int!) { 
-  repository(owner: $owner, name: $repository){
-    id name
-    owner { login }
-    milestone(number: $number) {
+query queryMilestone($id: ID!) { 
+  milestone: node(id: $id) {
+    ... on Milestone {
       id number title description state dueOn
+      repository {
+        id name
+        owner { login }
+      }
       issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
           id number title state
-          trackedInIssues(first: 1) {
-            totalCount
-          }
+          trackedInIssues(first: 1) { totalCount }
         }
       }
     }

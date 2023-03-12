@@ -18,22 +18,23 @@ export class CreateMilestoneIssue extends TriggerableAction {
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
 
-    const milestone = await sdk.queryMilestone({
-      owner: payload.repository.owner.login,
-      repository: payload.repository.name,
-      number: payload.milestone.number,
-    });
+    const milestone = (
+      await sdk.queryMilestone({
+        id: payload.milestone.node_id,
+      })
+    ).milestone;
 
     core.debug(`queryMilestone = ${JSON.stringify(milestone, null, 2)}`);
 
-    if (milestone.repository?.milestone?.id === undefined)
-      return actionErr("No repository or milestone found.");
+    if (milestone == undefined || milestone.__typename !== "Milestone") {
+      return actionErr("No milestone found.");
+    }
 
     const issue = await sdk.createIssueWithMilestone({
       repository: milestone.repository.id,
       title: payload.milestone.title,
       body: payload.milestone.description,
-      milestone: milestone.repository.milestone.id,
+      milestone: milestone.id,
     });
 
     core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
