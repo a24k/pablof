@@ -1,16 +1,14 @@
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
-import { Result, ok, err } from "neverthrow";
 
 import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
-import type { QueryMilestoneQuery } from "../../graphql";
 import type { Context, Sdk } from "../";
 
 export class SyncMilestoneIssue extends TriggerableAction {
   constructor() {
-    super("milestone", "edited");
+    super("milestone", ["edited", "closed", "opened"]);
   }
 
   description(): string {

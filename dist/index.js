@@ -240,7 +240,7 @@ const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
-        super("milestone", "edited");
+        super("milestone", ["edited", "closed", "opened"]);
     }
     description() {
         return `SyncMilestoneIssue for ${super.description()}`;
