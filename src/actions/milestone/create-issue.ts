@@ -25,6 +25,13 @@ export class CreateMilestoneIssue extends TriggerableAction {
       })
     ).node;
     core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+    core.debug(
+      `     type = ${JSON.stringify(
+        node != undefined && node.__typename,
+        null,
+        2
+      )}`
+    );
 
     if (node == undefined || node.__typename != "Milestone") {
       return actionErr("No milestone found.");
