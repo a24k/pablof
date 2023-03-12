@@ -3258,6 +3258,7 @@ exports.CreateIssueWithMilestoneDocument = `
 exports.QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
+    __typename
     ... on Milestone {
       id
       number
