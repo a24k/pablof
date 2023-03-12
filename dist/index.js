@@ -271,7 +271,9 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
             const issue = yield sdk.updateIssue({
                 issue: roots[0].id,
                 title: payload.milestone.title,
-                state: payload.milestone.state === "open" ? graphql_1.IssueState.Open : graphql_1.IssueState.Closed,
+                state: payload.milestone.state === "open"
+                    ? graphql_1.IssueState.Open
+                    : graphql_1.IssueState.Closed,
             });
             core.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
