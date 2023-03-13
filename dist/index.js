@@ -162,7 +162,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 return (0, result_1.actionErr)("Fail to create issue.");
             }
             const issueDigest = issue.createIssue.issue;
-            this.debug(`IssueDigestFragment = ${issueDigest}`);
+            this.debug(`IssueDigestFragment = ${JSON.stringify(issueDigest, null, 2)}`);
             const projects = yield this.queryProjects(payload.repository.node_id, sdk);
             const issueId = issue.createIssue.issue.id;
             projects.match((ids) => {

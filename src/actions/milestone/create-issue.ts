@@ -89,7 +89,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
 
     const issueDigest = issue.createIssue.issue as IssueDigestFragment;
-    this.debug(`IssueDigestFragment = ${issueDigest}`);
+    this.debug(`IssueDigestFragment = ${JSON.stringify(issueDigest, null, 2)}`);
 
     const projects = await this.queryProjects(payload.repository.node_id, sdk);
     const issueId = issue.createIssue.issue.id;
