@@ -6,6 +6,7 @@ import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
 import type { Context, Sdk, ID } from "../";
+import type { IssueDigestFragment } from "../../graphql";
 
 export class CreateMilestoneIssue extends TriggerableAction {
   constructor() {
@@ -86,6 +87,9 @@ export class CreateMilestoneIssue extends TriggerableAction {
     if (issue.createIssue?.issue?.id == undefined) {
       return actionErr("Fail to create issue.");
     }
+
+    const issueDigest = issue.createIssue.issue as IssueDigestFragment;
+    this.debug(`IssueDigestFragment = ${issueDigest}`);
 
     const projects = await this.queryProjects(payload.repository.node_id, sdk);
     const issueId = issue.createIssue.issue.id;

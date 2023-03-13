@@ -1,0 +1,3 @@
+fragment IssueDigest on Issue {
+  id title body state
+}

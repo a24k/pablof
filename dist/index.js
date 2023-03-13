@@ -161,6 +161,8 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to create issue.");
             }
+            const issueDigest = issue.createIssue.issue;
+            this.debug(`IssueDigestFragment = ${issueDigest}`);
             const projects = yield this.queryProjects(payload.repository.node_id, sdk);
             const issueId = issue.createIssue.issue.id;
             projects.match((ids) => {
@@ -448,8 +450,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IssueClosedStateReason = exports.IpAllowListForInstalledAppsEnabledSettingValue = exports.IpAllowListEntryOrderField = exports.IpAllowListEnabledSettingValue = exports.IdentityProviderConfigurationState = exports.GitSignatureState = exports.GistPrivacy = exports.GistOrderField = exports.FundingPlatform = exports.FileViewedState = exports.EnterpriseUserDeployment = exports.EnterpriseUserAccountMembershipRole = exports.EnterpriseServerUserAccountsUploadSyncState = exports.EnterpriseServerUserAccountsUploadOrderField = exports.EnterpriseServerUserAccountOrderField = exports.EnterpriseServerUserAccountEmailOrderField = exports.EnterpriseServerInstallationOrderField = exports.EnterpriseMembersCanMakePurchasesSettingValue = exports.EnterpriseMembersCanCreateRepositoriesSettingValue = exports.EnterpriseMemberOrderField = exports.EnterpriseEnabledSettingValue = exports.EnterpriseEnabledDisabledSettingValue = exports.EnterpriseDefaultRepositoryPermissionSettingValue = exports.EnterpriseAllowPrivateRepositoryForkingPolicyValue = exports.EnterpriseAdministratorRole = exports.EnterpriseAdministratorInvitationOrderField = exports.DismissReason = exports.DiscussionPollOptionOrderField = exports.DiscussionOrderField = exports.DiffSide = exports.DeploymentStatusState = exports.DeploymentState = exports.DeploymentReviewState = exports.DeploymentProtectionRuleType = exports.DeploymentOrderField = exports.DependencyGraphEcosystem = exports.DefaultRepositoryPermissionField = exports.ContributionLevel = exports.ComparisonStatus = exports.CommitContributionOrderField = exports.CommentCannotUpdateReason = exports.CommentAuthorAssociation = exports.CollaboratorAffiliation = exports.CheckStatusState = exports.CheckRunType = exports.CheckRunState = exports.CheckConclusionState = exports.CheckAnnotationLevel = exports.AuditLogOrderField = exports.ActorType = void 0;
 exports.ProjectCardState = exports.ProjectCardArchivedState = exports.PinnedDiscussionPattern = exports.PinnedDiscussionGradient = exports.PinnableItemType = exports.PatchStatus = exports.PackageVersionOrderField = exports.PackageType = exports.PackageOrderField = exports.PackageFileOrderField = exports.OrganizationOrderField = exports.OrganizationMigrationState = exports.OrganizationMembersCanCreateRepositoriesSettingValue = exports.OrganizationMemberRole = exports.OrganizationInvitationType = exports.OrganizationInvitationSource = exports.OrganizationInvitationRole = exports.OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility = exports.OrgUpdateMemberAuditEntryPermission = exports.OrgUpdateDefaultRepositoryPermissionAuditEntryPermission = exports.OrgRemoveOutsideCollaboratorAuditEntryReason = exports.OrgRemoveOutsideCollaboratorAuditEntryMembershipType = exports.OrgRemoveMemberAuditEntryReason = exports.OrgRemoveMemberAuditEntryMembershipType = exports.OrgRemoveBillingManagerAuditEntryReason = exports.OrgEnterpriseOwnerOrderField = exports.OrgCreateAuditEntryBillingPlan = exports.OrgAddMemberAuditEntryPermission = exports.OrderDirection = exports.OperationType = exports.OauthApplicationCreateAuditEntryState = exports.OidcProviderType = exports.NotificationRestrictionSettingValue = exports.MilestoneState = exports.MilestoneOrderField = exports.MigrationState = exports.MigrationSourceType = exports.MergeableState = exports.MergeStateStatus = exports.MergeCommitTitle = exports.MergeCommitMessage = exports.MannequinOrderField = exports.LockReason = exports.LanguageOrderField = exports.LabelOrderField = exports.IssueTimelineItemsItemType = exports.IssueStateReason = exports.IssueState = exports.IssueOrderField = exports.IssueCommentOrderField = void 0;
 exports.RepositoryVisibility = exports.RepositoryPrivacy = exports.RepositoryPermission = exports.RepositoryOrderField = exports.RepositoryMigrationOrderField = exports.RepositoryMigrationOrderDirection = exports.RepositoryLockReason = exports.RepositoryInvitationOrderField = exports.RepositoryInteractionLimitOrigin = exports.RepositoryInteractionLimitExpiry = exports.RepositoryInteractionLimit = exports.RepositoryContributionType = exports.RepositoryAffiliation = exports.ReportedContentClassifiers = exports.RepoRemoveMemberAuditEntryVisibility = exports.RepoDestroyAuditEntryVisibility = exports.RepoCreateAuditEntryVisibility = exports.RepoChangeMergeSettingAuditEntryMergeType = exports.RepoArchivedAuditEntryVisibility = exports.RepoAddMemberAuditEntryVisibility = exports.RepoAccessAuditEntryVisibility = exports.ReleaseOrderField = exports.RefOrderField = exports.ReactionOrderField = exports.ReactionContent = exports.PullRequestUpdateState = exports.PullRequestTimelineItemsItemType = exports.PullRequestState = exports.PullRequestReviewState = exports.PullRequestReviewEvent = exports.PullRequestReviewDecision = exports.PullRequestReviewCommentState = exports.PullRequestOrderField = exports.PullRequestMergeMethod = exports.ProjectV2WorkflowsOrderField = exports.ProjectV2ViewOrderField = exports.ProjectV2ViewLayout = exports.ProjectV2State = exports.ProjectV2SingleSelectFieldOptionColor = exports.ProjectV2OrderField = exports.ProjectV2ItemType = exports.ProjectV2ItemOrderField = exports.ProjectV2ItemFieldValueOrderField = exports.ProjectV2FieldType = exports.ProjectV2FieldOrderField = exports.ProjectV2CustomFieldType = exports.ProjectTemplate = exports.ProjectState = exports.ProjectOrderField = exports.ProjectColumnPurpose = void 0;
-exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
-exports.getSdk = exports.QueryProjectDocument = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = exports.UpdateIssueDocument = void 0;
+exports.AddProjectItemDocument = exports.IssueDigestFragmentDoc = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
+exports.getSdk = exports.QueryProjectDocument = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = void 0;
 /** The actor's type. */
 var ActorType;
 (function (ActorType) {
@@ -3318,6 +3320,14 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
+exports.IssueDigestFragmentDoc = `
+    fragment IssueDigest on Issue {
+  id
+  title
+  body
+  state
+}
+    `;
 exports.AddProjectItemDocument = `
     mutation addProjectItem($project: ID!, $item: ID!) {
   addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
@@ -3334,10 +3344,7 @@ exports.CreateIssueWithMilestoneDocument = `
     input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
   ) {
     issue {
-      id
-      title
-      body
-      state
+      ...IssueDigest
       milestone {
         id
         title
@@ -3348,7 +3355,7 @@ exports.CreateIssueWithMilestoneDocument = `
     }
   }
 }
-    `;
+    ${exports.IssueDigestFragmentDoc}`;
 exports.UpdateIssueDocument = `
     mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
   updateIssue(input: {id: $issue, title: $title, state: $state}) {
@@ -3491,6 +3498,1041 @@ function getSdk(requester) {
     };
 }
 exports.getSdk = getSdk;
+const result = {
+    "possibleTypes": {
+        "Actor": [
+            "Bot",
+            "EnterpriseUserAccount",
+            "Mannequin",
+            "Organization",
+            "User"
+        ],
+        "AnnouncementBanner": [
+            "Enterprise",
+            "Organization"
+        ],
+        "Assignable": [
+            "Issue",
+            "PullRequest"
+        ],
+        "Assignee": [
+            "Bot",
+            "Mannequin",
+            "Organization",
+            "User"
+        ],
+        "AuditEntry": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "AuditEntryActor": [
+            "Bot",
+            "Organization",
+            "User"
+        ],
+        "BranchActorAllowanceActor": [
+            "App",
+            "Team",
+            "User"
+        ],
+        "Claimable": [
+            "Mannequin",
+            "User"
+        ],
+        "Closable": [
+            "Discussion",
+            "Issue",
+            "Milestone",
+            "Project",
+            "ProjectV2",
+            "PullRequest"
+        ],
+        "Closer": [
+            "Commit",
+            "PullRequest"
+        ],
+        "Comment": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "GistComment",
+            "Issue",
+            "IssueComment",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "Contribution": [
+            "CreatedCommitContribution",
+            "CreatedIssueContribution",
+            "CreatedPullRequestContribution",
+            "CreatedPullRequestReviewContribution",
+            "CreatedRepositoryContribution",
+            "JoinedGitHubContribution",
+            "RestrictedContribution"
+        ],
+        "CreatedIssueOrRestrictedContribution": [
+            "CreatedIssueContribution",
+            "RestrictedContribution"
+        ],
+        "CreatedPullRequestOrRestrictedContribution": [
+            "CreatedPullRequestContribution",
+            "RestrictedContribution"
+        ],
+        "CreatedRepositoryOrRestrictedContribution": [
+            "CreatedRepositoryContribution",
+            "RestrictedContribution"
+        ],
+        "Deletable": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "GistComment",
+            "IssueComment",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "DeploymentReviewer": [
+            "Team",
+            "User"
+        ],
+        "EnterpriseAuditEntryData": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry"
+        ],
+        "EnterpriseMember": [
+            "EnterpriseUserAccount",
+            "User"
+        ],
+        "GitObject": [
+            "Blob",
+            "Commit",
+            "Tag",
+            "Tree"
+        ],
+        "GitSignature": [
+            "GpgSignature",
+            "SmimeSignature",
+            "SshSignature",
+            "UnknownSignature"
+        ],
+        "HovercardContext": [
+            "GenericHovercardContext",
+            "OrganizationTeamsHovercardContext",
+            "OrganizationsHovercardContext",
+            "ReviewStatusHovercardContext",
+            "ViewerHovercardContext"
+        ],
+        "IpAllowListOwner": [
+            "App",
+            "Enterprise",
+            "Organization"
+        ],
+        "IssueOrPullRequest": [
+            "Issue",
+            "PullRequest"
+        ],
+        "IssueTimelineItem": [
+            "AssignedEvent",
+            "ClosedEvent",
+            "Commit",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MilestonedEvent",
+            "ReferencedEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "SubscribedEvent",
+            "TransferredEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "IssueTimelineItems": [
+            "AddedToProjectEvent",
+            "AssignedEvent",
+            "ClosedEvent",
+            "CommentDeletedEvent",
+            "ConnectedEvent",
+            "ConvertedNoteToIssueEvent",
+            "ConvertedToDiscussionEvent",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DisconnectedEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MarkedAsDuplicateEvent",
+            "MentionedEvent",
+            "MilestonedEvent",
+            "MovedColumnsInProjectEvent",
+            "PinnedEvent",
+            "ReferencedEvent",
+            "RemovedFromProjectEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "SubscribedEvent",
+            "TransferredEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnmarkedAsDuplicateEvent",
+            "UnpinnedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "Labelable": [
+            "Discussion",
+            "Issue",
+            "PullRequest"
+        ],
+        "Lockable": [
+            "Discussion",
+            "Issue",
+            "PullRequest"
+        ],
+        "MemberStatusable": [
+            "Organization",
+            "Team"
+        ],
+        "Migration": [
+            "RepositoryMigration"
+        ],
+        "MilestoneItem": [
+            "Issue",
+            "PullRequest"
+        ],
+        "Minimizable": [
+            "CommitComment",
+            "DiscussionComment",
+            "GistComment",
+            "IssueComment",
+            "PullRequestReviewComment"
+        ],
+        "Node": [
+            "AddedToProjectEvent",
+            "App",
+            "AssignedEvent",
+            "AutoMergeDisabledEvent",
+            "AutoMergeEnabledEvent",
+            "AutoRebaseEnabledEvent",
+            "AutoSquashEnabledEvent",
+            "AutomaticBaseChangeFailedEvent",
+            "AutomaticBaseChangeSucceededEvent",
+            "BaseRefChangedEvent",
+            "BaseRefDeletedEvent",
+            "BaseRefForcePushedEvent",
+            "Blob",
+            "Bot",
+            "BranchProtectionRule",
+            "BypassForcePushAllowance",
+            "BypassPullRequestAllowance",
+            "CWE",
+            "CheckRun",
+            "CheckSuite",
+            "ClosedEvent",
+            "CodeOfConduct",
+            "CommentDeletedEvent",
+            "Commit",
+            "CommitComment",
+            "CommitCommentThread",
+            "Comparison",
+            "ConnectedEvent",
+            "ConvertToDraftEvent",
+            "ConvertedNoteToIssueEvent",
+            "ConvertedToDiscussionEvent",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DependencyGraphManifest",
+            "DeployKey",
+            "DeployedEvent",
+            "Deployment",
+            "DeploymentEnvironmentChangedEvent",
+            "DeploymentReview",
+            "DeploymentStatus",
+            "DisconnectedEvent",
+            "Discussion",
+            "DiscussionCategory",
+            "DiscussionComment",
+            "DiscussionPoll",
+            "DiscussionPollOption",
+            "DraftIssue",
+            "Enterprise",
+            "EnterpriseAdministratorInvitation",
+            "EnterpriseIdentityProvider",
+            "EnterpriseRepositoryInfo",
+            "EnterpriseServerInstallation",
+            "EnterpriseServerUserAccount",
+            "EnterpriseServerUserAccountEmail",
+            "EnterpriseServerUserAccountsUpload",
+            "EnterpriseUserAccount",
+            "Environment",
+            "ExternalIdentity",
+            "Gist",
+            "GistComment",
+            "HeadRefDeletedEvent",
+            "HeadRefForcePushedEvent",
+            "HeadRefRestoredEvent",
+            "IpAllowListEntry",
+            "Issue",
+            "IssueComment",
+            "Label",
+            "LabeledEvent",
+            "Language",
+            "License",
+            "LinkedBranch",
+            "LockedEvent",
+            "Mannequin",
+            "MarkedAsDuplicateEvent",
+            "MarketplaceCategory",
+            "MarketplaceListing",
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "MentionedEvent",
+            "MergedEvent",
+            "MigrationSource",
+            "Milestone",
+            "MilestonedEvent",
+            "MovedColumnsInProjectEvent",
+            "OIDCProvider",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "Organization",
+            "OrganizationIdentityProvider",
+            "OrganizationInvitation",
+            "OrganizationMigration",
+            "Package",
+            "PackageFile",
+            "PackageTag",
+            "PackageVersion",
+            "PinnedDiscussion",
+            "PinnedEvent",
+            "PinnedIssue",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "Project",
+            "ProjectCard",
+            "ProjectColumn",
+            "ProjectV2",
+            "ProjectV2Field",
+            "ProjectV2Item",
+            "ProjectV2ItemFieldDateValue",
+            "ProjectV2ItemFieldIterationValue",
+            "ProjectV2ItemFieldNumberValue",
+            "ProjectV2ItemFieldSingleSelectValue",
+            "ProjectV2ItemFieldTextValue",
+            "ProjectV2IterationField",
+            "ProjectV2SingleSelectField",
+            "ProjectV2View",
+            "ProjectV2Workflow",
+            "PublicKey",
+            "PullRequest",
+            "PullRequestCommit",
+            "PullRequestCommitCommentThread",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "PullRequestReviewThread",
+            "PullRequestThread",
+            "Push",
+            "PushAllowance",
+            "Reaction",
+            "ReadyForReviewEvent",
+            "Ref",
+            "ReferencedEvent",
+            "Release",
+            "ReleaseAsset",
+            "RemovedFromProjectEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "Repository",
+            "RepositoryInvitation",
+            "RepositoryMigration",
+            "RepositoryTopic",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "RepositoryVulnerabilityAlert",
+            "ReviewDismissalAllowance",
+            "ReviewDismissedEvent",
+            "ReviewRequest",
+            "ReviewRequestRemovedEvent",
+            "ReviewRequestedEvent",
+            "SavedReply",
+            "SecurityAdvisory",
+            "SponsorsActivity",
+            "SponsorsListing",
+            "SponsorsListingFeaturedItem",
+            "SponsorsTier",
+            "Sponsorship",
+            "SponsorshipNewsletter",
+            "Status",
+            "StatusCheckRollup",
+            "StatusContext",
+            "SubscribedEvent",
+            "Tag",
+            "Team",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamDiscussion",
+            "TeamDiscussionComment",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry",
+            "Topic",
+            "TransferredEvent",
+            "Tree",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnmarkedAsDuplicateEvent",
+            "UnpinnedEvent",
+            "UnsubscribedEvent",
+            "User",
+            "UserBlockedEvent",
+            "UserContentEdit",
+            "UserStatus",
+            "VerifiableDomain",
+            "Workflow",
+            "WorkflowRun"
+        ],
+        "OauthApplicationAuditEntryData": [
+            "OauthApplicationCreateAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry"
+        ],
+        "OrgRestoreMemberAuditEntryMembership": [
+            "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+            "OrgRestoreMemberMembershipRepositoryAuditEntryData",
+            "OrgRestoreMemberMembershipTeamAuditEntryData"
+        ],
+        "OrganizationAuditEntry": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "OrganizationAuditEntryData": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "OrganizationOrUser": [
+            "Organization",
+            "User"
+        ],
+        "PackageOwner": [
+            "Organization",
+            "Repository",
+            "User"
+        ],
+        "PermissionGranter": [
+            "Organization",
+            "Repository",
+            "Team"
+        ],
+        "PinnableItem": [
+            "Gist",
+            "Repository"
+        ],
+        "ProfileOwner": [
+            "Organization",
+            "User"
+        ],
+        "ProjectCardItem": [
+            "Issue",
+            "PullRequest"
+        ],
+        "ProjectOwner": [
+            "Organization",
+            "Repository",
+            "User"
+        ],
+        "ProjectV2FieldCommon": [
+            "ProjectV2Field",
+            "ProjectV2IterationField",
+            "ProjectV2SingleSelectField"
+        ],
+        "ProjectV2FieldConfiguration": [
+            "ProjectV2Field",
+            "ProjectV2IterationField",
+            "ProjectV2SingleSelectField"
+        ],
+        "ProjectV2ItemContent": [
+            "DraftIssue",
+            "Issue",
+            "PullRequest"
+        ],
+        "ProjectV2ItemFieldValue": [
+            "ProjectV2ItemFieldDateValue",
+            "ProjectV2ItemFieldIterationValue",
+            "ProjectV2ItemFieldLabelValue",
+            "ProjectV2ItemFieldMilestoneValue",
+            "ProjectV2ItemFieldNumberValue",
+            "ProjectV2ItemFieldPullRequestValue",
+            "ProjectV2ItemFieldRepositoryValue",
+            "ProjectV2ItemFieldReviewerValue",
+            "ProjectV2ItemFieldSingleSelectValue",
+            "ProjectV2ItemFieldTextValue",
+            "ProjectV2ItemFieldUserValue"
+        ],
+        "ProjectV2ItemFieldValueCommon": [
+            "ProjectV2ItemFieldDateValue",
+            "ProjectV2ItemFieldIterationValue",
+            "ProjectV2ItemFieldNumberValue",
+            "ProjectV2ItemFieldSingleSelectValue",
+            "ProjectV2ItemFieldTextValue"
+        ],
+        "ProjectV2Owner": [
+            "Issue",
+            "Organization",
+            "PullRequest",
+            "User"
+        ],
+        "ProjectV2Recent": [
+            "Organization",
+            "Repository",
+            "User"
+        ],
+        "PullRequestTimelineItem": [
+            "AssignedEvent",
+            "BaseRefDeletedEvent",
+            "BaseRefForcePushedEvent",
+            "ClosedEvent",
+            "Commit",
+            "CommitCommentThread",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DeployedEvent",
+            "DeploymentEnvironmentChangedEvent",
+            "HeadRefDeletedEvent",
+            "HeadRefForcePushedEvent",
+            "HeadRefRestoredEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MergedEvent",
+            "MilestonedEvent",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "PullRequestReviewThread",
+            "ReferencedEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "ReviewDismissedEvent",
+            "ReviewRequestRemovedEvent",
+            "ReviewRequestedEvent",
+            "SubscribedEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "PullRequestTimelineItems": [
+            "AddedToProjectEvent",
+            "AssignedEvent",
+            "AutoMergeDisabledEvent",
+            "AutoMergeEnabledEvent",
+            "AutoRebaseEnabledEvent",
+            "AutoSquashEnabledEvent",
+            "AutomaticBaseChangeFailedEvent",
+            "AutomaticBaseChangeSucceededEvent",
+            "BaseRefChangedEvent",
+            "BaseRefDeletedEvent",
+            "BaseRefForcePushedEvent",
+            "ClosedEvent",
+            "CommentDeletedEvent",
+            "ConnectedEvent",
+            "ConvertToDraftEvent",
+            "ConvertedNoteToIssueEvent",
+            "ConvertedToDiscussionEvent",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DeployedEvent",
+            "DeploymentEnvironmentChangedEvent",
+            "DisconnectedEvent",
+            "HeadRefDeletedEvent",
+            "HeadRefForcePushedEvent",
+            "HeadRefRestoredEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MarkedAsDuplicateEvent",
+            "MentionedEvent",
+            "MergedEvent",
+            "MilestonedEvent",
+            "MovedColumnsInProjectEvent",
+            "PinnedEvent",
+            "PullRequestCommit",
+            "PullRequestCommitCommentThread",
+            "PullRequestReview",
+            "PullRequestReviewThread",
+            "PullRequestRevisionMarker",
+            "ReadyForReviewEvent",
+            "ReferencedEvent",
+            "RemovedFromProjectEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "ReviewDismissedEvent",
+            "ReviewRequestRemovedEvent",
+            "ReviewRequestedEvent",
+            "SubscribedEvent",
+            "TransferredEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnmarkedAsDuplicateEvent",
+            "UnpinnedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "PushAllowanceActor": [
+            "App",
+            "Team",
+            "User"
+        ],
+        "Reactable": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "Issue",
+            "IssueComment",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "Release",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "Reactor": [
+            "Bot",
+            "Mannequin",
+            "Organization",
+            "User"
+        ],
+        "ReferencedSubject": [
+            "Issue",
+            "PullRequest"
+        ],
+        "RenamedTitleSubject": [
+            "Issue",
+            "PullRequest"
+        ],
+        "RepositoryAuditEntryData": [
+            "OrgRestoreMemberMembershipRepositoryAuditEntryData",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "RepositoryDiscussionAuthor": [
+            "Organization",
+            "User"
+        ],
+        "RepositoryDiscussionCommentAuthor": [
+            "Organization",
+            "User"
+        ],
+        "RepositoryInfo": [
+            "Repository"
+        ],
+        "RepositoryNode": [
+            "CommitComment",
+            "CommitCommentThread",
+            "DependabotUpdate",
+            "Discussion",
+            "DiscussionCategory",
+            "Issue",
+            "IssueComment",
+            "PinnedDiscussion",
+            "PullRequest",
+            "PullRequestCommitCommentThread",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "RepositoryVulnerabilityAlert"
+        ],
+        "RepositoryOwner": [
+            "Organization",
+            "User"
+        ],
+        "RequestedReviewer": [
+            "Mannequin",
+            "Team",
+            "User"
+        ],
+        "RequirableByPullRequest": [
+            "CheckRun",
+            "StatusContext"
+        ],
+        "ReviewDismissalAllowanceActor": [
+            "App",
+            "Team",
+            "User"
+        ],
+        "SearchResultItem": [
+            "App",
+            "Discussion",
+            "Issue",
+            "MarketplaceListing",
+            "Organization",
+            "PullRequest",
+            "Repository",
+            "User"
+        ],
+        "Sponsor": [
+            "Organization",
+            "User"
+        ],
+        "Sponsorable": [
+            "Organization",
+            "User"
+        ],
+        "SponsorableItem": [
+            "Organization",
+            "User"
+        ],
+        "SponsorsListingFeatureableItem": [
+            "Repository",
+            "User"
+        ],
+        "Starrable": [
+            "Gist",
+            "Repository",
+            "Topic"
+        ],
+        "StatusCheckRollupContext": [
+            "CheckRun",
+            "StatusContext"
+        ],
+        "Subscribable": [
+            "Commit",
+            "Discussion",
+            "Issue",
+            "PullRequest",
+            "Repository",
+            "Team",
+            "TeamDiscussion"
+        ],
+        "TeamAuditEntryData": [
+            "OrgRestoreMemberMembershipTeamAuditEntryData",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "TopicAuditEntryData": [
+            "RepoAddTopicAuditEntry",
+            "RepoRemoveTopicAuditEntry"
+        ],
+        "UniformResourceLocatable": [
+            "Bot",
+            "CheckRun",
+            "ClosedEvent",
+            "Commit",
+            "ConvertToDraftEvent",
+            "CrossReferencedEvent",
+            "Gist",
+            "Issue",
+            "Mannequin",
+            "MergedEvent",
+            "Milestone",
+            "Organization",
+            "PullRequest",
+            "PullRequestCommit",
+            "ReadyForReviewEvent",
+            "Release",
+            "Repository",
+            "RepositoryTopic",
+            "ReviewDismissedEvent",
+            "TeamDiscussion",
+            "TeamDiscussionComment",
+            "User",
+            "WorkflowRun"
+        ],
+        "Updatable": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "GistComment",
+            "Issue",
+            "IssueComment",
+            "Project",
+            "ProjectV2",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "UpdatableComment": [
+            "CommitComment",
+            "DiscussionComment",
+            "GistComment",
+            "Issue",
+            "IssueComment",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "VerifiableDomainOwner": [
+            "Enterprise",
+            "Organization"
+        ],
+        "Votable": [
+            "Discussion",
+            "DiscussionComment"
+        ]
+    }
+};
+exports["default"] = result;
 
 
 /***/ }),
