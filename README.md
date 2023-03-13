@@ -4,11 +4,11 @@
 
 # About
 
-pablof - a Productive Assistant for a Better Life OF you and your team.
+pablof - a Productive Assistant for a Better Life OF you, your team, your family and our world.
 
 # Usage
 
-## Beta
+## Beta - Milestone Issue
 
 ### Workflow Example
 
@@ -29,13 +29,26 @@ jobs:
 
 ### Inputs
 
-| Name  | Required | Type   | Description      |
-| ---   | :---:    | ---    | ---              |
-| token | ✓        | string | a Personal Access Token with `repo` and `project` scopes.GitHub Token for |
+| Name  | Required | Type   | Description                                               |
+| ---   | :---:    | ---    | ---                                                       |
+| token | ✓        | string | a Personal Access Token with `repo` and `project` scopes. |
 
 # Features
 
 ## Milestone Issue
+
+[Milestone](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones)
+is a better way to track progress on groups of issues.
+It is very useful for managing projects with multiple issues,
+but there is not a sufficient way to describe or discuss about Milestone itself in detail.
+
+### Concept
+
+Milestone Issue is a issue linked 1:1 to Milestone.
+
+As shown in the figure below, each Milestone has a linked Milestone Issue.
+Each Issues in the Milestone should be tracked from the Milestone Issue.
+All Issues on the Milestone consists of a single tree with the Milestone Issue as its root.
 
 ```mermaid
 flowchart LR
@@ -49,26 +62,57 @@ flowchart LR
 
   mb -- 1:1 --- mib
 
-  tia[Task Issue A]
-  sti1[Sub Task Issue 1]
-  sti2[Sub Task Issue 2]
+  ti1[Task Issue 1]
+  sia[Sub Issue a]
+  sib[Sub Issue b]
 
-  tib[Task Issue B]
-  sti3[Sub Task Issue 3]
-  sti4[Sub Task Issue 4]
+  ti2[Task Issue 2]
+  sic[Sub Issue c]
+  sid[Sub Issue d]
 
-  tic[Task Issue C]
+  ti3[Task Issue 3]
 
-  tid[Task Issue D]
+  ti4[Task Issue 4]
 
-  mia -- track --> tia
-  tia -- track --> sti1
-  tia -- track --> sti2
+  mia -- track --> ti1
+  ti1 -- track --> sia
+  ti1 -- track --> sib
 
-  mia -- track --> tib
-  tib -- track --> sti3
-  tib -- track --> sti4
+  mia -- track --> ti2
+  ti2 -- track --> sic
+  ti2 -- track --> sid
 
-  mib -- track --> tic
-  mib -- track --> tid
+  mib -- track --> ti3
+  mib -- track --> ti4
 ```
+
+### How to identify the Milestone Issue
+
+1. list issues linked with the Milestone
+1. filter issues by `trackedInIssues.totalCount === 0`
+1. the first issue, in order of `CREATED_AT ASC`, is the Milestone Issue
+
+### Actions
+
+#### Create Milestone Issue
+
+Automatically create a Milestone Issue when a Milestone is created.
+The created Milestone Issue will inherit the `title` and `body` of the Milestone.
+
+##### Supported Triggers
+
+| Name        | Action    |
+| ---         | ---       |
+| `milestone` | `created` |
+
+#### Sync Milestone Issue
+
+Automatically updates the Milestone Issue when a Milestone is updated.
+The updated Milestone Issue will have the same `title` and `state` as the Milestone.
+
+##### Supported Triggers
+
+| Name        | Action    |
+| ---         | ---       |
+| `milestone` | `edited` `closed` `opened` |
+
