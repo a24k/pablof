@@ -7,13 +7,13 @@ query queryNode($id: ID!) {
       projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
-          id number title shortDescription readme closed
+          id title shortDescription readme closed
         }
       }
     }
 
     ... on Milestone {
-      id number title description state dueOn
+      id title description state dueOn
       repository {
         id name
         owner { login }
@@ -21,14 +21,14 @@ query queryNode($id: ID!) {
       issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
-          id number title state
+          id title state
           trackedInIssues(first: 1) { totalCount }
         }
       }
     }
 
     ... on ProjectV2 {
-      id number title shortDescription readme closed
+      id title shortDescription readme closed
     }
   }
 }

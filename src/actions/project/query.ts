@@ -44,7 +44,7 @@ export class QueryProject extends TriggerableAction {
     core.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
 
     return actionOk(
-      `Project queried {id: ${projects[0].id}, number: ${projects[0].number}, title: ${projects[0].title}}`
+      `Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`
     );
   }
 }

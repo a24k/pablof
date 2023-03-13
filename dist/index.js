@@ -175,7 +175,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to create issue.");
             }
-            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
+            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
 }
@@ -281,7 +281,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
             if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to update issue.");
             }
-            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, number: ${issue.updateIssue.issue.number}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
+            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
         });
     }
 }
@@ -372,7 +372,7 @@ class QueryProject extends triggerable_1.TriggerableAction {
                 return (0, result_1.actionErr)("No projectsV2 found.");
             }
             core.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
-            return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, number: ${projects[0].number}, title: ${projects[0].title}}`);
+            return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
         });
     }
 }
@@ -3344,13 +3344,11 @@ exports.CreateIssueWithMilestoneDocument = `
   ) {
     issue {
       id
-      number
       title
       body
       state
       milestone {
         id
-        number
         title
         description
         state
@@ -3365,13 +3363,11 @@ exports.UpdateIssueDocument = `
   updateIssue(input: {id: $issue, title: $title, state: $state}) {
     issue {
       id
-      number
       title
       body
       state
       milestone {
         id
-        number
         title
         description
         state
@@ -3394,7 +3390,6 @@ exports.QueryNodeDocument = `
         totalCount
         nodes {
           id
-          number
           title
           shortDescription
           readme
@@ -3404,7 +3399,6 @@ exports.QueryNodeDocument = `
     }
     ... on Milestone {
       id
-      number
       title
       description
       state
@@ -3420,7 +3414,6 @@ exports.QueryNodeDocument = `
         totalCount
         nodes {
           id
-          number
           title
           state
           trackedInIssues(first: 1) {
@@ -3431,7 +3424,6 @@ exports.QueryNodeDocument = `
     }
     ... on ProjectV2 {
       id
-      number
       title
       shortDescription
       readme
@@ -3480,7 +3472,6 @@ exports.QueryProjectDocument = `
     login
     projectV2(number: $number) {
       id
-      number
       title
     }
   }

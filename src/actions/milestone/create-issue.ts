@@ -43,7 +43,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
 
     return actionOk(
-      `MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`
+      `MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`
     );
   }
 }

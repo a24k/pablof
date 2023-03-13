@@ -58,7 +58,7 @@ export class SyncMilestoneIssue extends TriggerableAction {
     }
 
     return actionOk(
-      `MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, number: ${issue.updateIssue.issue.number}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`
+      `MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`
     );
   }
 }

@@ -27794,14 +27794,12 @@ export type CreateIssueWithMilestoneMutation = {
     readonly issue?: {
       readonly __typename?: "Issue";
       readonly id: string;
-      readonly number: number;
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
       readonly milestone?: {
         readonly __typename?: "Milestone";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly description?: string | null;
         readonly state: MilestoneState;
@@ -27824,14 +27822,12 @@ export type UpdateIssueMutation = {
     readonly issue?: {
       readonly __typename?: "Issue";
       readonly id: string;
-      readonly number: number;
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
       readonly milestone?: {
         readonly __typename?: "Milestone";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly description?: string | null;
         readonly state: MilestoneState;
@@ -27933,7 +27929,6 @@ export type QueryNodeQuery = {
     | {
         readonly __typename: "Milestone";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly description?: string | null;
         readonly state: MilestoneState;
@@ -27952,7 +27947,6 @@ export type QueryNodeQuery = {
           readonly nodes?: ReadonlyArray<{
             readonly __typename?: "Issue";
             readonly id: string;
-            readonly number: number;
             readonly title: string;
             readonly state: IssueState;
             readonly trackedInIssues: {
@@ -28015,7 +28009,6 @@ export type QueryNodeQuery = {
     | {
         readonly __typename: "ProjectV2";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly shortDescription?: string | null;
         readonly readme?: string | null;
@@ -28082,7 +28075,6 @@ export type QueryNodeQuery = {
           readonly nodes?: ReadonlyArray<{
             readonly __typename?: "ProjectV2";
             readonly id: string;
-            readonly number: number;
             readonly title: string;
             readonly shortDescription?: string | null;
             readonly readme?: string | null;
@@ -28208,7 +28200,6 @@ export type QueryProjectQuery = {
     readonly projectV2?: {
       readonly __typename?: "ProjectV2";
       readonly id: string;
-      readonly number: number;
       readonly title: string;
     } | null;
   } | null;
@@ -28221,13 +28212,11 @@ export const CreateIssueWithMilestoneDocument = `
   ) {
     issue {
       id
-      number
       title
       body
       state
       milestone {
         id
-        number
         title
         description
         state
@@ -28242,13 +28231,11 @@ export const UpdateIssueDocument = `
   updateIssue(input: {id: $issue, title: $title, state: $state}) {
     issue {
       id
-      number
       title
       body
       state
       milestone {
         id
-        number
         title
         description
         state
@@ -28271,7 +28258,6 @@ export const QueryNodeDocument = `
         totalCount
         nodes {
           id
-          number
           title
           shortDescription
           readme
@@ -28281,7 +28267,6 @@ export const QueryNodeDocument = `
     }
     ... on Milestone {
       id
-      number
       title
       description
       state
@@ -28297,7 +28282,6 @@ export const QueryNodeDocument = `
         totalCount
         nodes {
           id
-          number
           title
           state
           trackedInIssues(first: 1) {
@@ -28308,7 +28292,6 @@ export const QueryNodeDocument = `
     }
     ... on ProjectV2 {
       id
-      number
       title
       shortDescription
       readme
@@ -28357,7 +28340,6 @@ export const QueryProjectDocument = `
     login
     projectV2(number: $number) {
       id
-      number
       title
     }
   }
