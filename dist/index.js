@@ -25,33 +25,10 @@ exports.collect = collect;
 /***/ }),
 
 /***/ 6253:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -63,7 +40,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ActionInventory = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 class ActionInventory {
     constructor() {
         this.items = [];
@@ -78,20 +54,20 @@ class ActionInventory {
         return __awaiter(this, void 0, void 0, function* () {
             for (const item of this.items) {
                 const title = item.description();
-                core.debug(`handleContext on ${title}`);
+                item.debug(`handleContext on ${title}`);
                 const result = yield item.handleContext(context, sdk);
                 result.match((res) => {
                     switch (res.type) {
                         case "Success":
-                            core.notice(res.message, { title });
+                            item.notice(res.message);
                             break;
                         case "Skip":
                         default:
-                            core.debug("skipped");
+                            item.debug("skipped");
                             break;
                     }
                 }, (err) => {
-                    core.error(err.message, { title });
+                    item.error(err.message);
                 });
             }
         });
@@ -107,29 +83,6 @@ exports.ActionInventory = ActionInventory;
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -141,7 +94,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
-const core = __importStar(__nccwpck_require__(2186));
+const neverthrow_1 = __nccwpck_require__(8591);
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
@@ -151,15 +104,51 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     description() {
         return `CreateMilestoneIssue for ${super.description()}`;
     }
+    queryProjects(repository, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield sdk.queryNode({
+                id: repository,
+            })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, neverthrow_1.err)("No repository found.");
+            }
+            const nodes = node.projectsV2.nodes;
+            if (nodes == undefined || nodes.length === 0) {
+                return (0, neverthrow_1.err)("No projects found.");
+            }
+            this.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
+            return (0, neverthrow_1.ok)(nodes.flatMap(project => project == null || project.closed ? [] : project.id));
+        });
+    }
+    addIssueToProject(sdk, project, issue) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield sdk.addProjectItem({
+                project: project,
+                item: issue,
+            })).addProjectV2ItemById;
+            this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
+            if (((_a = result === null || result === void 0 ? void 0 : result.item) === null || _a === void 0 ? void 0 : _a.type) === "ISSUE") {
+                this.notice(`MilestoneIssue is added to ProjectV2 {id: ${project}}`);
+            }
+            else {
+                this.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${project}}`);
+            }
+        });
+    }
+    digest(issue) {
+        this.debug(`IssuePropsFragment = ${JSON.stringify(issue, null, 2)}`);
+    }
     handle(context, sdk) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const node = (yield sdk.queryNode({
                 id: payload.milestone.node_id,
             })).node;
-            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
@@ -169,11 +158,19 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 body: payload.milestone.description,
                 milestone: node.id,
             });
-            core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+            this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to create issue.");
             }
-            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, number: ${issue.createIssue.issue.number}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
+            this.digest(issue.createIssue.issue);
+            const projects = yield this.queryProjects(payload.repository.node_id, sdk);
+            const issueId = issue.createIssue.issue.id;
+            projects.match((ids) => {
+                for (const id of ids) {
+                    this.addIssueToProject(sdk, id, issueId);
+                }
+            }, (err) => this.warning(`No projects found. (${err})`));
+            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
 }
@@ -202,29 +199,6 @@ Object.defineProperty(exports, "SyncMilestoneIssue", ({ enumerable: true, get: f
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -236,7 +210,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SyncMilestoneIssue = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 const graphql_1 = __nccwpck_require__(7064);
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
@@ -251,11 +224,11 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const node = (yield sdk.queryNode({
                 id: payload.milestone.node_id,
             })).node;
-            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
@@ -267,7 +240,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
             if (roots.length === 0 || roots[0] == undefined) {
                 return (0, result_1.actionErr)("No milestone issue found.");
             }
-            core.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
+            this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
             const issue = yield sdk.updateIssue({
                 issue: roots[0].id,
                 title: payload.milestone.title,
@@ -275,11 +248,11 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                     ? graphql_1.IssueState.Open
                     : graphql_1.IssueState.Closed,
             });
-            core.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
+            this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to update issue.");
             }
-            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, number: ${issue.updateIssue.issue.number}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
+            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
         });
     }
 }
@@ -317,6 +290,29 @@ exports.actionErr = actionErr;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -328,6 +324,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TriggerableAction = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const result_1 = __nccwpck_require__(4983);
 class TriggerableAction {
     constructor(name, action) {
@@ -336,6 +333,18 @@ class TriggerableAction {
     }
     description() {
         return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
+    }
+    debug(message) {
+        core.debug(message);
+    }
+    notice(message) {
+        core.notice(message, { title: this.description() });
+    }
+    warning(message) {
+        core.warning(message, { title: this.description() });
+    }
+    error(message) {
+        core.error(message, { title: this.description() });
     }
     canHandle(name, action) {
         return (this.triggerName === name &&
@@ -374,8 +383,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IssueClosedStateReason = exports.IpAllowListForInstalledAppsEnabledSettingValue = exports.IpAllowListEntryOrderField = exports.IpAllowListEnabledSettingValue = exports.IdentityProviderConfigurationState = exports.GitSignatureState = exports.GistPrivacy = exports.GistOrderField = exports.FundingPlatform = exports.FileViewedState = exports.EnterpriseUserDeployment = exports.EnterpriseUserAccountMembershipRole = exports.EnterpriseServerUserAccountsUploadSyncState = exports.EnterpriseServerUserAccountsUploadOrderField = exports.EnterpriseServerUserAccountOrderField = exports.EnterpriseServerUserAccountEmailOrderField = exports.EnterpriseServerInstallationOrderField = exports.EnterpriseMembersCanMakePurchasesSettingValue = exports.EnterpriseMembersCanCreateRepositoriesSettingValue = exports.EnterpriseMemberOrderField = exports.EnterpriseEnabledSettingValue = exports.EnterpriseEnabledDisabledSettingValue = exports.EnterpriseDefaultRepositoryPermissionSettingValue = exports.EnterpriseAllowPrivateRepositoryForkingPolicyValue = exports.EnterpriseAdministratorRole = exports.EnterpriseAdministratorInvitationOrderField = exports.DismissReason = exports.DiscussionPollOptionOrderField = exports.DiscussionOrderField = exports.DiffSide = exports.DeploymentStatusState = exports.DeploymentState = exports.DeploymentReviewState = exports.DeploymentProtectionRuleType = exports.DeploymentOrderField = exports.DependencyGraphEcosystem = exports.DefaultRepositoryPermissionField = exports.ContributionLevel = exports.ComparisonStatus = exports.CommitContributionOrderField = exports.CommentCannotUpdateReason = exports.CommentAuthorAssociation = exports.CollaboratorAffiliation = exports.CheckStatusState = exports.CheckRunType = exports.CheckRunState = exports.CheckConclusionState = exports.CheckAnnotationLevel = exports.AuditLogOrderField = exports.ActorType = void 0;
 exports.ProjectCardState = exports.ProjectCardArchivedState = exports.PinnedDiscussionPattern = exports.PinnedDiscussionGradient = exports.PinnableItemType = exports.PatchStatus = exports.PackageVersionOrderField = exports.PackageType = exports.PackageOrderField = exports.PackageFileOrderField = exports.OrganizationOrderField = exports.OrganizationMigrationState = exports.OrganizationMembersCanCreateRepositoriesSettingValue = exports.OrganizationMemberRole = exports.OrganizationInvitationType = exports.OrganizationInvitationSource = exports.OrganizationInvitationRole = exports.OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility = exports.OrgUpdateMemberAuditEntryPermission = exports.OrgUpdateDefaultRepositoryPermissionAuditEntryPermission = exports.OrgRemoveOutsideCollaboratorAuditEntryReason = exports.OrgRemoveOutsideCollaboratorAuditEntryMembershipType = exports.OrgRemoveMemberAuditEntryReason = exports.OrgRemoveMemberAuditEntryMembershipType = exports.OrgRemoveBillingManagerAuditEntryReason = exports.OrgEnterpriseOwnerOrderField = exports.OrgCreateAuditEntryBillingPlan = exports.OrgAddMemberAuditEntryPermission = exports.OrderDirection = exports.OperationType = exports.OauthApplicationCreateAuditEntryState = exports.OidcProviderType = exports.NotificationRestrictionSettingValue = exports.MilestoneState = exports.MilestoneOrderField = exports.MigrationState = exports.MigrationSourceType = exports.MergeableState = exports.MergeStateStatus = exports.MergeCommitTitle = exports.MergeCommitMessage = exports.MannequinOrderField = exports.LockReason = exports.LanguageOrderField = exports.LabelOrderField = exports.IssueTimelineItemsItemType = exports.IssueStateReason = exports.IssueState = exports.IssueOrderField = exports.IssueCommentOrderField = void 0;
 exports.RepositoryVisibility = exports.RepositoryPrivacy = exports.RepositoryPermission = exports.RepositoryOrderField = exports.RepositoryMigrationOrderField = exports.RepositoryMigrationOrderDirection = exports.RepositoryLockReason = exports.RepositoryInvitationOrderField = exports.RepositoryInteractionLimitOrigin = exports.RepositoryInteractionLimitExpiry = exports.RepositoryInteractionLimit = exports.RepositoryContributionType = exports.RepositoryAffiliation = exports.ReportedContentClassifiers = exports.RepoRemoveMemberAuditEntryVisibility = exports.RepoDestroyAuditEntryVisibility = exports.RepoCreateAuditEntryVisibility = exports.RepoChangeMergeSettingAuditEntryMergeType = exports.RepoArchivedAuditEntryVisibility = exports.RepoAddMemberAuditEntryVisibility = exports.RepoAccessAuditEntryVisibility = exports.ReleaseOrderField = exports.RefOrderField = exports.ReactionOrderField = exports.ReactionContent = exports.PullRequestUpdateState = exports.PullRequestTimelineItemsItemType = exports.PullRequestState = exports.PullRequestReviewState = exports.PullRequestReviewEvent = exports.PullRequestReviewDecision = exports.PullRequestReviewCommentState = exports.PullRequestOrderField = exports.PullRequestMergeMethod = exports.ProjectV2WorkflowsOrderField = exports.ProjectV2ViewOrderField = exports.ProjectV2ViewLayout = exports.ProjectV2State = exports.ProjectV2SingleSelectFieldOptionColor = exports.ProjectV2OrderField = exports.ProjectV2ItemType = exports.ProjectV2ItemOrderField = exports.ProjectV2ItemFieldValueOrderField = exports.ProjectV2FieldType = exports.ProjectV2FieldOrderField = exports.ProjectV2CustomFieldType = exports.ProjectTemplate = exports.ProjectState = exports.ProjectOrderField = exports.ProjectColumnPurpose = void 0;
-exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
-exports.getSdk = exports.QueryProjectDocument = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = void 0;
+exports.IssuePropsFragmentDoc = exports.RepositoryPropsFragmentDoc = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
+exports.getSdk = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.ProjectV2ItemPropsFragmentDoc = exports.ProjectV2PropsFragmentDoc = exports.MilestonePropsFragmentDoc = void 0;
 /** The actor's type. */
 var ActorType;
 (function (ActorType) {
@@ -3244,84 +3253,131 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
+exports.RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+  owner {
+    login
+  }
+}
+    `;
+exports.IssuePropsFragmentDoc = `
+    fragment IssueProps on Issue {
+  __typename
+  id
+  title
+  body
+  state
+  trackedInIssues(first: 1) {
+    totalCount
+  }
+}
+    `;
+exports.MilestonePropsFragmentDoc = `
+    fragment MilestoneProps on Milestone {
+  __typename
+  id
+  title
+  description
+  state
+  dueOn
+}
+    `;
+exports.ProjectV2PropsFragmentDoc = `
+    fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id
+  title
+  shortDescription
+  readme
+  closed
+}
+    `;
+exports.ProjectV2ItemPropsFragmentDoc = `
+    fragment ProjectV2ItemProps on ProjectV2Item {
+  __typename
+  id
+  type
+  isArchived
+  project {
+    ...ProjectV2Props
+  }
+}
+    ${exports.ProjectV2PropsFragmentDoc}`;
+exports.AddProjectItemDocument = `
+    mutation addProjectItem($project: ID!, $item: ID!) {
+  addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
+    item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${exports.ProjectV2ItemPropsFragmentDoc}`;
 exports.CreateIssueWithMilestoneDocument = `
     mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
   createIssue(
     input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
   ) {
     issue {
-      id
-      number
-      title
-      body
-      state
+      ...IssueProps
       milestone {
-        id
-        number
-        title
-        description
-        state
-        dueOn
+        ...MilestoneProps
       }
     }
   }
 }
-    `;
+    ${exports.IssuePropsFragmentDoc}
+${exports.MilestonePropsFragmentDoc}`;
 exports.UpdateIssueDocument = `
     mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
   updateIssue(input: {id: $issue, title: $title, state: $state}) {
     issue {
-      id
-      number
-      title
-      body
-      state
+      ...IssueProps
       milestone {
-        id
-        number
-        title
-        description
-        state
-        dueOn
+        ...MilestoneProps
       }
     }
   }
 }
-    `;
+    ${exports.IssuePropsFragmentDoc}
+${exports.MilestonePropsFragmentDoc}`;
 exports.QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
-    __typename
-    ... on Milestone {
-      id
-      number
-      title
-      description
-      state
-      dueOn
-      repository {
-        id
-        name
-        owner {
-          login
+    ... on Repository {
+      ...RepositoryProps
+      projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+        totalCount
+        nodes {
+          ...ProjectV2Props
         }
+      }
+    }
+    ... on Milestone {
+      ...MilestoneProps
+      repository {
+        ...RepositoryProps
       }
       issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
         totalCount
         nodes {
-          id
-          number
-          title
-          state
-          trackedInIssues(first: 1) {
-            totalCount
-          }
+          ...IssueProps
         }
       }
     }
+    ... on ProjectV2 {
+      ...ProjectV2Props
+    }
   }
 }
-    `;
+    ${exports.RepositoryPropsFragmentDoc}
+${exports.ProjectV2PropsFragmentDoc}
+${exports.MilestonePropsFragmentDoc}
+${exports.IssuePropsFragmentDoc}`;
 exports.QueryProjectFieldsDocument = `
     query queryProjectFields($owner: String!, $number: Int!) {
   user(login: $owner) {
@@ -3354,22 +3410,11 @@ exports.QueryProjectFieldsDocument = `
   }
 }
     `;
-exports.QueryProjectDocument = `
-    query queryProject($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    id
-    name
-    login
-    projectV2(number: $number) {
-      id
-      number
-      title
-    }
-  }
-}
-    `;
 function getSdk(requester) {
     return {
+        addProjectItem(variables, options) {
+            return requester(exports.AddProjectItemDocument, variables, options);
+        },
         createIssueWithMilestone(variables, options) {
             return requester(exports.CreateIssueWithMilestoneDocument, variables, options);
         },
@@ -3381,13 +3426,1045 @@ function getSdk(requester) {
         },
         queryProjectFields(variables, options) {
             return requester(exports.QueryProjectFieldsDocument, variables, options);
-        },
-        queryProject(variables, options) {
-            return requester(exports.QueryProjectDocument, variables, options);
         }
     };
 }
 exports.getSdk = getSdk;
+const result = {
+    "possibleTypes": {
+        "Actor": [
+            "Bot",
+            "EnterpriseUserAccount",
+            "Mannequin",
+            "Organization",
+            "User"
+        ],
+        "AnnouncementBanner": [
+            "Enterprise",
+            "Organization"
+        ],
+        "Assignable": [
+            "Issue",
+            "PullRequest"
+        ],
+        "Assignee": [
+            "Bot",
+            "Mannequin",
+            "Organization",
+            "User"
+        ],
+        "AuditEntry": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "AuditEntryActor": [
+            "Bot",
+            "Organization",
+            "User"
+        ],
+        "BranchActorAllowanceActor": [
+            "App",
+            "Team",
+            "User"
+        ],
+        "Claimable": [
+            "Mannequin",
+            "User"
+        ],
+        "Closable": [
+            "Discussion",
+            "Issue",
+            "Milestone",
+            "Project",
+            "ProjectV2",
+            "PullRequest"
+        ],
+        "Closer": [
+            "Commit",
+            "PullRequest"
+        ],
+        "Comment": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "GistComment",
+            "Issue",
+            "IssueComment",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "Contribution": [
+            "CreatedCommitContribution",
+            "CreatedIssueContribution",
+            "CreatedPullRequestContribution",
+            "CreatedPullRequestReviewContribution",
+            "CreatedRepositoryContribution",
+            "JoinedGitHubContribution",
+            "RestrictedContribution"
+        ],
+        "CreatedIssueOrRestrictedContribution": [
+            "CreatedIssueContribution",
+            "RestrictedContribution"
+        ],
+        "CreatedPullRequestOrRestrictedContribution": [
+            "CreatedPullRequestContribution",
+            "RestrictedContribution"
+        ],
+        "CreatedRepositoryOrRestrictedContribution": [
+            "CreatedRepositoryContribution",
+            "RestrictedContribution"
+        ],
+        "Deletable": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "GistComment",
+            "IssueComment",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "DeploymentReviewer": [
+            "Team",
+            "User"
+        ],
+        "EnterpriseAuditEntryData": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry"
+        ],
+        "EnterpriseMember": [
+            "EnterpriseUserAccount",
+            "User"
+        ],
+        "GitObject": [
+            "Blob",
+            "Commit",
+            "Tag",
+            "Tree"
+        ],
+        "GitSignature": [
+            "GpgSignature",
+            "SmimeSignature",
+            "SshSignature",
+            "UnknownSignature"
+        ],
+        "HovercardContext": [
+            "GenericHovercardContext",
+            "OrganizationTeamsHovercardContext",
+            "OrganizationsHovercardContext",
+            "ReviewStatusHovercardContext",
+            "ViewerHovercardContext"
+        ],
+        "IpAllowListOwner": [
+            "App",
+            "Enterprise",
+            "Organization"
+        ],
+        "IssueOrPullRequest": [
+            "Issue",
+            "PullRequest"
+        ],
+        "IssueTimelineItem": [
+            "AssignedEvent",
+            "ClosedEvent",
+            "Commit",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MilestonedEvent",
+            "ReferencedEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "SubscribedEvent",
+            "TransferredEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "IssueTimelineItems": [
+            "AddedToProjectEvent",
+            "AssignedEvent",
+            "ClosedEvent",
+            "CommentDeletedEvent",
+            "ConnectedEvent",
+            "ConvertedNoteToIssueEvent",
+            "ConvertedToDiscussionEvent",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DisconnectedEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MarkedAsDuplicateEvent",
+            "MentionedEvent",
+            "MilestonedEvent",
+            "MovedColumnsInProjectEvent",
+            "PinnedEvent",
+            "ReferencedEvent",
+            "RemovedFromProjectEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "SubscribedEvent",
+            "TransferredEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnmarkedAsDuplicateEvent",
+            "UnpinnedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "Labelable": [
+            "Discussion",
+            "Issue",
+            "PullRequest"
+        ],
+        "Lockable": [
+            "Discussion",
+            "Issue",
+            "PullRequest"
+        ],
+        "MemberStatusable": [
+            "Organization",
+            "Team"
+        ],
+        "Migration": [
+            "RepositoryMigration"
+        ],
+        "MilestoneItem": [
+            "Issue",
+            "PullRequest"
+        ],
+        "Minimizable": [
+            "CommitComment",
+            "DiscussionComment",
+            "GistComment",
+            "IssueComment",
+            "PullRequestReviewComment"
+        ],
+        "Node": [
+            "AddedToProjectEvent",
+            "App",
+            "AssignedEvent",
+            "AutoMergeDisabledEvent",
+            "AutoMergeEnabledEvent",
+            "AutoRebaseEnabledEvent",
+            "AutoSquashEnabledEvent",
+            "AutomaticBaseChangeFailedEvent",
+            "AutomaticBaseChangeSucceededEvent",
+            "BaseRefChangedEvent",
+            "BaseRefDeletedEvent",
+            "BaseRefForcePushedEvent",
+            "Blob",
+            "Bot",
+            "BranchProtectionRule",
+            "BypassForcePushAllowance",
+            "BypassPullRequestAllowance",
+            "CWE",
+            "CheckRun",
+            "CheckSuite",
+            "ClosedEvent",
+            "CodeOfConduct",
+            "CommentDeletedEvent",
+            "Commit",
+            "CommitComment",
+            "CommitCommentThread",
+            "Comparison",
+            "ConnectedEvent",
+            "ConvertToDraftEvent",
+            "ConvertedNoteToIssueEvent",
+            "ConvertedToDiscussionEvent",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DependencyGraphManifest",
+            "DeployKey",
+            "DeployedEvent",
+            "Deployment",
+            "DeploymentEnvironmentChangedEvent",
+            "DeploymentReview",
+            "DeploymentStatus",
+            "DisconnectedEvent",
+            "Discussion",
+            "DiscussionCategory",
+            "DiscussionComment",
+            "DiscussionPoll",
+            "DiscussionPollOption",
+            "DraftIssue",
+            "Enterprise",
+            "EnterpriseAdministratorInvitation",
+            "EnterpriseIdentityProvider",
+            "EnterpriseRepositoryInfo",
+            "EnterpriseServerInstallation",
+            "EnterpriseServerUserAccount",
+            "EnterpriseServerUserAccountEmail",
+            "EnterpriseServerUserAccountsUpload",
+            "EnterpriseUserAccount",
+            "Environment",
+            "ExternalIdentity",
+            "Gist",
+            "GistComment",
+            "HeadRefDeletedEvent",
+            "HeadRefForcePushedEvent",
+            "HeadRefRestoredEvent",
+            "IpAllowListEntry",
+            "Issue",
+            "IssueComment",
+            "Label",
+            "LabeledEvent",
+            "Language",
+            "License",
+            "LinkedBranch",
+            "LockedEvent",
+            "Mannequin",
+            "MarkedAsDuplicateEvent",
+            "MarketplaceCategory",
+            "MarketplaceListing",
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "MentionedEvent",
+            "MergedEvent",
+            "MigrationSource",
+            "Milestone",
+            "MilestonedEvent",
+            "MovedColumnsInProjectEvent",
+            "OIDCProvider",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "Organization",
+            "OrganizationIdentityProvider",
+            "OrganizationInvitation",
+            "OrganizationMigration",
+            "Package",
+            "PackageFile",
+            "PackageTag",
+            "PackageVersion",
+            "PinnedDiscussion",
+            "PinnedEvent",
+            "PinnedIssue",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "Project",
+            "ProjectCard",
+            "ProjectColumn",
+            "ProjectV2",
+            "ProjectV2Field",
+            "ProjectV2Item",
+            "ProjectV2ItemFieldDateValue",
+            "ProjectV2ItemFieldIterationValue",
+            "ProjectV2ItemFieldNumberValue",
+            "ProjectV2ItemFieldSingleSelectValue",
+            "ProjectV2ItemFieldTextValue",
+            "ProjectV2IterationField",
+            "ProjectV2SingleSelectField",
+            "ProjectV2View",
+            "ProjectV2Workflow",
+            "PublicKey",
+            "PullRequest",
+            "PullRequestCommit",
+            "PullRequestCommitCommentThread",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "PullRequestReviewThread",
+            "PullRequestThread",
+            "Push",
+            "PushAllowance",
+            "Reaction",
+            "ReadyForReviewEvent",
+            "Ref",
+            "ReferencedEvent",
+            "Release",
+            "ReleaseAsset",
+            "RemovedFromProjectEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "Repository",
+            "RepositoryInvitation",
+            "RepositoryMigration",
+            "RepositoryTopic",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "RepositoryVulnerabilityAlert",
+            "ReviewDismissalAllowance",
+            "ReviewDismissedEvent",
+            "ReviewRequest",
+            "ReviewRequestRemovedEvent",
+            "ReviewRequestedEvent",
+            "SavedReply",
+            "SecurityAdvisory",
+            "SponsorsActivity",
+            "SponsorsListing",
+            "SponsorsListingFeaturedItem",
+            "SponsorsTier",
+            "Sponsorship",
+            "SponsorshipNewsletter",
+            "Status",
+            "StatusCheckRollup",
+            "StatusContext",
+            "SubscribedEvent",
+            "Tag",
+            "Team",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamDiscussion",
+            "TeamDiscussionComment",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry",
+            "Topic",
+            "TransferredEvent",
+            "Tree",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnmarkedAsDuplicateEvent",
+            "UnpinnedEvent",
+            "UnsubscribedEvent",
+            "User",
+            "UserBlockedEvent",
+            "UserContentEdit",
+            "UserStatus",
+            "VerifiableDomain",
+            "Workflow",
+            "WorkflowRun"
+        ],
+        "OauthApplicationAuditEntryData": [
+            "OauthApplicationCreateAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry"
+        ],
+        "OrgRestoreMemberAuditEntryMembership": [
+            "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+            "OrgRestoreMemberMembershipRepositoryAuditEntryData",
+            "OrgRestoreMemberMembershipTeamAuditEntryData"
+        ],
+        "OrganizationAuditEntry": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "OrganizationAuditEntryData": [
+            "MembersCanDeleteReposClearAuditEntry",
+            "MembersCanDeleteReposDisableAuditEntry",
+            "MembersCanDeleteReposEnableAuditEntry",
+            "OauthApplicationCreateAuditEntry",
+            "OrgAddBillingManagerAuditEntry",
+            "OrgAddMemberAuditEntry",
+            "OrgBlockUserAuditEntry",
+            "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+            "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+            "OrgCreateAuditEntry",
+            "OrgDisableOauthAppRestrictionsAuditEntry",
+            "OrgDisableSamlAuditEntry",
+            "OrgDisableTwoFactorRequirementAuditEntry",
+            "OrgEnableOauthAppRestrictionsAuditEntry",
+            "OrgEnableSamlAuditEntry",
+            "OrgEnableTwoFactorRequirementAuditEntry",
+            "OrgInviteMemberAuditEntry",
+            "OrgInviteToBusinessAuditEntry",
+            "OrgOauthAppAccessApprovedAuditEntry",
+            "OrgOauthAppAccessDeniedAuditEntry",
+            "OrgOauthAppAccessRequestedAuditEntry",
+            "OrgRemoveBillingManagerAuditEntry",
+            "OrgRemoveMemberAuditEntry",
+            "OrgRemoveOutsideCollaboratorAuditEntry",
+            "OrgRestoreMemberAuditEntry",
+            "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+            "OrgUnblockUserAuditEntry",
+            "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+            "OrgUpdateMemberAuditEntry",
+            "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+            "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "RepositoryVisibilityChangeDisableAuditEntry",
+            "RepositoryVisibilityChangeEnableAuditEntry",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "OrganizationOrUser": [
+            "Organization",
+            "User"
+        ],
+        "PackageOwner": [
+            "Organization",
+            "Repository",
+            "User"
+        ],
+        "PermissionGranter": [
+            "Organization",
+            "Repository",
+            "Team"
+        ],
+        "PinnableItem": [
+            "Gist",
+            "Repository"
+        ],
+        "ProfileOwner": [
+            "Organization",
+            "User"
+        ],
+        "ProjectCardItem": [
+            "Issue",
+            "PullRequest"
+        ],
+        "ProjectOwner": [
+            "Organization",
+            "Repository",
+            "User"
+        ],
+        "ProjectV2FieldCommon": [
+            "ProjectV2Field",
+            "ProjectV2IterationField",
+            "ProjectV2SingleSelectField"
+        ],
+        "ProjectV2FieldConfiguration": [
+            "ProjectV2Field",
+            "ProjectV2IterationField",
+            "ProjectV2SingleSelectField"
+        ],
+        "ProjectV2ItemContent": [
+            "DraftIssue",
+            "Issue",
+            "PullRequest"
+        ],
+        "ProjectV2ItemFieldValue": [
+            "ProjectV2ItemFieldDateValue",
+            "ProjectV2ItemFieldIterationValue",
+            "ProjectV2ItemFieldLabelValue",
+            "ProjectV2ItemFieldMilestoneValue",
+            "ProjectV2ItemFieldNumberValue",
+            "ProjectV2ItemFieldPullRequestValue",
+            "ProjectV2ItemFieldRepositoryValue",
+            "ProjectV2ItemFieldReviewerValue",
+            "ProjectV2ItemFieldSingleSelectValue",
+            "ProjectV2ItemFieldTextValue",
+            "ProjectV2ItemFieldUserValue"
+        ],
+        "ProjectV2ItemFieldValueCommon": [
+            "ProjectV2ItemFieldDateValue",
+            "ProjectV2ItemFieldIterationValue",
+            "ProjectV2ItemFieldNumberValue",
+            "ProjectV2ItemFieldSingleSelectValue",
+            "ProjectV2ItemFieldTextValue"
+        ],
+        "ProjectV2Owner": [
+            "Issue",
+            "Organization",
+            "PullRequest",
+            "User"
+        ],
+        "ProjectV2Recent": [
+            "Organization",
+            "Repository",
+            "User"
+        ],
+        "PullRequestTimelineItem": [
+            "AssignedEvent",
+            "BaseRefDeletedEvent",
+            "BaseRefForcePushedEvent",
+            "ClosedEvent",
+            "Commit",
+            "CommitCommentThread",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DeployedEvent",
+            "DeploymentEnvironmentChangedEvent",
+            "HeadRefDeletedEvent",
+            "HeadRefForcePushedEvent",
+            "HeadRefRestoredEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MergedEvent",
+            "MilestonedEvent",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "PullRequestReviewThread",
+            "ReferencedEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "ReviewDismissedEvent",
+            "ReviewRequestRemovedEvent",
+            "ReviewRequestedEvent",
+            "SubscribedEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "PullRequestTimelineItems": [
+            "AddedToProjectEvent",
+            "AssignedEvent",
+            "AutoMergeDisabledEvent",
+            "AutoMergeEnabledEvent",
+            "AutoRebaseEnabledEvent",
+            "AutoSquashEnabledEvent",
+            "AutomaticBaseChangeFailedEvent",
+            "AutomaticBaseChangeSucceededEvent",
+            "BaseRefChangedEvent",
+            "BaseRefDeletedEvent",
+            "BaseRefForcePushedEvent",
+            "ClosedEvent",
+            "CommentDeletedEvent",
+            "ConnectedEvent",
+            "ConvertToDraftEvent",
+            "ConvertedNoteToIssueEvent",
+            "ConvertedToDiscussionEvent",
+            "CrossReferencedEvent",
+            "DemilestonedEvent",
+            "DeployedEvent",
+            "DeploymentEnvironmentChangedEvent",
+            "DisconnectedEvent",
+            "HeadRefDeletedEvent",
+            "HeadRefForcePushedEvent",
+            "HeadRefRestoredEvent",
+            "IssueComment",
+            "LabeledEvent",
+            "LockedEvent",
+            "MarkedAsDuplicateEvent",
+            "MentionedEvent",
+            "MergedEvent",
+            "MilestonedEvent",
+            "MovedColumnsInProjectEvent",
+            "PinnedEvent",
+            "PullRequestCommit",
+            "PullRequestCommitCommentThread",
+            "PullRequestReview",
+            "PullRequestReviewThread",
+            "PullRequestRevisionMarker",
+            "ReadyForReviewEvent",
+            "ReferencedEvent",
+            "RemovedFromProjectEvent",
+            "RenamedTitleEvent",
+            "ReopenedEvent",
+            "ReviewDismissedEvent",
+            "ReviewRequestRemovedEvent",
+            "ReviewRequestedEvent",
+            "SubscribedEvent",
+            "TransferredEvent",
+            "UnassignedEvent",
+            "UnlabeledEvent",
+            "UnlockedEvent",
+            "UnmarkedAsDuplicateEvent",
+            "UnpinnedEvent",
+            "UnsubscribedEvent",
+            "UserBlockedEvent"
+        ],
+        "PushAllowanceActor": [
+            "App",
+            "Team",
+            "User"
+        ],
+        "Reactable": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "Issue",
+            "IssueComment",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "Release",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "Reactor": [
+            "Bot",
+            "Mannequin",
+            "Organization",
+            "User"
+        ],
+        "ReferencedSubject": [
+            "Issue",
+            "PullRequest"
+        ],
+        "RenamedTitleSubject": [
+            "Issue",
+            "PullRequest"
+        ],
+        "RepositoryAuditEntryData": [
+            "OrgRestoreMemberMembershipRepositoryAuditEntryData",
+            "PrivateRepositoryForkingDisableAuditEntry",
+            "PrivateRepositoryForkingEnableAuditEntry",
+            "RepoAccessAuditEntry",
+            "RepoAddMemberAuditEntry",
+            "RepoAddTopicAuditEntry",
+            "RepoArchivedAuditEntry",
+            "RepoChangeMergeSettingAuditEntry",
+            "RepoConfigDisableAnonymousGitAccessAuditEntry",
+            "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+            "RepoConfigDisableContributorsOnlyAuditEntry",
+            "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+            "RepoConfigEnableAnonymousGitAccessAuditEntry",
+            "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+            "RepoConfigEnableContributorsOnlyAuditEntry",
+            "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+            "RepoConfigLockAnonymousGitAccessAuditEntry",
+            "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+            "RepoCreateAuditEntry",
+            "RepoDestroyAuditEntry",
+            "RepoRemoveMemberAuditEntry",
+            "RepoRemoveTopicAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "RepositoryDiscussionAuthor": [
+            "Organization",
+            "User"
+        ],
+        "RepositoryDiscussionCommentAuthor": [
+            "Organization",
+            "User"
+        ],
+        "RepositoryInfo": [
+            "Repository"
+        ],
+        "RepositoryNode": [
+            "CommitComment",
+            "CommitCommentThread",
+            "DependabotUpdate",
+            "Discussion",
+            "DiscussionCategory",
+            "Issue",
+            "IssueComment",
+            "PinnedDiscussion",
+            "PullRequest",
+            "PullRequestCommitCommentThread",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "RepositoryVulnerabilityAlert"
+        ],
+        "RepositoryOwner": [
+            "Organization",
+            "User"
+        ],
+        "RequestedReviewer": [
+            "Mannequin",
+            "Team",
+            "User"
+        ],
+        "RequirableByPullRequest": [
+            "CheckRun",
+            "StatusContext"
+        ],
+        "ReviewDismissalAllowanceActor": [
+            "App",
+            "Team",
+            "User"
+        ],
+        "SearchResultItem": [
+            "App",
+            "Discussion",
+            "Issue",
+            "MarketplaceListing",
+            "Organization",
+            "PullRequest",
+            "Repository",
+            "User"
+        ],
+        "Sponsor": [
+            "Organization",
+            "User"
+        ],
+        "Sponsorable": [
+            "Organization",
+            "User"
+        ],
+        "SponsorableItem": [
+            "Organization",
+            "User"
+        ],
+        "SponsorsListingFeatureableItem": [
+            "Repository",
+            "User"
+        ],
+        "Starrable": [
+            "Gist",
+            "Repository",
+            "Topic"
+        ],
+        "StatusCheckRollupContext": [
+            "CheckRun",
+            "StatusContext"
+        ],
+        "Subscribable": [
+            "Commit",
+            "Discussion",
+            "Issue",
+            "PullRequest",
+            "Repository",
+            "Team",
+            "TeamDiscussion"
+        ],
+        "TeamAuditEntryData": [
+            "OrgRestoreMemberMembershipTeamAuditEntryData",
+            "TeamAddMemberAuditEntry",
+            "TeamAddRepositoryAuditEntry",
+            "TeamChangeParentTeamAuditEntry",
+            "TeamRemoveMemberAuditEntry",
+            "TeamRemoveRepositoryAuditEntry"
+        ],
+        "TopicAuditEntryData": [
+            "RepoAddTopicAuditEntry",
+            "RepoRemoveTopicAuditEntry"
+        ],
+        "UniformResourceLocatable": [
+            "Bot",
+            "CheckRun",
+            "ClosedEvent",
+            "Commit",
+            "ConvertToDraftEvent",
+            "CrossReferencedEvent",
+            "Gist",
+            "Issue",
+            "Mannequin",
+            "MergedEvent",
+            "Milestone",
+            "Organization",
+            "PullRequest",
+            "PullRequestCommit",
+            "ReadyForReviewEvent",
+            "Release",
+            "Repository",
+            "RepositoryTopic",
+            "ReviewDismissedEvent",
+            "TeamDiscussion",
+            "TeamDiscussionComment",
+            "User",
+            "WorkflowRun"
+        ],
+        "Updatable": [
+            "CommitComment",
+            "Discussion",
+            "DiscussionComment",
+            "GistComment",
+            "Issue",
+            "IssueComment",
+            "Project",
+            "ProjectV2",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "UpdatableComment": [
+            "CommitComment",
+            "DiscussionComment",
+            "GistComment",
+            "Issue",
+            "IssueComment",
+            "PullRequest",
+            "PullRequestReview",
+            "PullRequestReviewComment",
+            "TeamDiscussion",
+            "TeamDiscussionComment"
+        ],
+        "VerifiableDomainOwner": [
+            "Enterprise",
+            "Organization"
+        ],
+        "Votable": [
+            "Discussion",
+            "DiscussionComment"
+        ]
+    }
+};
+exports["default"] = result;
 
 
 /***/ }),

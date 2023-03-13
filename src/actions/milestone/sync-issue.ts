@@ -1,4 +1,3 @@
-import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { IssueState } from "../../graphql";
@@ -18,14 +17,14 @@ export class SyncMilestoneIssue extends TriggerableAction {
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
-    core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
     const node = (
       await sdk.queryNode({
         id: payload.milestone.node_id,
       })
     ).node;
-    core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
     if (node == undefined || node.__typename !== "Milestone") {
       return actionErr("No milestone found.");
     }
@@ -41,7 +40,7 @@ export class SyncMilestoneIssue extends TriggerableAction {
     if (roots.length === 0 || roots[0] == undefined) {
       return actionErr("No milestone issue found.");
     }
-    core.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
+    this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
     const issue = await sdk.updateIssue({
       issue: roots[0].id,
@@ -51,14 +50,14 @@ export class SyncMilestoneIssue extends TriggerableAction {
           ? IssueState.Open
           : IssueState.Closed,
     });
-    core.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
+    this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
 
     if (issue.updateIssue?.issue?.id == undefined) {
       return actionErr("Fail to update issue.");
     }
 
     return actionOk(
-      `MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, number: ${issue.updateIssue.issue.number}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`
+      `MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`
     );
   }
 }

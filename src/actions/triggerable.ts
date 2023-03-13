@@ -1,3 +1,5 @@
+import * as core from "@actions/core";
+
 import { actionSkip } from "./result";
 import type { Context, Sdk, ActionResult } from "./";
 
@@ -14,6 +16,22 @@ export abstract class TriggerableAction {
     return `${this.triggerName}${
       this.triggerAction === undefined ? "" : `-${this.triggerAction}`
     }`;
+  }
+
+  debug(message: string): void {
+    core.debug(message);
+  }
+
+  notice(message: string): void {
+    core.notice(message, { title: this.description() });
+  }
+
+  warning(message: string): void {
+    core.warning(message, { title: this.description() });
+  }
+
+  error(message: string): void {
+    core.error(message, { title: this.description() });
   }
 
   canHandle(name: string, action?: string): boolean {

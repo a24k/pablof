@@ -38,9 +38,9 @@ jobs:
 
 ### Inputs
 
-| Name  | Required | Type   | Description                                               |
-| ---   | :---:    | ---    | ---                                                       |
-| token | ✓        | string | personal access token with `repo` and `project` scopes. |
+| Name    | Required | Type   | Description                                             |
+| ---     | :---:    | ---    | ---                                                     |
+| token   | ✓        | string | Personal Access Token with `repo` and `project` scopes. |
 
 # Features - Milestone Issue
 

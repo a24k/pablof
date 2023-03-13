@@ -1,5 +1,3 @@
-import * as core from "@actions/core";
-
 import { TriggerableAction } from "./";
 import type { Context, Sdk } from "./";
 import type { ActionOk, ActionErr } from "./result";
@@ -19,23 +17,23 @@ export class ActionInventory {
     for (const item of this.items) {
       const title = item.description();
 
-      core.debug(`handleContext on ${title}`);
+      item.debug(`handleContext on ${title}`);
 
       const result = await item.handleContext(context, sdk);
       result.match(
         (res: ActionOk) => {
           switch (res.type) {
             case "Success":
-              core.notice(res.message, { title });
+              item.notice(res.message);
               break;
             case "Skip":
             default:
-              core.debug("skipped");
+              item.debug("skipped");
               break;
           }
         },
         (err: ActionErr) => {
-          core.error(err.message, { title });
+          item.error(err.message);
         }
       );
     }
