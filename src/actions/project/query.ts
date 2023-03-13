@@ -31,6 +31,12 @@ export class QueryProject extends TriggerableAction {
     ).node;
     core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    return actionOk(`Project queried`);
+    if (node == undefined || node.__typename !== "ProjectV2") {
+      return actionErr("No project found.");
+    }
+
+    return actionOk(
+      `Project queried {id: ${node.id}, number: ${node.number}, title: ${node.title}}`
+    );
   }
 }
