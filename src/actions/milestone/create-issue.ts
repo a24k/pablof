@@ -61,6 +61,10 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
   }
 
+  protected digest(issue: IssueDigestFragment): void {
+    this.debug(`IssueDigestFragment = ${JSON.stringify(issue, null, 2)}`);
+  }
+
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
@@ -88,8 +92,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
       return actionErr("Fail to create issue.");
     }
 
-    const issueDigest = issue.createIssue.issue as IssueDigestFragment;
-    this.debug(`IssueDigestFragment = ${JSON.stringify(issueDigest, null, 2)}`);
+    this.digest(issue.createIssue.issue);
 
     const projects = await this.queryProjects(payload.repository.node_id, sdk);
     const issueId = issue.createIssue.issue.id;

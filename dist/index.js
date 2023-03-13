@@ -139,6 +139,9 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             }
         });
     }
+    digest(issue) {
+        this.debug(`IssueDigestFragment = ${JSON.stringify(issue, null, 2)}`);
+    }
     handle(context, sdk) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
@@ -161,8 +164,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to create issue.");
             }
-            const issueDigest = issue.createIssue.issue;
-            this.debug(`IssueDigestFragment = ${JSON.stringify(issueDigest, null, 2)}`);
+            this.digest(issue.createIssue.issue);
             const projects = yield this.queryProjects(payload.repository.node_id, sdk);
             const issueId = issue.createIssue.issue.id;
             projects.match((ids) => {
