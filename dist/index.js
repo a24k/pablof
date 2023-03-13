@@ -147,7 +147,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             }
             const projects = yield this.queryProjects(payload.repository.node_id, sdk);
             const issueId = issue.createIssue.issue.id;
-            yield projects.match((ids) => __awaiter(this, void 0, void 0, function* () {
+            projects.match((ids) => __awaiter(this, void 0, void 0, function* () {
                 var _c;
                 for (const projectId of ids) {
                     const result = (yield sdk.addProjectItem({

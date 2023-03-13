@@ -73,7 +73,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
     const projects = await this.queryProjects(payload.repository.node_id, sdk);
     const issueId = issue.createIssue.issue.id;
-    await projects.match(
+    projects.match(
       async (ids: ID[]) => {
         for (const projectId of ids) {
           const result = (
