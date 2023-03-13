@@ -44,6 +44,26 @@ export class CreateMilestoneIssue extends TriggerableAction {
     );
   }
 
+  private async addIssueToProjects(sdk: Sdk, issue: ID, projects: ID[]) {
+    for (const projectId of projects) {
+      const result = (
+        await sdk.addProjectItem({
+          project: projectId,
+          item: issue,
+        })
+      ).addProjectV2ItemById;
+      this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
+
+      if (result?.item?.type === "ISSUE") {
+        this.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
+      } else {
+        this.warning(
+          `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
+        );
+      }
+    }
+  }
+
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
@@ -74,32 +94,9 @@ export class CreateMilestoneIssue extends TriggerableAction {
     const projects = await this.queryProjects(payload.repository.node_id, sdk);
     const issueId = issue.createIssue.issue.id;
     projects.match(
-      async (ids: ID[]) => {
-        for (const projectId of ids) {
-          const result = (
-            await sdk.addProjectItem({
-              project: projectId,
-              item: issueId,
-            })
-          ).addProjectV2ItemById;
-          this.debug(
-            `addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`
-          );
-
-          if (result?.item?.type === "ISSUE") {
-            this.notice(
-              `MilestoneIssue is added to ProjectV2 {id: ${projectId}}`
-            );
-          } else {
-            this.warning(
-              `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
-            );
-          }
-        }
-      },
-      async (err: string) => {
-        this.warning(`MilestoneIssue can't find projects = ${err}`);
-      }
+      async (ids: ID[]) => await this.addIssueToProjects(sdk, issueId, ids),
+      async (err: string) =>
+        this.warning(`MilestoneIssue can't find projects = ${err}`)
     );
 
     return actionOk(

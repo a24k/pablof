@@ -123,6 +123,24 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(nodes.flatMap(project => project == null || project.closed ? [] : project.id));
         });
     }
+    addIssueToProjects(sdk, issue, projects) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const projectId of projects) {
+                const result = (yield sdk.addProjectItem({
+                    project: projectId,
+                    item: issue,
+                })).addProjectV2ItemById;
+                this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
+                if (((_a = result === null || result === void 0 ? void 0 : result.item) === null || _a === void 0 ? void 0 : _a.type) === "ISSUE") {
+                    this.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
+                }
+                else {
+                    this.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`);
+                }
+            }
+        });
+    }
     handle(context, sdk) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
@@ -147,24 +165,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             }
             const projects = yield this.queryProjects(payload.repository.node_id, sdk);
             const issueId = issue.createIssue.issue.id;
-            projects.match((ids) => __awaiter(this, void 0, void 0, function* () {
-                var _c;
-                for (const projectId of ids) {
-                    const result = (yield sdk.addProjectItem({
-                        project: projectId,
-                        item: issueId,
-                    })).addProjectV2ItemById;
-                    this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
-                    if (((_c = result === null || result === void 0 ? void 0 : result.item) === null || _c === void 0 ? void 0 : _c.type) === "ISSUE") {
-                        this.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
-                    }
-                    else {
-                        this.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`);
-                    }
-                }
-            }), (err) => __awaiter(this, void 0, void 0, function* () {
-                this.warning(`MilestoneIssue can't find projects = ${err}`);
-            }));
+            projects.match((ids) => __awaiter(this, void 0, void 0, function* () { return yield this.addIssueToProjects(sdk, issueId, ids); }), (err) => __awaiter(this, void 0, void 0, function* () { return this.warning(`MilestoneIssue can't find projects = ${err}`); }));
             return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
     }
