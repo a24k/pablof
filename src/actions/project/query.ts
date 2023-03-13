@@ -35,7 +35,9 @@ export class QueryProject extends TriggerableAction {
       return actionErr("No projectsV2 found.");
     }
 
-    const projects = nodes.filter(project => project !== null);
+    const projects = nodes.filter(
+      project => project !== null && project.closed === false
+    );
     if (projects.length === 0 || projects[0] == undefined) {
       return actionErr("No projectsV2 found.");
     }
