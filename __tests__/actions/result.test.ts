@@ -1,10 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { ActionResult, ok, skip, err } from "../../src/actions/result";
+import { actionOk, actionSkip, actionErr } from "../../src/actions/result";
 
 describe("ActionResult", () => {
-  describe("skip()", () => {
-    const result = skip();
+  describe("actionSkip()", () => {
+    const result = actionSkip();
 
     test("isOk() = true", () => {
       expect(result.isOk()).toBe(true);
@@ -19,8 +19,8 @@ describe("ActionResult", () => {
     });
   });
 
-  describe("ok('success')", () => {
-    const result = ok("success");
+  describe("actionOk('success')", () => {
+    const result = actionOk("success");
 
     test("isOk() = true", () => {
       expect(result.isOk()).toBe(true);
@@ -42,8 +42,8 @@ describe("ActionResult", () => {
     });
   });
 
-  describe("err('failure')", () => {
-    const result = err("failure");
+  describe("actionErr('failure')", () => {
+    const result = actionErr("failure");
 
     test("isOk() = false", () => {
       expect(result.isOk()).toBe(false);

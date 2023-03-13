@@ -1,4 +1,4 @@
-import { skip } from "./result";
+import { actionSkip } from "./result";
 import type { Context, Sdk, ActionResult } from "./";
 
 export abstract class TriggerableAction {
@@ -38,7 +38,7 @@ export abstract class TriggerableAction {
     if (this.canHandleContext(context)) {
       return await this.handle(context, sdk);
     } else {
-      return skip();
+      return actionSkip();
     }
   }
 }

@@ -2,7 +2,7 @@ import * as github from "@actions/github";
 
 import type { Sdk } from "../graphql";
 
-import { CreateMilestoneIssue } from "./milestone";
+import { CreateMilestoneIssue, SyncMilestoneIssue } from "./milestone";
 
 import { ActionInventory } from "./inventory";
 import { ActionResult } from "./result";
@@ -17,6 +17,7 @@ export function collect(): ActionInventory {
   const inventory = new ActionInventory();
 
   inventory.submit(new CreateMilestoneIssue());
+  inventory.submit(new SyncMilestoneIssue());
 
   return inventory;
 }

@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 
 import { TriggerableAction } from "../../src/actions";
 import type { Context } from "../../src/actions";
-import { ActionResult, ok } from "../../src/actions/result";
+import { ActionResult, actionOk } from "../../src/actions/result";
 
 describe("TriggerableAction", () => {
   class TestAction extends TriggerableAction {
@@ -11,7 +11,7 @@ describe("TriggerableAction", () => {
     }
 
     protected async handle(_: Context): Promise<ActionResult> {
-      return ok("ok");
+      return actionOk("ok");
     }
   }
 
