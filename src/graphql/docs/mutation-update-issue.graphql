@@ -1,9 +1,10 @@
 mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
   updateIssue(input: { id: $issue, title: $title, state: $state }) {
     issue {
-      id title body state
+      ...IssueProps
       milestone {
-        id title description state dueOn
-      } }
+        ...MilestoneProps
+      }
+    }
   }
 }

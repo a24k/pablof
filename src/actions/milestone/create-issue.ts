@@ -6,7 +6,7 @@ import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
 import type { Context, Sdk, ID } from "../";
-import type { IssueDigestFragment } from "../../graphql";
+import type { IssuePropsFragment } from "../../graphql";
 
 export class CreateMilestoneIssue extends TriggerableAction {
   constructor() {
@@ -61,8 +61,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
   }
 
-  protected digest(issue: IssueDigestFragment): void {
-    this.debug(`IssueDigestFragment = ${JSON.stringify(issue, null, 2)}`);
+  protected digest(issue: IssuePropsFragment): void {
+    this.debug(`IssuePropsFragment = ${JSON.stringify(issue, null, 2)}`);
   }
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {

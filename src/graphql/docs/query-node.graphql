@@ -1,34 +1,30 @@
 query queryNode($id: ID!) { 
   node(id: $id) {
-    __typename
-
     ... on Repository {
-      id name nameWithOwner description
+      ...RepositoryProps
       projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
-          id title shortDescription readme closed
+          ...ProjectV2Props
         }
       }
     }
 
     ... on Milestone {
-      id title description state dueOn
+      ...MilestoneProps
       repository {
-        id name
-        owner { login }
+        ...RepositoryProps
       }
       issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
-          id title state
-          trackedInIssues(first: 1) { totalCount }
+          ...IssueProps
         }
       }
     }
 
     ... on ProjectV2 {
-      id title shortDescription readme closed
+      ...ProjectV2Props
     }
   }
 }
