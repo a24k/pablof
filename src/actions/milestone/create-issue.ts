@@ -44,23 +44,19 @@ export class CreateMilestoneIssue extends TriggerableAction {
     );
   }
 
-  private async addIssueToProjects(sdk: Sdk, issue: ID, projects: ID[]) {
-    for (const projectId of projects) {
-      const result = (
-        await sdk.addProjectItem({
-          project: projectId,
-          item: issue,
-        })
-      ).addProjectV2ItemById;
-      this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
+  private async addIssueToProject(sdk: Sdk, project: ID, issue: ID) {
+    const result = (
+      await sdk.addProjectItem({
+        project: project,
+        item: issue,
+      })
+    ).addProjectV2ItemById;
+    this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
 
-      if (result?.item?.type === "ISSUE") {
-        this.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
-      } else {
-        this.warning(
-          `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
-        );
-      }
+    if (result?.item?.type === "ISSUE") {
+      this.notice(`MilestoneIssue is added to ProjectV2 {id: ${project}}`);
+    } else {
+      this.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${project}}`);
     }
   }
 
@@ -94,9 +90,12 @@ export class CreateMilestoneIssue extends TriggerableAction {
     const projects = await this.queryProjects(payload.repository.node_id, sdk);
     const issueId = issue.createIssue.issue.id;
     projects.match(
-      async (ids: ID[]) => await this.addIssueToProjects(sdk, issueId, ids),
-      async (err: string) =>
-        this.warning(`MilestoneIssue can't find projects = ${err}`)
+      (ids: ID[]) => {
+        for (const id of ids) {
+          this.addIssueToProject(sdk, id, issueId);
+        }
+      },
+      (err: string) => this.warning(`No projects found. (${err})`)
     );
 
     return actionOk(
