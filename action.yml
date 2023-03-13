@@ -3,7 +3,7 @@ description: 'Productive Assistant for GitHub'
 author: 'Atsushi KAWASAKI'
 inputs:
   token:
-    description: 'GitHub Personal Access Token with write access to repo and project'
+    description: 'Personal Access Token with `repo` and `project` scopes.'
     required: true
   project:
     description: 'ProjectV2 Node ID to interact with pablof'
