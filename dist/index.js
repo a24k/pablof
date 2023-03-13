@@ -9,7 +9,6 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
 const milestone_1 = __nccwpck_require__(5674);
-const project_1 = __nccwpck_require__(9534);
 const inventory_1 = __nccwpck_require__(6253);
 Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
 const triggerable_1 = __nccwpck_require__(4953);
@@ -18,7 +17,6 @@ function collect() {
     const inventory = new inventory_1.ActionInventory();
     inventory.submit(new milestone_1.CreateMilestoneIssue());
     inventory.submit(new milestone_1.SyncMilestoneIssue());
-    inventory.submit(new project_1.QueryProject());
     return inventory;
 }
 exports.collect = collect;
@@ -263,73 +261,6 @@ exports.SyncMilestoneIssue = SyncMilestoneIssue;
 
 /***/ }),
 
-/***/ 9534:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.QueryProject = void 0;
-const query_1 = __nccwpck_require__(9371);
-Object.defineProperty(exports, "QueryProject", ({ enumerable: true, get: function () { return query_1.QueryProject; } }));
-
-
-/***/ }),
-
-/***/ 9371:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.QueryProject = void 0;
-const triggerable_1 = __nccwpck_require__(4953);
-const result_1 = __nccwpck_require__(4983);
-class QueryProject extends triggerable_1.TriggerableAction {
-    constructor() {
-        super("pull_request");
-    }
-    description() {
-        return `QueryProject for ${super.description()}`;
-    }
-    handle(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const payload = context.payload;
-            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const node = (yield sdk.queryNode({
-                id: payload.repository.node_id,
-            })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Repository") {
-                return (0, result_1.actionErr)("No repository found.");
-            }
-            const nodes = node.projectsV2.nodes;
-            if (nodes == undefined) {
-                return (0, result_1.actionErr)("No projectsV2 found.");
-            }
-            const projects = nodes.filter(project => project !== null && project.closed === false);
-            if (projects.length === 0 || projects[0] == undefined) {
-                return (0, result_1.actionErr)("No projectsV2 found.");
-            }
-            this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
-            return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
-        });
-    }
-}
-exports.QueryProject = QueryProject;
-
-
-/***/ }),
-
 /***/ 4983:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -453,7 +384,7 @@ exports.IssueClosedStateReason = exports.IpAllowListForInstalledAppsEnabledSetti
 exports.ProjectCardState = exports.ProjectCardArchivedState = exports.PinnedDiscussionPattern = exports.PinnedDiscussionGradient = exports.PinnableItemType = exports.PatchStatus = exports.PackageVersionOrderField = exports.PackageType = exports.PackageOrderField = exports.PackageFileOrderField = exports.OrganizationOrderField = exports.OrganizationMigrationState = exports.OrganizationMembersCanCreateRepositoriesSettingValue = exports.OrganizationMemberRole = exports.OrganizationInvitationType = exports.OrganizationInvitationSource = exports.OrganizationInvitationRole = exports.OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility = exports.OrgUpdateMemberAuditEntryPermission = exports.OrgUpdateDefaultRepositoryPermissionAuditEntryPermission = exports.OrgRemoveOutsideCollaboratorAuditEntryReason = exports.OrgRemoveOutsideCollaboratorAuditEntryMembershipType = exports.OrgRemoveMemberAuditEntryReason = exports.OrgRemoveMemberAuditEntryMembershipType = exports.OrgRemoveBillingManagerAuditEntryReason = exports.OrgEnterpriseOwnerOrderField = exports.OrgCreateAuditEntryBillingPlan = exports.OrgAddMemberAuditEntryPermission = exports.OrderDirection = exports.OperationType = exports.OauthApplicationCreateAuditEntryState = exports.OidcProviderType = exports.NotificationRestrictionSettingValue = exports.MilestoneState = exports.MilestoneOrderField = exports.MigrationState = exports.MigrationSourceType = exports.MergeableState = exports.MergeStateStatus = exports.MergeCommitTitle = exports.MergeCommitMessage = exports.MannequinOrderField = exports.LockReason = exports.LanguageOrderField = exports.LabelOrderField = exports.IssueTimelineItemsItemType = exports.IssueStateReason = exports.IssueState = exports.IssueOrderField = exports.IssueCommentOrderField = void 0;
 exports.RepositoryVisibility = exports.RepositoryPrivacy = exports.RepositoryPermission = exports.RepositoryOrderField = exports.RepositoryMigrationOrderField = exports.RepositoryMigrationOrderDirection = exports.RepositoryLockReason = exports.RepositoryInvitationOrderField = exports.RepositoryInteractionLimitOrigin = exports.RepositoryInteractionLimitExpiry = exports.RepositoryInteractionLimit = exports.RepositoryContributionType = exports.RepositoryAffiliation = exports.ReportedContentClassifiers = exports.RepoRemoveMemberAuditEntryVisibility = exports.RepoDestroyAuditEntryVisibility = exports.RepoCreateAuditEntryVisibility = exports.RepoChangeMergeSettingAuditEntryMergeType = exports.RepoArchivedAuditEntryVisibility = exports.RepoAddMemberAuditEntryVisibility = exports.RepoAccessAuditEntryVisibility = exports.ReleaseOrderField = exports.RefOrderField = exports.ReactionOrderField = exports.ReactionContent = exports.PullRequestUpdateState = exports.PullRequestTimelineItemsItemType = exports.PullRequestState = exports.PullRequestReviewState = exports.PullRequestReviewEvent = exports.PullRequestReviewDecision = exports.PullRequestReviewCommentState = exports.PullRequestOrderField = exports.PullRequestMergeMethod = exports.ProjectV2WorkflowsOrderField = exports.ProjectV2ViewOrderField = exports.ProjectV2ViewLayout = exports.ProjectV2State = exports.ProjectV2SingleSelectFieldOptionColor = exports.ProjectV2OrderField = exports.ProjectV2ItemType = exports.ProjectV2ItemOrderField = exports.ProjectV2ItemFieldValueOrderField = exports.ProjectV2FieldType = exports.ProjectV2FieldOrderField = exports.ProjectV2CustomFieldType = exports.ProjectTemplate = exports.ProjectState = exports.ProjectOrderField = exports.ProjectColumnPurpose = void 0;
 exports.IssuePropsFragmentDoc = exports.RepositoryPropsFragmentDoc = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
-exports.getSdk = exports.QueryProjectDocument = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.ProjectV2ItemPropsFragmentDoc = exports.ProjectV2PropsFragmentDoc = exports.MilestonePropsFragmentDoc = void 0;
+exports.getSdk = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.ProjectV2ItemPropsFragmentDoc = exports.ProjectV2PropsFragmentDoc = exports.MilestonePropsFragmentDoc = void 0;
 /** The actor's type. */
 var ActorType;
 (function (ActorType) {
@@ -3479,19 +3410,6 @@ exports.QueryProjectFieldsDocument = `
   }
 }
     `;
-exports.QueryProjectDocument = `
-    query queryProject($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    id
-    name
-    login
-    projectV2(number: $number) {
-      id
-      title
-    }
-  }
-}
-    `;
 function getSdk(requester) {
     return {
         addProjectItem(variables, options) {
@@ -3508,9 +3426,6 @@ function getSdk(requester) {
         },
         queryProjectFields(variables, options) {
             return requester(exports.QueryProjectFieldsDocument, variables, options);
-        },
-        queryProject(variables, options) {
-            return requester(exports.QueryProjectDocument, variables, options);
         }
     };
 }

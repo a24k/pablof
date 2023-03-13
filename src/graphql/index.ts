@@ -28283,26 +28283,6 @@ export type QueryProjectFieldsQuery = {
   } | null;
 };
 
-export type QueryProjectQueryVariables = Exact<{
-  owner: Scalars["String"];
-  number: Scalars["Int"];
-}>;
-
-export type QueryProjectQuery = {
-  readonly __typename?: "Query";
-  readonly user?: {
-    readonly __typename?: "User";
-    readonly id: string;
-    readonly name?: string | null;
-    readonly login: string;
-    readonly projectV2?: {
-      readonly __typename?: "ProjectV2";
-      readonly id: string;
-      readonly title: string;
-    } | null;
-  } | null;
-};
-
 export const RepositoryPropsFragmentDoc = `
     fragment RepositoryProps on Repository {
   __typename
@@ -28460,19 +28440,6 @@ export const QueryProjectFieldsDocument = `
   }
 }
     `;
-export const QueryProjectDocument = `
-    query queryProject($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    id
-    name
-    login
-    projectV2(number: $number) {
-      id
-      title
-    }
-  }
-}
-    `;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,
   vars?: V,
@@ -28535,16 +28502,6 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<QueryProjectFieldsQuery>;
-    },
-    queryProject(
-      variables: QueryProjectQueryVariables,
-      options?: C
-    ): Promise<QueryProjectQuery> {
-      return requester<QueryProjectQuery, QueryProjectQueryVariables>(
-        QueryProjectDocument,
-        variables,
-        options
-      ) as Promise<QueryProjectQuery>;
     },
   };
 }
