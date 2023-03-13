@@ -5,6 +5,8 @@ inputs:
   token:
     description: 'GitHub Personal Access Token with write access to repo and project'
     required: true
+  project:
+    description: 'ProjectV2 Node ID to interact with pablof'
 runs:
   using: 'node16'
   main: 'dist/index.js'
