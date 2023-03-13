@@ -4,7 +4,16 @@
 
 # About
 
-pablof - a Productive Assistant for a Better Life OF you, your team, your family and our world.
+pablof -- a Productive Assistant for a Better Life OF you, your team, your family and our world.
+
+This is a custom action for GitHub Actions to help you work with GitHub Issues and Projects (V2).
+
+## Table of Contents
+
+- [Usage](#usage)
+- [Features - Milestone Issue](#usage)
+    - [Create Milestone Issue](#create-milestone-issue)
+    - [Sync Milestone Issue](#sync-milestone-issue)
 
 # Usage
 
