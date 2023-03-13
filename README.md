@@ -40,7 +40,7 @@ jobs:
 
 | Name  | Required | Type   | Description                                               |
 | ---   | :---:    | ---    | ---                                                       |
-| token | ✓        | string | a Personal Access Token with `repo` and `project` scopes. |
+| token | ✓        | string | personal access token with `repo` and `project` scopes. |
 
 # Features - Milestone Issue
 
