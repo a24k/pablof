@@ -1,0 +1,9 @@
+mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
+  updateIssue(input: { id: $issue, title: $title, state: $state }) {
+    issue {
+      id number title body state
+      milestone {
+        id number title description state dueOn
+      } }
+  }
+}
