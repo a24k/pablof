@@ -1,3 +1,4 @@
 fragment IssueDigest on Issue {
+  __typename
   id title body state
 }

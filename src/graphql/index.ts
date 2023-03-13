@@ -27781,7 +27781,7 @@ export enum WorkflowRunOrderField {
 }
 
 export type IssueDigestFragment = {
-  readonly __typename?: "Issue";
+  readonly __typename: "Issue";
   readonly id: string;
   readonly title: string;
   readonly body: string;
@@ -27817,7 +27817,7 @@ export type CreateIssueWithMilestoneMutation = {
   readonly createIssue?: {
     readonly __typename?: "CreateIssuePayload";
     readonly issue?: {
-      readonly __typename?: "Issue";
+      readonly __typename: "Issue";
       readonly id: string;
       readonly title: string;
       readonly body: string;
@@ -28232,6 +28232,7 @@ export type QueryProjectQuery = {
 
 export const IssueDigestFragmentDoc = `
     fragment IssueDigest on Issue {
+  __typename
   id
   title
   body

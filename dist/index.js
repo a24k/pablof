@@ -3324,6 +3324,7 @@ var WorkflowRunOrderField;
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
 exports.IssueDigestFragmentDoc = `
     fragment IssueDigest on Issue {
+  __typename
   id
   title
   body
