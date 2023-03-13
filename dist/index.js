@@ -196,17 +196,18 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             const projects = yield this.queryProjects(payload.repository.node_id, sdk);
             const issueId = issue.createIssue.issue.id;
             yield projects.match((ids) => __awaiter(this, void 0, void 0, function* () {
+                var _c;
                 for (const projectId of ids) {
                     const result = (yield sdk.addProjectItem({
                         project: projectId,
                         item: issueId,
                     })).addProjectV2ItemById;
                     core.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
-                    if (result == undefined || result.__typename !== "AddProjectV2ItemByIdPayload" || result.item == undefined) {
-                        core.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`);
+                    if (((_c = result === null || result === void 0 ? void 0 : result.item) === null || _c === void 0 ? void 0 : _c.type) === "ISSUE") {
+                        core.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
                     }
                     else {
-                        core.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
+                        core.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`);
                     }
                 }
             }), (err) => __awaiter(this, void 0, void 0, function* () {

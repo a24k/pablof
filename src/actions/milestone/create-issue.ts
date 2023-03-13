@@ -87,17 +87,13 @@ export class CreateMilestoneIssue extends TriggerableAction {
             `addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`
           );
 
-          if (
-            result == undefined ||
-            result.__typename !== "AddProjectV2ItemByIdPayload" ||
-            result.item == undefined
-          ) {
-            core.warning(
-              `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
-            );
-          } else {
+          if (result?.item?.type === "ISSUE") {
             core.notice(
               `MilestoneIssue is added to ProjectV2 {id: ${projectId}}`
+            );
+          } else {
+            core.warning(
+              `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
             );
           }
         }
