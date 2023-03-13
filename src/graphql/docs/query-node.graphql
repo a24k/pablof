@@ -1,6 +1,7 @@
 query queryNode($id: ID!) { 
   node(id: $id) {
     __typename
+
     ... on Milestone {
       id number title description state dueOn
       repository {
@@ -14,6 +15,10 @@ query queryNode($id: ID!) {
           trackedInIssues(first: 1) { totalCount }
         }
       }
+    }
+
+    ... on ProjectV2 {
+      id number title shortDescription readme closed
     }
   }
 }

@@ -28012,7 +28012,15 @@ export type QueryNodeQuery = {
     | { readonly __typename: "Project" }
     | { readonly __typename: "ProjectCard" }
     | { readonly __typename: "ProjectColumn" }
-    | { readonly __typename: "ProjectV2" }
+    | {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly number: number;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+      }
     | { readonly __typename: "ProjectV2Field" }
     | { readonly __typename: "ProjectV2Item" }
     | { readonly __typename: "ProjectV2ItemFieldDateValue" }
@@ -28261,6 +28269,14 @@ export const QueryNodeDocument = `
           }
         }
       }
+    }
+    ... on ProjectV2 {
+      id
+      number
+      title
+      shortDescription
+      readme
+      closed
     }
   }
 }

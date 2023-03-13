@@ -9,6 +9,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
 const milestone_1 = __nccwpck_require__(5674);
+const project_1 = __nccwpck_require__(9534);
 const inventory_1 = __nccwpck_require__(6253);
 Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
 const triggerable_1 = __nccwpck_require__(4953);
@@ -17,6 +18,7 @@ function collect() {
     const inventory = new inventory_1.ActionInventory();
     inventory.submit(new milestone_1.CreateMilestoneIssue());
     inventory.submit(new milestone_1.SyncMilestoneIssue());
+    inventory.submit(new project_1.QueryProject());
     return inventory;
 }
 exports.collect = collect;
@@ -284,6 +286,89 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
     }
 }
 exports.SyncMilestoneIssue = SyncMilestoneIssue;
+
+
+/***/ }),
+
+/***/ 9534:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.QueryProject = void 0;
+const query_1 = __nccwpck_require__(9371);
+Object.defineProperty(exports, "QueryProject", ({ enumerable: true, get: function () { return query_1.QueryProject; } }));
+
+
+/***/ }),
+
+/***/ 9371:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.QueryProject = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const triggerable_1 = __nccwpck_require__(4953);
+const result_1 = __nccwpck_require__(4983);
+class QueryProject extends triggerable_1.TriggerableAction {
+    constructor() {
+        super("pull_request");
+    }
+    description() {
+        return `QueryProject for ${super.description()}`;
+    }
+    handle(context, sdk) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            const project = core.getInput("project");
+            if (project == undefined) {
+                return (0, result_1.actionErr)("No project specified.");
+            }
+            const node = (yield sdk.queryNode({
+                id: project,
+            })).node;
+            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            return (0, result_1.actionOk)(`Project queried`);
+        });
+    }
+}
+exports.QueryProject = QueryProject;
 
 
 /***/ }),
@@ -3318,6 +3403,14 @@ exports.QueryNodeDocument = `
           }
         }
       }
+    }
+    ... on ProjectV2 {
+      id
+      number
+      title
+      shortDescription
+      readme
+      closed
     }
   }
 }
