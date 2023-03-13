@@ -11,8 +11,9 @@ import { TriggerableAction } from "./triggerable";
 export { ActionInventory, ActionResult, TriggerableAction };
 
 type Context = typeof github.context;
+type ID = string;
 
-export type { Context, Sdk };
+export type { Context, Sdk, ID };
 
 export function collect(): ActionInventory {
   const inventory = new ActionInventory();

@@ -1,10 +1,12 @@
+import { Result, ok, err } from "neverthrow";
+
 import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
-import type { Context, Sdk } from "../";
+import type { Context, Sdk, ID } from "../";
 
 export class CreateMilestoneIssue extends TriggerableAction {
   constructor() {
@@ -13,6 +15,34 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   description(): string {
     return `CreateMilestoneIssue for ${super.description()}`;
+  }
+
+  private async queryProjects(
+    repository: ID,
+    sdk: Sdk
+  ): Promise<Result<ID[], string>> {
+    const node = (
+      await sdk.queryNode({
+        id: repository,
+      })
+    ).node;
+    core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    const nodes = node.projectsV2.nodes;
+    if (nodes == undefined || nodes.length === 0) {
+      return err("No projects found.");
+    }
+    core.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
+
+    return ok(
+      nodes.flatMap(project =>
+        project == null || project.closed ? [] : project.id
+      )
+    );
   }
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
@@ -41,6 +71,41 @@ export class CreateMilestoneIssue extends TriggerableAction {
     if (issue.createIssue?.issue?.id == undefined) {
       return actionErr("Fail to create issue.");
     }
+
+    const projects = await this.queryProjects(payload.repository.node_id, sdk);
+    const issueId = issue.createIssue.issue.id;
+    await projects.match(
+      async (ids: ID[]) => {
+        for (const projectId of ids) {
+          const result = (
+            await sdk.addProjectItem({
+              project: projectId,
+              item: issueId,
+            })
+          ).addProjectV2ItemById;
+          core.debug(
+            `addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`
+          );
+
+          if (
+            result == undefined ||
+            result.__typename !== "AddProjectV2ItemByIdPayload" ||
+            result.item == undefined
+          ) {
+            core.warning(
+              `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
+            );
+          } else {
+            core.notice(
+              `MilestoneIssue is added to ProjectV2 {id: ${projectId}}`
+            );
+          }
+        }
+      },
+      async (err: string) => {
+        core.warning(`MilestoneIssue can't find projects = ${err}`);
+      }
+    );
 
     return actionOk(
       `MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`

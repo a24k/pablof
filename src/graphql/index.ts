@@ -27780,6 +27780,23 @@ export enum WorkflowRunOrderField {
   CreatedAt = "CREATED_AT",
 }
 
+export type AddProjectItemMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+}>;
+
+export type AddProjectItemMutation = {
+  readonly __typename?: "Mutation";
+  readonly addProjectV2ItemById?: {
+    readonly __typename?: "AddProjectV2ItemByIdPayload";
+    readonly item?: {
+      readonly __typename?: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+    } | null;
+  } | null;
+};
+
 export type CreateIssueWithMilestoneMutationVariables = Exact<{
   repository: Scalars["ID"];
   title: Scalars["String"];
@@ -28205,6 +28222,16 @@ export type QueryProjectQuery = {
   } | null;
 };
 
+export const AddProjectItemDocument = `
+    mutation addProjectItem($project: ID!, $item: ID!) {
+  addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
+    item {
+      id
+      type
+    }
+  }
+}
+    `;
 export const CreateIssueWithMilestoneDocument = `
     mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
   createIssue(
@@ -28352,6 +28379,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
+    addProjectItem(
+      variables: AddProjectItemMutationVariables,
+      options?: C
+    ): Promise<AddProjectItemMutation> {
+      return requester<AddProjectItemMutation, AddProjectItemMutationVariables>(
+        AddProjectItemDocument,
+        variables,
+        options
+      ) as Promise<AddProjectItemMutation>;
+    },
     createIssueWithMilestone(
       variables: CreateIssueWithMilestoneMutationVariables,
       options?: C
