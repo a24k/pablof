@@ -33,16 +33,14 @@ jobs:
 | ---   | :---:    | ---    | ---                                                       |
 | token | ✓        | string | a Personal Access Token with `repo` and `project` scopes. |
 
-# Features
-
-## Milestone Issue
+# Features - Milestone Issue
 
 [Milestone](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones)
 is a better way to track progress on groups of issues.
 It is very useful for managing projects with multiple issues,
 but there is not a sufficient way to describe or discuss about Milestone itself in detail.
 
-### Concept
+## Concept
 
 Milestone Issue is a issue linked 1:1 to Milestone.
 
@@ -86,31 +84,31 @@ flowchart LR
   mib -- track --> ti4
 ```
 
-### How to identify the Milestone Issue
+## How to identify the Milestone Issue
 
 1. list issues linked with the Milestone
 1. filter issues by `trackedInIssues.totalCount === 0`
 1. the first issue, in order of `CREATED_AT ASC`, is the Milestone Issue
 
-### Actions
+## Actions
 
-#### Create Milestone Issue
+### Create Milestone Issue
 
 Automatically create a Milestone Issue when a Milestone is created.
 The created Milestone Issue will inherit the `title` and `body` of the Milestone.
 
-##### Supported Triggers
+#### Supported Triggers
 
 | Name        | Action    |
 | ---         | ---       |
 | `milestone` | `created` |
 
-#### Sync Milestone Issue
+### Sync Milestone Issue
 
 Automatically updates the Milestone Issue when a Milestone is updated.
 The updated Milestone Issue will have the same `title` and `state` as the Milestone.
 
-##### Supported Triggers
+#### Supported Triggers
 
 | Name        | Action    |
 | ---         | ---       |
