@@ -22,4 +22,3 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GH_TOKEN }}
-          project: ${{ secrets.PROJECT_ID }}

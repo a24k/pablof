@@ -19,24 +19,30 @@ export class QueryProject extends TriggerableAction {
     const payload = context.payload as PullRequestEvent;
     core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const project = core.getInput("project");
-    if (project == undefined) {
-      return actionErr("No project specified.");
-    }
-
     const node = (
       await sdk.queryNode({
-        id: project,
+        id: payload.repository.node_id,
       })
     ).node;
     core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    if (node == undefined || node.__typename !== "ProjectV2") {
-      return actionErr("No project found.");
+    if (node == undefined || node.__typename !== "Repository") {
+      return actionErr("No repository found.");
     }
 
+    const nodes = node.projectsV2.nodes;
+    if (nodes == undefined) {
+      return actionErr("No projectsV2 found.");
+    }
+
+    const projects = nodes.filter(project => project !== null);
+    if (projects.length === 0 || projects[0] == undefined) {
+      return actionErr("No projectsV2 found.");
+    }
+    core.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
+
     return actionOk(
-      `Project queried {id: ${node.id}, number: ${node.number}, title: ${node.title}}`
+      `Project queried {id: ${projects[0].id}, number: ${projects[0].number}, title: ${projects[0].title}}`
     );
   }
 }

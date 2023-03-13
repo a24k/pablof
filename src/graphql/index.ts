@@ -28070,7 +28070,26 @@ export type QueryNodeQuery = {
     | { readonly __typename: "RepoDestroyAuditEntry" }
     | { readonly __typename: "RepoRemoveMemberAuditEntry" }
     | { readonly __typename: "RepoRemoveTopicAuditEntry" }
-    | { readonly __typename: "Repository" }
+    | {
+        readonly __typename: "Repository";
+        readonly id: string;
+        readonly name: string;
+        readonly nameWithOwner: string;
+        readonly description?: string | null;
+        readonly projectsV2: {
+          readonly __typename?: "ProjectV2Connection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<{
+            readonly __typename?: "ProjectV2";
+            readonly id: string;
+            readonly number: number;
+            readonly title: string;
+            readonly shortDescription?: string | null;
+            readonly readme?: string | null;
+            readonly closed: boolean;
+          } | null> | null;
+        };
+      }
     | { readonly __typename: "RepositoryInvitation" }
     | { readonly __typename: "RepositoryMigration" }
     | { readonly __typename: "RepositoryTopic" }
@@ -28243,6 +28262,23 @@ export const QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
     __typename
+    ... on Repository {
+      id
+      name
+      nameWithOwner
+      description
+      projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+        totalCount
+        nodes {
+          id
+          number
+          title
+          shortDescription
+          readme
+          closed
+        }
+      }
+    }
     ... on Milestone {
       id
       number

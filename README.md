@@ -41,7 +41,6 @@ jobs:
 | Name    | Required | Type   | Description                                             |
 | ---     | :---:    | ---    | ---                                                     |
 | token   | ✓        | string | Personal Access Token with `repo` and `project` scopes. |
-| project |          | string | ProjectV2 Node ID to interact with pablof.              |
 
 # Features - Milestone Issue
 

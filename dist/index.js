@@ -356,18 +356,23 @@ class QueryProject extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const project = core.getInput("project");
-            if (project == undefined) {
-                return (0, result_1.actionErr)("No project specified.");
-            }
             const node = (yield sdk.queryNode({
-                id: project,
+                id: payload.repository.node_id,
             })).node;
             core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "ProjectV2") {
-                return (0, result_1.actionErr)("No project found.");
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, result_1.actionErr)("No repository found.");
             }
-            return (0, result_1.actionOk)(`Project queried {id: ${node.id}, number: ${node.number}, title: ${node.title}}`);
+            const nodes = node.projectsV2.nodes;
+            if (nodes == undefined) {
+                return (0, result_1.actionErr)("No projectsV2 found.");
+            }
+            const projects = nodes.filter(project => project !== null);
+            if (projects.length === 0 || projects[0] == undefined) {
+                return (0, result_1.actionErr)("No projectsV2 found.");
+            }
+            core.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
+            return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, number: ${projects[0].number}, title: ${projects[0].title}}`);
         });
     }
 }
@@ -3380,6 +3385,23 @@ exports.QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
     __typename
+    ... on Repository {
+      id
+      name
+      nameWithOwner
+      description
+      projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+        totalCount
+        nodes {
+          id
+          number
+          title
+          shortDescription
+          readme
+          closed
+        }
+      }
+    }
     ... on Milestone {
       id
       number
