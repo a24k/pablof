@@ -27,33 +27,10 @@ exports.collect = collect;
 /***/ }),
 
 /***/ 6253:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -65,7 +42,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ActionInventory = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 class ActionInventory {
     constructor() {
         this.items = [];
@@ -80,20 +56,20 @@ class ActionInventory {
         return __awaiter(this, void 0, void 0, function* () {
             for (const item of this.items) {
                 const title = item.description();
-                core.debug(`handleContext on ${title}`);
+                item.debug(`handleContext on ${title}`);
                 const result = yield item.handleContext(context, sdk);
                 result.match((res) => {
                     switch (res.type) {
                         case "Success":
-                            core.notice(res.message, { title });
+                            item.notice(res.message);
                             break;
                         case "Skip":
                         default:
-                            core.debug("skipped");
+                            item.debug("skipped");
                             break;
                     }
                 }, (err) => {
-                    core.error(err.message, { title });
+                    item.error(err.message);
                 });
             }
         });
@@ -109,29 +85,6 @@ exports.ActionInventory = ActionInventory;
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -144,7 +97,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-const core = __importStar(__nccwpck_require__(2186));
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
@@ -159,7 +111,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             const node = (yield sdk.queryNode({
                 id: repository,
             })).node;
-            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Repository") {
                 return (0, neverthrow_1.err)("No repository found.");
             }
@@ -167,7 +119,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             if (nodes == undefined || nodes.length === 0) {
                 return (0, neverthrow_1.err)("No projects found.");
             }
-            core.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
+            this.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
             return (0, neverthrow_1.ok)(nodes.flatMap(project => project == null || project.closed ? [] : project.id));
         });
     }
@@ -175,11 +127,11 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const node = (yield sdk.queryNode({
                 id: payload.milestone.node_id,
             })).node;
-            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
@@ -189,7 +141,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 body: payload.milestone.description,
                 milestone: node.id,
             });
-            core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+            this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to create issue.");
             }
@@ -202,16 +154,16 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                         project: projectId,
                         item: issueId,
                     })).addProjectV2ItemById;
-                    core.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
+                    this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
                     if (((_c = result === null || result === void 0 ? void 0 : result.item) === null || _c === void 0 ? void 0 : _c.type) === "ISSUE") {
-                        core.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
+                        this.notice(`MilestoneIssue is added to ProjectV2 {id: ${projectId}}`);
                     }
                     else {
-                        core.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`);
+                        this.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`);
                     }
                 }
             }), (err) => __awaiter(this, void 0, void 0, function* () {
-                core.warning(`MilestoneIssue can't find projects = ${err}`);
+                this.warning(`MilestoneIssue can't find projects = ${err}`);
             }));
             return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
         });
@@ -242,29 +194,6 @@ Object.defineProperty(exports, "SyncMilestoneIssue", ({ enumerable: true, get: f
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -276,7 +205,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SyncMilestoneIssue = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 const graphql_1 = __nccwpck_require__(7064);
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
@@ -291,11 +219,11 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const node = (yield sdk.queryNode({
                 id: payload.milestone.node_id,
             })).node;
-            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
@@ -307,7 +235,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
             if (roots.length === 0 || roots[0] == undefined) {
                 return (0, result_1.actionErr)("No milestone issue found.");
             }
-            core.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
+            this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
             const issue = yield sdk.updateIssue({
                 issue: roots[0].id,
                 title: payload.milestone.title,
@@ -315,7 +243,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                     ? graphql_1.IssueState.Open
                     : graphql_1.IssueState.Closed,
             });
-            core.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
+            this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, result_1.actionErr)("Fail to update issue.");
             }
@@ -346,29 +274,6 @@ Object.defineProperty(exports, "QueryProject", ({ enumerable: true, get: functio
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -380,7 +285,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QueryProject = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class QueryProject extends triggerable_1.TriggerableAction {
@@ -393,11 +297,11 @@ class QueryProject extends triggerable_1.TriggerableAction {
     handle(context, sdk) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
             const node = (yield sdk.queryNode({
                 id: payload.repository.node_id,
             })).node;
-            core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Repository") {
                 return (0, result_1.actionErr)("No repository found.");
             }
@@ -409,7 +313,7 @@ class QueryProject extends triggerable_1.TriggerableAction {
             if (projects.length === 0 || projects[0] == undefined) {
                 return (0, result_1.actionErr)("No projectsV2 found.");
             }
-            core.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
+            this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
             return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
         });
     }
@@ -448,6 +352,29 @@ exports.actionErr = actionErr;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -459,6 +386,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TriggerableAction = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const result_1 = __nccwpck_require__(4983);
 class TriggerableAction {
     constructor(name, action) {
@@ -467,6 +395,18 @@ class TriggerableAction {
     }
     description() {
         return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
+    }
+    debug(message) {
+        core.debug(message);
+    }
+    notice(message) {
+        core.notice(message, { title: this.description() });
+    }
+    warning(message) {
+        core.warning(message, { title: this.description() });
+    }
+    error(message) {
+        core.error(message, { title: this.description() });
     }
     canHandle(name, action) {
         return (this.triggerName === name &&

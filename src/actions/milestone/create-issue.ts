@@ -1,6 +1,5 @@
 import { Result, ok, err } from "neverthrow";
 
-import * as core from "@actions/core";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { TriggerableAction } from "../triggerable";
@@ -26,7 +25,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
         id: repository,
       })
     ).node;
-    core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
     if (node == undefined || node.__typename !== "Repository") {
       return err("No repository found.");
@@ -36,7 +35,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     if (nodes == undefined || nodes.length === 0) {
       return err("No projects found.");
     }
-    core.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
+    this.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
 
     return ok(
       nodes.flatMap(project =>
@@ -47,14 +46,14 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
-    core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
     const node = (
       await sdk.queryNode({
         id: payload.milestone.node_id,
       })
     ).node;
-    core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
     if (node == undefined || node.__typename !== "Milestone") {
       return actionErr("No milestone found.");
@@ -66,7 +65,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
       body: payload.milestone.description,
       milestone: node.id,
     });
-    core.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+    this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
 
     if (issue.createIssue?.issue?.id == undefined) {
       return actionErr("Fail to create issue.");
@@ -83,23 +82,23 @@ export class CreateMilestoneIssue extends TriggerableAction {
               item: issueId,
             })
           ).addProjectV2ItemById;
-          core.debug(
+          this.debug(
             `addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`
           );
 
           if (result?.item?.type === "ISSUE") {
-            core.notice(
+            this.notice(
               `MilestoneIssue is added to ProjectV2 {id: ${projectId}}`
             );
           } else {
-            core.warning(
+            this.warning(
               `MilestoneIssue isn't added to ProjectV2 {id: ${projectId}}`
             );
           }
         }
       },
       async (err: string) => {
-        core.warning(`MilestoneIssue can't find projects = ${err}`);
+        this.warning(`MilestoneIssue can't find projects = ${err}`);
       }
     );
 
