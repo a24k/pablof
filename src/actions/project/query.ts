@@ -1,13 +1,13 @@
-import type { PullRequestEvent } from "@octokit/webhooks-types";
+import type { PullRequestEvent } from '@octokit/webhooks-types';
 
-import { TriggerableAction } from "../triggerable";
-import { ActionResult, actionOk, actionErr } from "../result";
+import { TriggerableAction } from '../triggerable';
+import { ActionResult, actionOk, actionErr } from '../result';
 
-import type { Context, Sdk } from "../";
+import type { Context, Sdk } from '../';
 
 export class QueryProject extends TriggerableAction {
   constructor() {
-    super("pull_request");
+    super('pull_request');
   }
 
   description(): string {
@@ -26,21 +26,21 @@ export class QueryProject extends TriggerableAction {
     if (
       node == undefined ||
       node.node == undefined ||
-      node.node.__typename !== "Repository"
+      node.node.__typename !== 'Repository'
     ) {
-      return actionErr("No repository found.");
+      return actionErr('No repository found.');
     }
 
     const nodes = node.node.projectsV2.nodes;
     if (nodes == undefined) {
-      return actionErr("No projectsV2 found.");
+      return actionErr('No projectsV2 found.');
     }
 
     const projects = nodes.filter(
       project => project !== null && project.closed === false
     );
     if (projects.length === 0 || projects[0] == undefined) {
-      return actionErr("No projectsV2 found.");
+      return actionErr('No projectsV2 found.');
     }
     this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
 

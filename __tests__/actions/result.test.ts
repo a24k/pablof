@@ -1,64 +1,64 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from '@jest/globals';
 
-import { actionOk, actionSkip, actionErr } from "../../src/actions/result";
+import { actionOk, actionSkip, actionErr } from '../../src/actions/result';
 
-describe("ActionResult", () => {
-  describe("actionSkip()", () => {
+describe('ActionResult', () => {
+  describe('actionSkip()', () => {
     const result = actionSkip();
 
-    test("isOk() = true", () => {
+    test('isOk() = true', () => {
       expect(result.isOk()).toBe(true);
     });
 
-    test("isErr() = false", () => {
+    test('isErr() = false', () => {
       expect(result.isErr()).toBe(false);
     });
 
-    test("type = Skip", () => {
-      expect(result._unsafeUnwrap().type).toBe("Skip");
+    test('type = Skip', () => {
+      expect(result._unsafeUnwrap().type).toBe('Skip');
     });
   });
 
   describe("actionOk('success')", () => {
-    const result = actionOk("success");
+    const result = actionOk('success');
 
-    test("isOk() = true", () => {
+    test('isOk() = true', () => {
       expect(result.isOk()).toBe(true);
     });
 
-    test("isErr() = false", () => {
+    test('isErr() = false', () => {
       expect(result.isErr()).toBe(false);
     });
 
-    test("type = Success", () => {
-      expect(result._unsafeUnwrap().type).toBe("Success");
+    test('type = Success', () => {
+      expect(result._unsafeUnwrap().type).toBe('Success');
     });
 
     test("message = 'success'", () => {
       const resultOk = result._unsafeUnwrap();
-      if (resultOk.type === "Success") {
-        expect(resultOk.message).toBe("success");
+      if (resultOk.type === 'Success') {
+        expect(resultOk.message).toBe('success');
       }
     });
   });
 
   describe("actionErr('failure')", () => {
-    const result = actionErr("failure");
+    const result = actionErr('failure');
 
-    test("isOk() = false", () => {
+    test('isOk() = false', () => {
       expect(result.isOk()).toBe(false);
     });
 
-    test("isErr() = true", () => {
+    test('isErr() = true', () => {
       expect(result.isErr()).toBe(true);
     });
 
-    test("type = Failure", () => {
-      expect(result._unsafeUnwrapErr().type).toBe("Failure");
+    test('type = Failure', () => {
+      expect(result._unsafeUnwrapErr().type).toBe('Failure');
     });
 
     test("message = 'failure'", () => {
-      expect(result._unsafeUnwrapErr().message).toBe("failure");
+      expect(result._unsafeUnwrapErr().message).toBe('failure');
     });
   });
 });

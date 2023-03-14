@@ -1,13 +1,13 @@
-import * as github from "@actions/github";
+import * as github from '@actions/github';
 
-import type { Sdk } from "../graphql";
+import type { Sdk } from '../graphql';
 
-import { CreateMilestoneIssue, SyncMilestoneIssue } from "./milestone";
-import { QueryProject } from "./project";
+import { CreateMilestoneIssue, SyncMilestoneIssue } from './milestone';
+import { QueryProject } from './project';
 
-import { ActionInventory } from "./inventory";
-import { ActionResult } from "./result";
-import { TriggerableAction } from "./triggerable";
+import { ActionInventory } from './inventory';
+import { ActionResult } from './result';
+import { TriggerableAction } from './triggerable';
 export { ActionInventory, ActionResult, TriggerableAction };
 
 type Context = typeof github.context;

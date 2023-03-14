@@ -1,14 +1,14 @@
-import type { MilestoneEvent } from "@octokit/webhooks-types";
+import type { MilestoneEvent } from '@octokit/webhooks-types';
 
-import { IssueState } from "../../graphql";
-import { TriggerableAction } from "../triggerable";
-import { ActionResult, actionOk, actionErr } from "../result";
+import { IssueState } from '../../graphql';
+import { TriggerableAction } from '../triggerable';
+import { ActionResult, actionOk, actionErr } from '../result';
 
-import type { Context, Sdk } from "../";
+import type { Context, Sdk } from '../';
 
 export class SyncMilestoneIssue extends TriggerableAction {
   constructor() {
-    super("milestone", ["edited", "closed", "opened"]);
+    super('milestone', ['edited', 'closed', 'opened']);
   }
 
   description(): string {
@@ -25,20 +25,20 @@ export class SyncMilestoneIssue extends TriggerableAction {
       })
     ).node;
     this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-    if (node == undefined || node.__typename !== "Milestone") {
-      return actionErr("No milestone found.");
+    if (node == undefined || node.__typename !== 'Milestone') {
+      return actionErr('No milestone found.');
     }
 
     const nodes = node.issues.nodes;
     if (nodes == undefined) {
-      return actionErr("No issue found.");
+      return actionErr('No issue found.');
     }
 
     const roots = nodes.filter(
       issue => issue !== null && issue.trackedInIssues.totalCount === 0
     );
     if (roots.length === 0 || roots[0] == undefined) {
-      return actionErr("No milestone issue found.");
+      return actionErr('No milestone issue found.');
     }
     this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
@@ -46,14 +46,14 @@ export class SyncMilestoneIssue extends TriggerableAction {
       issue: roots[0].id,
       title: payload.milestone.title,
       state:
-        payload.milestone.state === "open"
+        payload.milestone.state === 'open'
           ? IssueState.Open
           : IssueState.Closed,
     });
     this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
 
     if (issue.updateIssue?.issue?.id == undefined) {
-      return actionErr("Fail to update issue.");
+      return actionErr('Fail to update issue.');
     }
 
     return actionOk(
