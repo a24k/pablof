@@ -116,11 +116,11 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(node);
         });
     }
-    createIssueWithMilestone(sdk, repository, milestone) {
+    createIssueWithMilestone(sdk, milestone) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const issue = yield sdk.createIssueWithMilestone({
-                repository,
+                repository: milestone.repository.id,
                 title: milestone.title,
                 body: milestone.description,
                 milestone: milestone.id,
@@ -169,11 +169,11 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             if (milestone.isErr()) {
                 return (0, result_1.actionErr)(milestone.error);
             }
-            const issue = yield this.createIssueWithMilestone(sdk, payload.repository.node_id, milestone.value);
+            const issue = yield this.createIssueWithMilestone(sdk, milestone.value);
             if (issue.isErr()) {
                 return (0, result_1.actionErr)(issue.error);
             }
-            const projects = yield this.queryProjects(sdk, payload.repository.node_id);
+            const projects = yield this.queryProjects(sdk, milestone.value.repository.id);
             if (projects.isErr()) {
                 return (0, result_1.actionErr)(projects.error);
             }
@@ -3371,6 +3371,16 @@ exports.MilestonePropsFragmentDoc = `
   description
   state
   dueOn
+  repository {
+    __typename
+    id
+    name
+    nameWithOwner
+    description
+    owner {
+      login
+    }
+  }
 }
     `;
 exports.ProjectV2PropsFragmentDoc = `
@@ -3446,9 +3456,6 @@ exports.QueryNodeDocument = `
     }
     ... on Milestone {
       ...MilestoneProps
-      repository {
-        ...RepositoryProps
-      }
       issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
         totalCount
         nodes {

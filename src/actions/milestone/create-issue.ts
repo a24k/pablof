@@ -38,11 +38,10 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   protected async createIssueWithMilestone(
     sdk: Sdk,
-    repository: ID,
     milestone: MilestonePropsFragment
   ): Promise<Result<IssuePropsFragment, string>> {
     const issue = await sdk.createIssueWithMilestone({
-      repository,
+      repository: milestone.repository.id,
       title: milestone.title,
       body: milestone.description,
       milestone: milestone.id,
@@ -105,16 +104,15 @@ export class CreateMilestoneIssue extends TriggerableAction {
       return actionErr(milestone.error);
     }
 
-    const issue = await this.createIssueWithMilestone(
-      sdk,
-      payload.repository.node_id,
-      milestone.value
-    );
+    const issue = await this.createIssueWithMilestone(sdk, milestone.value);
     if (issue.isErr()) {
       return actionErr(issue.error);
     }
 
-    const projects = await this.queryProjects(sdk, payload.repository.node_id);
+    const projects = await this.queryProjects(
+      sdk,
+      milestone.value.repository.id
+    );
     if (projects.isErr()) {
       return actionErr(projects.error);
     }
