@@ -65,7 +65,10 @@ export class CreateMilestoneIssue extends TriggerableAction {
     const payload = context.payload as MilestoneEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const milestone = await this.queryMilestone(sdk, payload.milestone.node_id);
+    const milestone = await this.queryMilestoneById(
+      sdk,
+      payload.milestone.node_id
+    );
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }
@@ -75,7 +78,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
       return actionErr(issue.error);
     }
 
-    const projects = await this.queryProjects(
+    const projects = await this.queryProjectsByRepositoryId(
       sdk,
       milestone.value.repository.id
     );

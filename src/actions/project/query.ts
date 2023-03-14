@@ -20,7 +20,7 @@ export class QueryProject extends TriggerableAction {
     const payload = context.payload as PullRequestEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const repository = await this.queryRepository(
+    const repository = await this.queryRepositoryById(
       sdk,
       payload.repository.node_id
     );

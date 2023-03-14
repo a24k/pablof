@@ -8,7 +8,7 @@ import { IssueState } from "../../graphql";
 import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
-import type { Context, Sdk, ID } from "../";
+import type { Context, Sdk } from "../";
 import type { IssuePropsFragment } from "../../graphql";
 
 export class SyncMilestoneIssue extends TriggerableAction {
@@ -22,11 +22,11 @@ export class SyncMilestoneIssue extends TriggerableAction {
 
   protected async updateIssue(
     sdk: Sdk,
-    issue: ID,
+    issue: IssuePropsFragment,
     title: string,
     state: IssueState
   ): Promise<Result<IssuePropsFragment, string>> {
-    const result = await sdk.updateIssue({ issue, title, state });
+    const result = await sdk.updateIssue({ issue: issue.id, title, state });
     this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
 
     if (result.updateIssue?.issue?.id == undefined) {
@@ -40,7 +40,10 @@ export class SyncMilestoneIssue extends TriggerableAction {
     const payload = context.payload as MilestoneEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const milestone = await this.queryMilestone(sdk, payload.milestone.node_id);
+    const milestone = await this.queryMilestoneById(
+      sdk,
+      payload.milestone.node_id
+    );
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }
@@ -55,7 +58,7 @@ export class SyncMilestoneIssue extends TriggerableAction {
 
     const issue = await this.updateIssue(
       sdk,
-      roots[0].id,
+      roots[0],
       payload.milestone.title,
       payload.milestone.state === "open" ? IssueState.Open : IssueState.Closed
     );

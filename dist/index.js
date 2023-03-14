@@ -141,7 +141,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const milestone = yield this.queryMilestone(sdk, payload.milestone.node_id);
+            const milestone = yield this.queryMilestoneById(sdk, payload.milestone.node_id);
             if (milestone.isErr()) {
                 return (0, result_1.actionErr)(milestone.error);
             }
@@ -149,7 +149,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             if (issue.isErr()) {
                 return (0, result_1.actionErr)(issue.error);
             }
-            const projects = yield this.queryProjects(sdk, milestone.value.repository.id);
+            const projects = yield this.queryProjectsByRepositoryId(sdk, milestone.value.repository.id);
             if (projects.isErr()) {
                 return (0, result_1.actionErr)(projects.error);
             }
@@ -217,7 +217,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
     updateIssue(sdk, issue, title, state) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield sdk.updateIssue({ issue, title, state });
+            const result = yield sdk.updateIssue({ issue: issue.id, title, state });
             this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
             if (((_b = (_a = result.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to update issue.");
@@ -230,7 +230,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const milestone = yield this.queryMilestone(sdk, payload.milestone.node_id);
+            const milestone = yield this.queryMilestoneById(sdk, payload.milestone.node_id);
             if (milestone.isErr()) {
                 return (0, result_1.actionErr)(milestone.error);
             }
@@ -239,7 +239,7 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                 return (0, result_1.actionErr)("No milestone issue found.");
             }
             this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
-            const issue = yield this.updateIssue(sdk, roots[0].id, payload.milestone.title, payload.milestone.state === "open" ? graphql_1.IssueState.Open : graphql_1.IssueState.Closed);
+            const issue = yield this.updateIssue(sdk, roots[0], payload.milestone.title, payload.milestone.state === "open" ? graphql_1.IssueState.Open : graphql_1.IssueState.Closed);
             if (issue.isErr()) {
                 return (0, result_1.actionErr)(issue.error);
             }
@@ -296,7 +296,7 @@ class QueryProject extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const repository = yield this.queryRepository(sdk, payload.repository.node_id);
+            const repository = yield this.queryRepositoryById(sdk, payload.repository.node_id);
             if (repository.isErr()) {
                 return (0, result_1.actionErr)(repository.error);
             }
@@ -427,7 +427,7 @@ class TriggerableAction {
             }
         });
     }
-    queryRepository(sdk, repository) {
+    queryRepositoryById(sdk, repository) {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield sdk.queryNode({ id: repository })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
@@ -437,7 +437,7 @@ class TriggerableAction {
             return (0, neverthrow_1.ok)(node);
         });
     }
-    queryMilestone(sdk, milestone) {
+    queryMilestoneById(sdk, milestone) {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield sdk.queryNode({ id: milestone })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
@@ -447,7 +447,7 @@ class TriggerableAction {
             return (0, neverthrow_1.ok)(node);
         });
     }
-    queryProjects(sdk, repository) {
+    queryProjectsByRepositoryId(sdk, repository) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield sdk.queryNode({ id: repository })).node;

@@ -68,7 +68,7 @@ export abstract class TriggerableAction {
     }
   }
 
-  protected async queryRepository(
+  protected async queryRepositoryById(
     sdk: Sdk,
     repository: ID
   ): Promise<Result<RepositoryPropsFragment, string>> {
@@ -82,7 +82,7 @@ export abstract class TriggerableAction {
     return ok(node);
   }
 
-  protected async queryMilestone(
+  protected async queryMilestoneById(
     sdk: Sdk,
     milestone: ID
   ): Promise<Result<MilestonePropsFragment, string>> {
@@ -96,7 +96,7 @@ export abstract class TriggerableAction {
     return ok(node);
   }
 
-  protected async queryProjects(
+  protected async queryProjectsByRepositoryId(
     sdk: Sdk,
     repository: ID
   ): Promise<Result<ProjectV2PropsFragment[], string>> {
