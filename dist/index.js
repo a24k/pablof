@@ -106,8 +106,6 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     }
     queryMilestone(sdk, milestone) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
-            this.debug(`milestone = ${JSON.stringify(milestone, null, 2)}`);
             const node = (yield sdk.queryNode({ id: milestone })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
@@ -4533,6 +4531,7 @@ function main() {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
+            core.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
             const inventory = (0, actions_1.collect)();
             yield inventory.handleContext(github.context, sdk);
         }

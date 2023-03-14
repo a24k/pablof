@@ -26,9 +26,6 @@ export class CreateMilestoneIssue extends TriggerableAction {
     sdk: Sdk,
     milestone: ID
   ): Promise<Result<MilestonePropsFragment, string>> {
-    this.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
-    this.debug(`milestone = ${JSON.stringify(milestone, null, 2)}`);
-
     const node = (await sdk.queryNode({ id: milestone })).node;
     this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
