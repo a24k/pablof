@@ -41,19 +41,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-//import { getSdk } from "./graphql";
-//import { collect } from "./actions";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
-            //const sdk = getSdk(octokit.graphql);
             core.debug(`octokit = ${JSON.stringify(octokit, null, 2)}`);
             core.debug(`graphql = ${JSON.stringify(octokit.graphql, null, 2)}`);
-            //core.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
-            //const inventory = collect();
-            //await inventory.handleContext(github.context, sdk);
         }
         catch (error) {
             if (error instanceof Error)
