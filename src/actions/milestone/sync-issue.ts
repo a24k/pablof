@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { IssueState } from "../../graphql";

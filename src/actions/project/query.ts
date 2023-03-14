@@ -1,12 +1,11 @@
-import { Result, ok, err } from "neverthrow";
+/* eslint-disable eqeqeq */
 
 import type { PullRequestEvent } from "@octokit/webhooks-types";
 
 import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
-import type { Context, Sdk, ID } from "../";
-import type { RepositoryPropsFragment } from "../../graphql";
+import type { Context, Sdk } from "../";
 
 export class QueryProject extends TriggerableAction {
   constructor() {
@@ -15,20 +14,6 @@ export class QueryProject extends TriggerableAction {
 
   description(): string {
     return `QueryProject for ${super.description()}`;
-  }
-
-  protected async queryRepository(
-    sdk: Sdk,
-    repository: ID
-  ): Promise<Result<RepositoryPropsFragment, string>> {
-    const node = (await sdk.queryNode({ id: repository })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-
-    if (node == undefined || node.__typename !== "Repository") {
-      return err("No repository found.");
-    }
-
-    return ok(node);
   }
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {

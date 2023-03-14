@@ -85,6 +85,7 @@ exports.ActionInventory = ActionInventory;
 
 "use strict";
 
+/* eslint-disable eqeqeq */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -106,16 +107,6 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     description() {
         return `CreateMilestoneIssue for ${super.description()}`;
     }
-    queryMilestone(sdk, milestone) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: milestone })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Milestone") {
-                return (0, neverthrow_1.err)("No milestone found.");
-            }
-            return (0, neverthrow_1.ok)(node);
-        });
-    }
     createIssueWithMilestone(sdk, milestone) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
@@ -130,21 +121,6 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 return (0, neverthrow_1.err)("Fail to create issue.");
             }
             return (0, neverthrow_1.ok)(issue.createIssue.issue);
-        });
-    }
-    queryProjects(sdk, repository) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Repository") {
-                return (0, neverthrow_1.err)("No repository found.");
-            }
-            const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
-            if (projects == undefined || projects.length === 0) {
-                return (0, neverthrow_1.err)("No projects found.");
-            }
-            return (0, neverthrow_1.ok)(projects);
         });
     }
     addItemToProject(sdk, project, item) {
@@ -215,6 +191,7 @@ Object.defineProperty(exports, "SyncMilestoneIssue", ({ enumerable: true, get: f
 
 "use strict";
 
+/* eslint-disable eqeqeq */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -295,6 +272,7 @@ Object.defineProperty(exports, "QueryProject", ({ enumerable: true, get: functio
 
 "use strict";
 
+/* eslint-disable eqeqeq */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -306,7 +284,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QueryProject = void 0;
-const neverthrow_1 = __nccwpck_require__(8591);
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class QueryProject extends triggerable_1.TriggerableAction {
@@ -315,16 +292,6 @@ class QueryProject extends triggerable_1.TriggerableAction {
     }
     description() {
         return `QueryProject for ${super.description()}`;
-    }
-    queryRepository(sdk, repository) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Repository") {
-                return (0, neverthrow_1.err)("No repository found.");
-            }
-            return (0, neverthrow_1.ok)(node);
-        });
     }
     handle(context, sdk) {
         var _a;
@@ -382,6 +349,7 @@ exports.actionErr = actionErr;
 
 "use strict";
 
+/* eslint-disable eqeqeq */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -416,6 +384,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TriggerableAction = void 0;
+const neverthrow_1 = __nccwpck_require__(8591);
 const core = __importStar(__nccwpck_require__(2186));
 const result_1 = __nccwpck_require__(4983);
 class TriggerableAction {
@@ -458,6 +427,41 @@ class TriggerableAction {
             else {
                 return (0, result_1.actionSkip)();
             }
+        });
+    }
+    queryRepository(sdk, repository) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield sdk.queryNode({ id: repository })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, neverthrow_1.err)("No repository found.");
+            }
+            return (0, neverthrow_1.ok)(node);
+        });
+    }
+    queryMilestone(sdk, milestone) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield sdk.queryNode({ id: milestone })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Milestone") {
+                return (0, neverthrow_1.err)("No milestone found.");
+            }
+            return (0, neverthrow_1.ok)(node);
+        });
+    }
+    queryProjects(sdk, repository) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield sdk.queryNode({ id: repository })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, neverthrow_1.err)("No repository found.");
+            }
+            const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
+            if (projects == undefined || projects.length === 0) {
+                return (0, neverthrow_1.err)("No projects found.");
+            }
+            return (0, neverthrow_1.ok)(projects);
         });
     }
 }

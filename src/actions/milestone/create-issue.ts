@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+
 import { Result, ok, err } from "neverthrow";
 
 import type { MilestoneEvent } from "@octokit/webhooks-types";
@@ -9,7 +11,6 @@ import type { Context, Sdk, ID } from "../";
 import type {
   MilestonePropsFragment,
   IssuePropsFragment,
-  ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
 } from "../../graphql";
 
@@ -20,20 +21,6 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   description(): string {
     return `CreateMilestoneIssue for ${super.description()}`;
-  }
-
-  protected async queryMilestone(
-    sdk: Sdk,
-    milestone: ID
-  ): Promise<Result<MilestonePropsFragment, string>> {
-    const node = (await sdk.queryNode({ id: milestone })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-
-    if (node == undefined || node.__typename !== "Milestone") {
-      return err("No milestone found.");
-    }
-
-    return ok(node);
   }
 
   protected async createIssueWithMilestone(
@@ -53,28 +40,6 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
 
     return ok(issue.createIssue.issue);
-  }
-
-  protected async queryProjects(
-    sdk: Sdk,
-    repository: ID
-  ): Promise<Result<ProjectV2PropsFragment[], string>> {
-    const node = (await sdk.queryNode({ id: repository })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-
-    if (node == undefined || node.__typename !== "Repository") {
-      return err("No repository found.");
-    }
-
-    const projects = node.projectsV2.nodes?.flatMap(project =>
-      project == null || project.closed ? [] : project
-    );
-
-    if (projects == undefined || projects.length === 0) {
-      return err("No projects found.");
-    }
-
-    return ok(projects);
   }
 
   protected async addItemToProject(

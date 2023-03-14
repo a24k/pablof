@@ -1,7 +1,15 @@
+/* eslint-disable eqeqeq */
+
+import { Result, ok, err } from "neverthrow";
 import * as core from "@actions/core";
 
 import { actionSkip } from "./result";
-import type { Context, Sdk, ActionResult } from "./";
+import type { Context, Sdk, ID, ActionResult } from "./";
+import type {
+  RepositoryPropsFragment,
+  MilestonePropsFragment,
+  ProjectV2PropsFragment,
+} from "../graphql";
 
 export abstract class TriggerableAction {
   private triggerName: string;
@@ -58,5 +66,55 @@ export abstract class TriggerableAction {
     } else {
       return actionSkip();
     }
+  }
+
+  protected async queryRepository(
+    sdk: Sdk,
+    repository: ID
+  ): Promise<Result<RepositoryPropsFragment, string>> {
+    const node = (await sdk.queryNode({ id: repository })).node;
+    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    return ok(node);
+  }
+
+  protected async queryMilestone(
+    sdk: Sdk,
+    milestone: ID
+  ): Promise<Result<MilestonePropsFragment, string>> {
+    const node = (await sdk.queryNode({ id: milestone })).node;
+    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+
+    if (node == undefined || node.__typename !== "Milestone") {
+      return err("No milestone found.");
+    }
+
+    return ok(node);
+  }
+
+  protected async queryProjects(
+    sdk: Sdk,
+    repository: ID
+  ): Promise<Result<ProjectV2PropsFragment[], string>> {
+    const node = (await sdk.queryNode({ id: repository })).node;
+    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    const projects = node.projectsV2.nodes?.flatMap(project =>
+      project == null || project.closed ? [] : project
+    );
+
+    if (projects == undefined || projects.length === 0) {
+      return err("No projects found.");
+    }
+
+    return ok(projects);
   }
 }
