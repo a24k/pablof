@@ -13,9 +13,6 @@ fragment IssueProps on Issue {
 fragment MilestoneProps on Milestone {
   __typename
   id title description state dueOn
-  repository {
-    ...RepositoryProps
-  }
 }
 
 fragment ProjectV2Props on ProjectV2 {

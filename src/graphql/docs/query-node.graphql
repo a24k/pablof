@@ -1,5 +1,7 @@
 query queryNode($id: ID!) { 
   node(id: $id) {
+    __typename
+
     ... on Repository {
       ...RepositoryProps
       projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
@@ -12,6 +14,9 @@ query queryNode($id: ID!) {
 
     ... on Milestone {
       ...MilestoneProps
+      repository {
+        ...RepositoryProps
+      }
       issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
