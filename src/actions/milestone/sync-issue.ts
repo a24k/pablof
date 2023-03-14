@@ -56,7 +56,7 @@ export class SyncMilestoneIssue extends TriggerableAction {
     }
 
     const roots = milestone.value.issues.nodes?.flatMap(issue =>
-      issue === null || issue.trackedInIssues.totalCount === 0 ? [] : issue
+      issue === null || issue.trackedInIssues.totalCount !== 0 ? [] : issue
     );
     if (roots == undefined || roots.length === 0) {
       return actionErr("No milestone issue found.");
