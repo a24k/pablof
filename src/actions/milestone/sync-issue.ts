@@ -45,16 +45,6 @@ export class SyncMilestoneIssue extends TriggerableAction {
       return actionErr(milestone.error);
     }
 
-    const node = (
-      await sdk.queryNode({
-        id: payload.milestone.node_id,
-      })
-    ).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-    if (node == undefined || node.__typename !== "Milestone") {
-      return actionErr("No milestone found.");
-    }
-
     const roots = milestone.value.issues.nodes?.flatMap(issue =>
       issue === null || issue.trackedInIssues.totalCount !== 0 ? [] : issue
     );
