@@ -27810,16 +27810,6 @@ export type MilestonePropsFragment = {
   readonly description?: string | null;
   readonly state: MilestoneState;
   readonly dueOn?: any | null;
-  readonly repository: {
-    readonly __typename: "Repository";
-    readonly id: string;
-    readonly name: string;
-    readonly nameWithOwner: string;
-    readonly description?: string | null;
-    readonly owner:
-      | { readonly __typename?: "Organization"; readonly login: string }
-      | { readonly __typename?: "User"; readonly login: string };
-  };
 };
 
 export type ProjectV2PropsFragment = {
@@ -27836,14 +27826,6 @@ export type ProjectV2ItemPropsFragment = {
   readonly id: string;
   readonly type: ProjectV2ItemType;
   readonly isArchived: boolean;
-  readonly project: {
-    readonly __typename: "ProjectV2";
-    readonly id: string;
-    readonly title: string;
-    readonly shortDescription?: string | null;
-    readonly readme?: string | null;
-    readonly closed: boolean;
-  };
 };
 
 export type AddProjectItemMutationVariables = Exact<{
@@ -27860,14 +27842,6 @@ export type AddProjectItemMutation = {
       readonly id: string;
       readonly type: ProjectV2ItemType;
       readonly isArchived: boolean;
-      readonly project: {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
-      };
     } | null;
   } | null;
 };
@@ -27896,16 +27870,6 @@ export type CreateIssueWithMilestoneMutation = {
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
-        };
       } | null;
       readonly trackedInIssues: {
         readonly __typename?: "IssueConnection";
@@ -27938,16 +27902,6 @@ export type UpdateIssueMutation = {
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
-        };
       } | null;
       readonly trackedInIssues: {
         readonly __typename?: "IssueConnection";
@@ -28067,16 +28021,6 @@ export type QueryNodeQuery = {
               readonly totalCount: number;
             };
           } | null> | null;
-        };
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
         };
       }
     | { readonly __typename?: "MilestonedEvent" }
@@ -28313,18 +28257,6 @@ export type QueryProjectFieldsQuery = {
   } | null;
 };
 
-export const IssuePropsFragmentDoc = `
-    fragment IssueProps on Issue {
-  __typename
-  id
-  title
-  body
-  state
-  trackedInIssues(first: 1) {
-    totalCount
-  }
-}
-    `;
 export const RepositoryPropsFragmentDoc = `
     fragment RepositoryProps on Repository {
   __typename
@@ -28337,6 +28269,18 @@ export const RepositoryPropsFragmentDoc = `
   }
 }
     `;
+export const IssuePropsFragmentDoc = `
+    fragment IssueProps on Issue {
+  __typename
+  id
+  title
+  body
+  state
+  trackedInIssues(first: 1) {
+    totalCount
+  }
+}
+    `;
 export const MilestonePropsFragmentDoc = `
     fragment MilestoneProps on Milestone {
   __typename
@@ -28345,11 +28289,8 @@ export const MilestonePropsFragmentDoc = `
   description
   state
   dueOn
-  repository {
-    ...RepositoryProps
-  }
 }
-    ${RepositoryPropsFragmentDoc}`;
+    `;
 export const ProjectV2PropsFragmentDoc = `
     fragment ProjectV2Props on ProjectV2 {
   __typename
@@ -28366,11 +28307,8 @@ export const ProjectV2ItemPropsFragmentDoc = `
   id
   type
   isArchived
-  project {
-    ...ProjectV2Props
-  }
 }
-    ${ProjectV2PropsFragmentDoc}`;
+    `;
 export const AddProjectItemDocument = `
     mutation addProjectItem($project: ID!, $item: ID!) {
   addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
