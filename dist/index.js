@@ -203,6 +203,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SyncMilestoneIssue = void 0;
+const neverthrow_1 = __nccwpck_require__(8591);
 const graphql_1 = __nccwpck_require__(7064);
 const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
@@ -213,11 +214,26 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
     description() {
         return `SyncMilestoneIssue for ${super.description()}`;
     }
-    handle(context, sdk) {
+    updateIssue(sdk, issue, title, state) {
         var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield sdk.updateIssue({ issue, title, state });
+            this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
+            if (((_b = (_a = result.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
+                return (0, neverthrow_1.err)("Fail to update issue.");
+            }
+            return (0, neverthrow_1.ok)(result.updateIssue.issue);
+        });
+    }
+    handle(context, sdk) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            const milestone = yield this.queryMilestone(sdk, payload.milestone.node_id);
+            if (milestone.isErr()) {
+                return (0, result_1.actionErr)(milestone.error);
+            }
             const node = (yield sdk.queryNode({
                 id: payload.milestone.node_id,
             })).node;
@@ -225,27 +241,16 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, result_1.actionErr)("No milestone found.");
             }
-            const nodes = node.issues.nodes;
-            if (nodes == undefined) {
-                return (0, result_1.actionErr)("No issue found.");
-            }
-            const roots = nodes.filter(issue => issue !== null && issue.trackedInIssues.totalCount === 0);
-            if (roots.length === 0 || roots[0] == undefined) {
+            const roots = (_a = milestone.value.issues.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(issue => issue === null || issue.trackedInIssues.totalCount === 0 ? [] : issue);
+            if (roots == undefined || roots.length === 0) {
                 return (0, result_1.actionErr)("No milestone issue found.");
             }
             this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
-            const issue = yield sdk.updateIssue({
-                issue: roots[0].id,
-                title: payload.milestone.title,
-                state: payload.milestone.state === "open"
-                    ? graphql_1.IssueState.Open
-                    : graphql_1.IssueState.Closed,
-            });
-            this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
-            if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, result_1.actionErr)("Fail to update issue.");
+            const issue = yield this.updateIssue(sdk, roots[0].id, payload.milestone.title, payload.milestone.state === "open" ? graphql_1.IssueState.Open : graphql_1.IssueState.Closed);
+            if (issue.isErr()) {
+                return (0, result_1.actionErr)(issue.error);
             }
-            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
+            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`);
         });
     }
 }
