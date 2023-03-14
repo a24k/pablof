@@ -44,20 +44,20 @@ export class CreateMilestoneIssue extends TriggerableAction {
 
   protected async addItemToProject(
     sdk: Sdk,
-    project: ID,
-    item: ID
+    projectID: ID,
+    itemID: ID
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
-    const projectItem = await sdk.addProjectItem({
-      project,
-      item,
+    const item = await sdk.addProjectItem({
+      project: projectID,
+      item: itemID,
     });
     this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
 
-    if (projectItem.addProjectV2ItemById?.item?.id == undefined) {
+    if (item.addProjectV2ItemById?.item?.id == undefined) {
       return err("Fail to add project item.");
     }
 
-    return ok(projectItem.addProjectV2ItemById.item);
+    return ok(item.addProjectV2ItemById.item);
   }
 
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {

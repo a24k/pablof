@@ -123,18 +123,18 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(issue.createIssue.issue);
         });
     }
-    addItemToProject(sdk, project, item) {
+    addItemToProject(sdk, projectID, itemID) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const projectItem = yield sdk.addProjectItem({
-                project,
-                item,
+            const item = yield sdk.addProjectItem({
+                project: projectID,
+                item: itemID,
             });
             this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
-            if (((_b = (_a = projectItem.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
+            if (((_b = (_a = item.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to add project item.");
             }
-            return (0, neverthrow_1.ok)(projectItem.addProjectV2ItemById.item);
+            return (0, neverthrow_1.ok)(item.addProjectV2ItemById.item);
         });
     }
     handle(context, sdk) {
