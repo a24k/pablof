@@ -7,7 +7,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-generic-sdk
-      - fragment-matcher
       - add:
           content: "/* eslint-disable no-undef, no-shadow, no-irregular-whitespace */"
       - add:
