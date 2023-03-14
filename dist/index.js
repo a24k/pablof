@@ -8,15 +8,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
-const milestone_1 = __nccwpck_require__(5674);
+//import { CreateMilestoneIssue, SyncMilestoneIssue } from "./milestone";
 const inventory_1 = __nccwpck_require__(6253);
 Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
 const triggerable_1 = __nccwpck_require__(4953);
 Object.defineProperty(exports, "TriggerableAction", ({ enumerable: true, get: function () { return triggerable_1.TriggerableAction; } }));
 function collect() {
     const inventory = new inventory_1.ActionInventory();
-    inventory.submit(new milestone_1.CreateMilestoneIssue());
-    inventory.submit(new milestone_1.SyncMilestoneIssue());
+    //inventory.submit(new CreateMilestoneIssue());
+    //inventory.submit(new SyncMilestoneIssue());
     return inventory;
 }
 exports.collect = collect;
@@ -74,203 +74,6 @@ class ActionInventory {
     }
 }
 exports.ActionInventory = ActionInventory;
-
-
-/***/ }),
-
-/***/ 4775:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CreateMilestoneIssue = void 0;
-const neverthrow_1 = __nccwpck_require__(8591);
-const triggerable_1 = __nccwpck_require__(4953);
-const result_1 = __nccwpck_require__(4983);
-class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
-    constructor() {
-        super("milestone", "created");
-    }
-    description() {
-        return `CreateMilestoneIssue for ${super.description()}`;
-    }
-    queryMilestone(sdk, milestone) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: milestone })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Milestone") {
-                return (0, neverthrow_1.err)("No milestone found.");
-            }
-            return (0, neverthrow_1.ok)(node);
-        });
-    }
-    createIssueWithMilestone(sdk, milestone) {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            const issue = yield sdk.createIssueWithMilestone({
-                repository: milestone.repository.id,
-                title: milestone.title,
-                body: milestone.description,
-                milestone: milestone.id,
-            });
-            this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
-            if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, neverthrow_1.err)("Fail to create issue.");
-            }
-            return (0, neverthrow_1.ok)(issue.createIssue.issue);
-        });
-    }
-    queryProjects(sdk, repository) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Repository") {
-                return (0, neverthrow_1.err)("No repository found.");
-            }
-            const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
-            if (projects == undefined || projects.length === 0) {
-                return (0, neverthrow_1.err)("No projects found.");
-            }
-            return (0, neverthrow_1.ok)(projects);
-        });
-    }
-    addItemToProject(sdk, project, item) {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            const projectItem = yield sdk.addProjectItem({
-                project,
-                item,
-            });
-            this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
-            if (((_b = (_a = projectItem.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, neverthrow_1.err)("Fail to add project item.");
-            }
-            return (0, neverthrow_1.ok)(projectItem.addProjectV2ItemById.item);
-        });
-    }
-    handle(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const payload = context.payload;
-            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const milestone = yield this.queryMilestone(sdk, payload.milestone.node_id);
-            if (milestone.isErr()) {
-                return (0, result_1.actionErr)(milestone.error);
-            }
-            const issue = yield this.createIssueWithMilestone(sdk, milestone.value);
-            if (issue.isErr()) {
-                return (0, result_1.actionErr)(issue.error);
-            }
-            const projects = yield this.queryProjects(sdk, milestone.value.repository.id);
-            if (projects.isErr()) {
-                return (0, result_1.actionErr)(projects.error);
-            }
-            for (const project of projects.value) {
-                const item = yield this.addItemToProject(sdk, project.id, issue.value.id);
-                if (item.isOk()) {
-                    this.notice(`Successfully added MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
-                }
-                else {
-                    this.warning(`Failed to add MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
-                }
-            }
-            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.value.id}, title: ${issue.value.title}, body: ${issue.value.body}}`);
-        });
-    }
-}
-exports.CreateMilestoneIssue = CreateMilestoneIssue;
-
-
-/***/ }),
-
-/***/ 5674:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SyncMilestoneIssue = exports.CreateMilestoneIssue = void 0;
-const create_issue_1 = __nccwpck_require__(4775);
-Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
-const sync_issue_1 = __nccwpck_require__(5417);
-Object.defineProperty(exports, "SyncMilestoneIssue", ({ enumerable: true, get: function () { return sync_issue_1.SyncMilestoneIssue; } }));
-
-
-/***/ }),
-
-/***/ 5417:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SyncMilestoneIssue = void 0;
-const graphql_1 = __nccwpck_require__(7064);
-const triggerable_1 = __nccwpck_require__(4953);
-const result_1 = __nccwpck_require__(4983);
-class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
-    constructor() {
-        super("milestone", ["edited", "closed", "opened"]);
-    }
-    description() {
-        return `SyncMilestoneIssue for ${super.description()}`;
-    }
-    handle(context, sdk) {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            const payload = context.payload;
-            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const node = (yield sdk.queryNode({
-                id: payload.milestone.node_id,
-            })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Milestone") {
-                return (0, result_1.actionErr)("No milestone found.");
-            }
-            const nodes = node.issues.nodes;
-            if (nodes == undefined) {
-                return (0, result_1.actionErr)("No issue found.");
-            }
-            const roots = nodes.filter(issue => issue !== null && issue.trackedInIssues.totalCount === 0);
-            if (roots.length === 0 || roots[0] == undefined) {
-                return (0, result_1.actionErr)("No milestone issue found.");
-            }
-            this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
-            const issue = yield sdk.updateIssue({
-                issue: roots[0].id,
-                title: payload.milestone.title,
-                state: payload.milestone.state === "open"
-                    ? graphql_1.IssueState.Open
-                    : graphql_1.IssueState.Closed,
-            });
-            this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
-            if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, result_1.actionErr)("Fail to update issue.");
-            }
-            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
-        });
-    }
-}
-exports.SyncMilestoneIssue = SyncMilestoneIssue;
 
 
 /***/ }),
@@ -4531,7 +4334,6 @@ function main() {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
-            core.debug(`token = ${JSON.stringify(token, null, 2)}`);
             core.debug(`octokit = ${JSON.stringify(octokit, null, 2)}`);
             core.debug(`graphql = ${JSON.stringify(octokit.graphql, null, 2)}`);
             core.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);

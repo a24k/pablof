@@ -10,7 +10,6 @@ async function main(): Promise<void> {
     const octokit = github.getOctokit(token);
     const sdk = getSdk(octokit.graphql);
 
-    core.debug(`token = ${JSON.stringify(token, null, 2)}`);
     core.debug(`octokit = ${JSON.stringify(octokit, null, 2)}`);
     core.debug(`graphql = ${JSON.stringify(octokit.graphql, null, 2)}`);
     core.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
