@@ -18,18 +18,20 @@ export class QueryProject extends TriggerableAction {
     const payload = context.payload as PullRequestEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const node = (
-      await sdk.queryNode({
-        id: payload.repository.node_id,
-      })
-    ).node;
+    const node = await sdk.queryNode({
+      id: payload.repository.node_id,
+    });
     this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    if (node == undefined || node.__typename !== "Repository") {
+    if (
+      node == undefined ||
+      node.node == undefined ||
+      node.node.__typename !== "Repository"
+    ) {
       return actionErr("No repository found.");
     }
 
-    const nodes = node.projectsV2.nodes;
+    const nodes = node.node.projectsV2.nodes;
     if (nodes == undefined) {
       return actionErr("No projectsV2 found.");
     }
