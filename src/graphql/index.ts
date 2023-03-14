@@ -27879,6 +27879,40 @@ export type ProjectV2ItemPropsFragment = {
     readonly readme?: string | null;
     readonly closed: boolean;
   };
+  readonly fieldValues: {
+    readonly __typename?: "ProjectV2ItemFieldValueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<
+      | { readonly __typename: "ProjectV2ItemFieldDateValue" }
+      | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+      | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+      | { readonly __typename: "ProjectV2ItemFieldMilestoneValue" }
+      | { readonly __typename: "ProjectV2ItemFieldNumberValue" }
+      | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+      | { readonly __typename: "ProjectV2ItemFieldRepositoryValue" }
+      | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+          readonly name?: string | null;
+          readonly optionId?: string | null;
+          readonly field:
+            | { readonly __typename?: "ProjectV2Field" }
+            | { readonly __typename?: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldTextValue" }
+      | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+      | null
+    > | null;
+  };
 };
 
 export type AddProjectItemMutationVariables = Exact<{
@@ -27902,6 +27936,40 @@ export type AddProjectItemMutation = {
         readonly shortDescription?: string | null;
         readonly readme?: string | null;
         readonly closed: boolean;
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | { readonly __typename: "ProjectV2ItemFieldDateValue" }
+          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | { readonly __typename: "ProjectV2ItemFieldMilestoneValue" }
+          | { readonly __typename: "ProjectV2ItemFieldNumberValue" }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | { readonly __typename: "ProjectV2ItemFieldRepositoryValue" }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename?: "ProjectV2Field" }
+                | { readonly __typename?: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldTextValue" }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
       };
     } | null;
   } | null;
@@ -28425,6 +28493,27 @@ export const ProjectV2ItemPropsFragmentDoc = `
     shortDescription
     readme
     closed
+  }
+  fieldValues(first: 100) {
+    totalCount
+    nodes {
+      __typename
+      ... on ProjectV2ItemFieldSingleSelectValue {
+        __typename
+        name
+        optionId
+        field {
+          ... on ProjectV2SingleSelectField {
+            __typename
+            name
+            options {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
   }
 }
     `;

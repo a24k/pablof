@@ -3447,6 +3447,27 @@ exports.ProjectV2ItemPropsFragmentDoc = `
     readme
     closed
   }
+  fieldValues(first: 100) {
+    totalCount
+    nodes {
+      __typename
+      ... on ProjectV2ItemFieldSingleSelectValue {
+        __typename
+        name
+        optionId
+        field {
+          ... on ProjectV2SingleSelectField {
+            __typename
+            name
+            options {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
 }
     `;
 exports.AddProjectItemDocument = `
