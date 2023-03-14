@@ -1,0 +1,30 @@
+query queryNode($id: ID!) { 
+  node(id: $id) {
+    ... on Repository {
+      ...RepositoryProps
+      projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+        totalCount
+        nodes {
+          ...ProjectV2Props
+        }
+      }
+    }
+
+    ... on Milestone {
+      ...MilestoneProps
+      repository {
+        ...RepositoryProps
+      }
+      issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+        totalCount
+        nodes {
+          ...IssueProps
+        }
+      }
+    }
+
+    ... on ProjectV2 {
+      ...ProjectV2Props
+    }
+  }
+}
