@@ -319,6 +319,7 @@ class QueryProject extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.debug(`repository = ${JSON.stringify(payload.repository.node_id, null, 2)}`);
             const node = yield sdk.queryNode({
                 id: payload.repository.node_id,
             });

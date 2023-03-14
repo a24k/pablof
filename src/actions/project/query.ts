@@ -17,6 +17,9 @@ export class QueryProject extends TriggerableAction {
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as PullRequestEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.debug(
+      `repository = ${JSON.stringify(payload.repository.node_id, null, 2)}`
+    );
 
     const node = await sdk.queryNode({
       id: payload.repository.node_id,
