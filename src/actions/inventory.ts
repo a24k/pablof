@@ -1,6 +1,6 @@
-import { TriggerableAction } from './';
-import type { Context, Sdk } from './';
-import type { ActionOk, ActionErr } from './result';
+import { TriggerableAction } from "./";
+import type { Context, Sdk } from "./";
+import type { ActionOk, ActionErr } from "./result";
 
 export class ActionInventory {
   protected items: TriggerableAction[] = [];
@@ -23,12 +23,12 @@ export class ActionInventory {
       result.match(
         (res: ActionOk) => {
           switch (res.type) {
-            case 'Success':
+            case "Success":
               item.notice(res.message);
               break;
-            case 'Skip':
+            case "Skip":
             default:
-              item.debug('skipped');
+              item.debug("skipped");
               break;
           }
         },

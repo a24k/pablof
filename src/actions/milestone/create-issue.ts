@@ -1,21 +1,21 @@
-import { Result, ok, err } from 'neverthrow';
+import { Result, ok, err } from "neverthrow";
 
-import type { MilestoneEvent } from '@octokit/webhooks-types';
+import type { MilestoneEvent } from "@octokit/webhooks-types";
 
-import { TriggerableAction } from '../triggerable';
-import { ActionResult, actionOk, actionErr } from '../result';
+import { TriggerableAction } from "../triggerable";
+import { ActionResult, actionOk, actionErr } from "../result";
 
-import type { Context, Sdk, ID } from '../';
+import type { Context, Sdk, ID } from "../";
 import type {
   MilestonePropsFragment,
   IssuePropsFragment,
   ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
-} from '../../graphql';
+} from "../../graphql";
 
 export class CreateMilestoneIssue extends TriggerableAction {
   constructor() {
-    super('milestone', 'created');
+    super("milestone", "created");
   }
 
   description(): string {
@@ -29,8 +29,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
     const node = (await sdk.queryNode({ id: milestone })).node;
     this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    if (node == undefined || node.__typename !== 'Milestone') {
-      return err('No milestone found.');
+    if (node == undefined || node.__typename !== "Milestone") {
+      return err("No milestone found.");
     }
 
     return ok(node);
@@ -49,7 +49,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
 
     if (issue.createIssue?.issue?.id == undefined) {
-      return err('Fail to create issue.');
+      return err("Fail to create issue.");
     }
 
     return ok(issue.createIssue.issue);
@@ -62,8 +62,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
     const node = (await sdk.queryNode({ id: repository })).node;
     this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
-    if (node == undefined || node.__typename !== 'Repository') {
-      return err('No repository found.');
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
     }
 
     const projects = node.projectsV2.nodes?.flatMap(project =>
@@ -71,7 +71,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     );
 
     if (projects == undefined || projects.length === 0) {
-      return err('No projects found.');
+      return err("No projects found.");
     }
 
     return ok(projects);
@@ -89,7 +89,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
 
     if (projectItem.addProjectV2ItemById?.item?.id == undefined) {
-      return err('Fail to add project item.');
+      return err("Fail to add project item.");
     }
 
     return ok(projectItem.addProjectV2ItemById.item);

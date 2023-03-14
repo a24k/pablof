@@ -1,7 +1,7 @@
-import * as core from '@actions/core';
+import * as core from "@actions/core";
 
-import { actionSkip } from './result';
-import type { Context, Sdk, ActionResult } from './';
+import { actionSkip } from "./result";
+import type { Context, Sdk, ActionResult } from "./";
 
 export abstract class TriggerableAction {
   private triggerName: string;
@@ -14,7 +14,7 @@ export abstract class TriggerableAction {
 
   description(): string {
     return `${this.triggerName}${
-      this.triggerAction === undefined ? '' : `-${this.triggerAction}`
+      this.triggerAction === undefined ? "" : `-${this.triggerAction}`
     }`;
   }
 

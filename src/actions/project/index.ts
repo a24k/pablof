@@ -1,3 +1,3 @@
-import { QueryProject } from './query';
+import { QueryProject } from "./query";
 
 export { QueryProject };
