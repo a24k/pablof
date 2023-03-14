@@ -29,6 +29,7 @@ fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
   id type isArchived
   project {
-    ...ProjectV2Props
+    __typename
+    id title shortDescription readme closed
   }
 }

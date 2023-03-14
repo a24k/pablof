@@ -28392,10 +28392,15 @@ export const ProjectV2ItemPropsFragmentDoc = `
   type
   isArchived
   project {
-    ...ProjectV2Props
+    __typename
+    id
+    title
+    shortDescription
+    readme
+    closed
   }
 }
-    ${ProjectV2PropsFragmentDoc}`;
+    `;
 export const AddProjectItemDocument = `
     mutation addProjectItem($project: ID!, $item: ID!) {
   addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
