@@ -60,12 +60,12 @@ class ActionInventory {
                 const result = yield item.handleContext(context, sdk);
                 result.match((res) => {
                     switch (res.type) {
-                        case 'Success':
+                        case "Success":
                             item.notice(res.message);
                             break;
-                        case 'Skip':
+                        case "Skip":
                         default:
-                            item.debug('skipped');
+                            item.debug("skipped");
                             break;
                     }
                 }, (err) => {
@@ -101,7 +101,7 @@ const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
-        super('milestone', 'created');
+        super("milestone", "created");
     }
     description() {
         return `CreateMilestoneIssue for ${super.description()}`;
@@ -110,8 +110,8 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield sdk.queryNode({ id: milestone })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== 'Milestone') {
-                return (0, neverthrow_1.err)('No milestone found.');
+            if (node == undefined || node.__typename !== "Milestone") {
+                return (0, neverthrow_1.err)("No milestone found.");
             }
             return (0, neverthrow_1.ok)(node);
         });
@@ -127,7 +127,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, neverthrow_1.err)('Fail to create issue.');
+                return (0, neverthrow_1.err)("Fail to create issue.");
             }
             return (0, neverthrow_1.ok)(issue.createIssue.issue);
         });
@@ -137,12 +137,12 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield sdk.queryNode({ id: repository })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== 'Repository') {
-                return (0, neverthrow_1.err)('No repository found.');
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, neverthrow_1.err)("No repository found.");
             }
             const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
             if (projects == undefined || projects.length === 0) {
-                return (0, neverthrow_1.err)('No projects found.');
+                return (0, neverthrow_1.err)("No projects found.");
             }
             return (0, neverthrow_1.ok)(projects);
         });
@@ -156,7 +156,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             });
             this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
             if (((_b = (_a = projectItem.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, neverthrow_1.err)('Fail to add project item.');
+                return (0, neverthrow_1.err)("Fail to add project item.");
             }
             return (0, neverthrow_1.ok)(projectItem.addProjectV2ItemById.item);
         });
@@ -231,7 +231,7 @@ const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
     constructor() {
-        super('milestone', ['edited', 'closed', 'opened']);
+        super("milestone", ["edited", "closed", "opened"]);
     }
     description() {
         return `SyncMilestoneIssue for ${super.description()}`;
@@ -245,28 +245,28 @@ class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
                 id: payload.milestone.node_id,
             })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== 'Milestone') {
-                return (0, result_1.actionErr)('No milestone found.');
+            if (node == undefined || node.__typename !== "Milestone") {
+                return (0, result_1.actionErr)("No milestone found.");
             }
             const nodes = node.issues.nodes;
             if (nodes == undefined) {
-                return (0, result_1.actionErr)('No issue found.');
+                return (0, result_1.actionErr)("No issue found.");
             }
             const roots = nodes.filter(issue => issue !== null && issue.trackedInIssues.totalCount === 0);
             if (roots.length === 0 || roots[0] == undefined) {
-                return (0, result_1.actionErr)('No milestone issue found.');
+                return (0, result_1.actionErr)("No milestone issue found.");
             }
             this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
             const issue = yield sdk.updateIssue({
                 issue: roots[0].id,
                 title: payload.milestone.title,
-                state: payload.milestone.state === 'open'
+                state: payload.milestone.state === "open"
                     ? graphql_1.IssueState.Open
                     : graphql_1.IssueState.Closed,
             });
             this.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
             if (((_b = (_a = issue.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, result_1.actionErr)('Fail to update issue.');
+                return (0, result_1.actionErr)("Fail to update issue.");
             }
             return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`);
         });
@@ -310,7 +310,7 @@ const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
 class QueryProject extends triggerable_1.TriggerableAction {
     constructor() {
-        super('pull_request');
+        super("pull_request");
     }
     description() {
         return `QueryProject for ${super.description()}`;
@@ -325,16 +325,16 @@ class QueryProject extends triggerable_1.TriggerableAction {
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined ||
                 node.node == undefined ||
-                node.node.__typename !== 'Repository') {
-                return (0, result_1.actionErr)('No repository found.');
+                node.node.__typename !== "Repository") {
+                return (0, result_1.actionErr)("No repository found.");
             }
             const nodes = node.node.projectsV2.nodes;
             if (nodes == undefined) {
-                return (0, result_1.actionErr)('No projectsV2 found.');
+                return (0, result_1.actionErr)("No projectsV2 found.");
             }
             const projects = nodes.filter(project => project !== null && project.closed === false);
             if (projects.length === 0 || projects[0] == undefined) {
-                return (0, result_1.actionErr)('No projectsV2 found.');
+                return (0, result_1.actionErr)("No projectsV2 found.");
             }
             this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
             return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
@@ -355,15 +355,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
 function actionOk(message) {
-    return (0, neverthrow_1.ok)({ type: 'Success', message });
+    return (0, neverthrow_1.ok)({ type: "Success", message });
 }
 exports.actionOk = actionOk;
 function actionSkip() {
-    return (0, neverthrow_1.ok)({ type: 'Skip' });
+    return (0, neverthrow_1.ok)({ type: "Skip" });
 }
 exports.actionSkip = actionSkip;
 function actionErr(message) {
-    return (0, neverthrow_1.err)({ type: 'Failure', message });
+    return (0, neverthrow_1.err)({ type: "Failure", message });
 }
 exports.actionErr = actionErr;
 
@@ -417,7 +417,7 @@ class TriggerableAction {
         this.triggerAction = action;
     }
     description() {
-        return `${this.triggerName}${this.triggerAction === undefined ? '' : `-${this.triggerAction}`}`;
+        return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
     }
     debug(message) {
         core.debug(message);
@@ -4615,7 +4615,7 @@ const actions_1 = __nccwpck_require__(9024);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const token = core.getInput('token');
+            const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const sdk = (0, graphql_1.getSdk)(octokit.graphql);
             const inventory = (0, actions_1.collect)();
