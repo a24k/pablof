@@ -50,6 +50,19 @@ fragment ProjectV2ItemProps on ProjectV2Item {
   project {
     __typename
     id title shortDescription readme closed
+    fields(first: 100) {
+      totalCount
+      nodes {
+        __typename
+        ... on ProjectV2SingleSelectField {
+          __typename
+          name
+          options {
+            id name
+          }
+        }
+      }
+    }
   }
   fieldValues(first: 100) {
     totalCount

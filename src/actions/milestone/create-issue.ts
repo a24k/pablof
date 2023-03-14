@@ -7,10 +7,11 @@ import type { MilestoneEvent } from "@octokit/webhooks-types";
 import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
 
-import type { Context, Sdk, ID } from "../";
+import type { Context, Sdk } from "../";
 import type {
   MilestonePropsFragment,
   IssuePropsFragment,
+  ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
 } from "../../graphql";
 
@@ -42,14 +43,14 @@ export class CreateMilestoneIssue extends TriggerableAction {
     return ok(issue.createIssue.issue);
   }
 
-  protected async addItemToProject(
+  protected async addIssueToProject(
     sdk: Sdk,
-    projectID: ID,
-    itemID: ID
+    project: ProjectV2PropsFragment,
+    issue: IssuePropsFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
     const item = await sdk.addProjectItem({
-      project: projectID,
-      item: itemID,
+      project: project.id,
+      item: issue.id,
     });
     this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
 
@@ -83,7 +84,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
 
     for (const project of projects.value) {
-      const item = await this.addItemToProject(sdk, project.id, issue.value.id);
+      const item = await this.addIssueToProject(sdk, project, issue.value);
       if (item.isOk()) {
         this.notice(
           `Successfully added MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`

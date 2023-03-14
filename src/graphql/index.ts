@@ -27878,6 +27878,24 @@ export type ProjectV2ItemPropsFragment = {
     readonly shortDescription?: string | null;
     readonly readme?: string | null;
     readonly closed: boolean;
+    readonly fields: {
+      readonly __typename?: "ProjectV2FieldConfigurationConnection";
+      readonly totalCount: number;
+      readonly nodes?: ReadonlyArray<
+        | { readonly __typename: "ProjectV2Field" }
+        | { readonly __typename: "ProjectV2IterationField" }
+        | {
+            readonly __typename: "ProjectV2SingleSelectField";
+            readonly name: string;
+            readonly options: ReadonlyArray<{
+              readonly __typename?: "ProjectV2SingleSelectFieldOption";
+              readonly id: string;
+              readonly name: string;
+            }>;
+          }
+        | null
+      > | null;
+    };
   };
   readonly fieldValues: {
     readonly __typename?: "ProjectV2ItemFieldValueConnection";
@@ -27936,6 +27954,24 @@ export type AddProjectItemMutation = {
         readonly shortDescription?: string | null;
         readonly readme?: string | null;
         readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | { readonly __typename: "ProjectV2Field" }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
       };
       readonly fieldValues: {
         readonly __typename?: "ProjectV2ItemFieldValueConnection";
@@ -28493,6 +28529,20 @@ export const ProjectV2ItemPropsFragmentDoc = `
     shortDescription
     readme
     closed
+    fields(first: 100) {
+      totalCount
+      nodes {
+        __typename
+        ... on ProjectV2SingleSelectField {
+          __typename
+          name
+          options {
+            id
+            name
+          }
+        }
+      }
+    }
   }
   fieldValues(first: 100) {
     totalCount

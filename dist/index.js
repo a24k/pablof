@@ -123,12 +123,12 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(issue.createIssue.issue);
         });
     }
-    addItemToProject(sdk, projectID, itemID) {
+    addIssueToProject(sdk, project, issue) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const item = yield sdk.addProjectItem({
-                project: projectID,
-                item: itemID,
+                project: project.id,
+                item: issue.id,
             });
             this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
             if (((_b = (_a = item.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
@@ -154,7 +154,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 return (0, result_1.actionErr)(projects.error);
             }
             for (const project of projects.value) {
-                const item = yield this.addItemToProject(sdk, project.id, issue.value.id);
+                const item = yield this.addIssueToProject(sdk, project, issue.value);
                 if (item.isOk()) {
                     this.notice(`Successfully added MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
                 }
@@ -3446,6 +3446,20 @@ exports.ProjectV2ItemPropsFragmentDoc = `
     shortDescription
     readme
     closed
+    fields(first: 100) {
+      totalCount
+      nodes {
+        __typename
+        ... on ProjectV2SingleSelectField {
+          __typename
+          name
+          options {
+            id
+            name
+          }
+        }
+      }
+    }
   }
   fieldValues(first: 100) {
     totalCount
