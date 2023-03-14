@@ -319,11 +319,13 @@ class QueryProject extends triggerable_1.TriggerableAction {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const node = (yield sdk.queryNode({
+            const node = yield sdk.queryNode({
                 id: payload.repository.node_id,
-            }));
+            });
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.node == undefined || node.node.__typename !== "Repository") {
+            if (node == undefined ||
+                node.node == undefined ||
+                node.node.__typename !== "Repository") {
                 return (0, result_1.actionErr)("No repository found.");
             }
             const nodes = node.node.projectsV2.nodes;
