@@ -106,6 +106,8 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     }
     queryMilestone(sdk, milestone) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
+            this.debug(`milestone = ${JSON.stringify(milestone, null, 2)}`);
             const node = (yield sdk.queryNode({ id: milestone })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
