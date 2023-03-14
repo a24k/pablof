@@ -104,73 +104,87 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
     description() {
         return `CreateMilestoneIssue for ${super.description()}`;
     }
-    queryProjects(repository, sdk) {
+    queryMilestone(sdk, milestone) {
         return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({
-                id: repository,
-            })).node;
+            const node = (yield sdk.queryNode({ id: milestone })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Milestone") {
+                return (0, neverthrow_1.err)("No milestone found.");
+            }
+            return (0, neverthrow_1.ok)(node);
+        });
+    }
+    createIssueWithMilestone(sdk, milestone) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const issue = yield sdk.createIssueWithMilestone({
+                repository: milestone.repository.id,
+                title: milestone.title,
+                body: milestone.description,
+                milestone: milestone.id,
+            });
+            this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+            if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
+                return (0, neverthrow_1.err)("Fail to create issue.");
+            }
+            return (0, neverthrow_1.ok)(issue.createIssue.issue);
+        });
+    }
+    queryProjects(sdk, repository) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield sdk.queryNode({ id: repository })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Repository") {
                 return (0, neverthrow_1.err)("No repository found.");
             }
-            const nodes = node.projectsV2.nodes;
-            if (nodes == undefined || nodes.length === 0) {
+            const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
+            if (projects == undefined || projects.length === 0) {
                 return (0, neverthrow_1.err)("No projects found.");
             }
-            this.debug(`foundProjectV2 = ${JSON.stringify(nodes, null, 2)}`);
-            return (0, neverthrow_1.ok)(nodes.flatMap(project => project == null || project.closed ? [] : project.id));
+            return (0, neverthrow_1.ok)(projects);
         });
     }
-    addIssueToProject(sdk, project, issue) {
-        var _a;
+    addItemToProject(sdk, project, item) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield sdk.addProjectItem({
-                project: project,
-                item: issue,
-            })).addProjectV2ItemById;
-            this.debug(`addProjectV2ItemById = ${JSON.stringify(result, null, 2)}`);
-            if (((_a = result === null || result === void 0 ? void 0 : result.item) === null || _a === void 0 ? void 0 : _a.type) === "ISSUE") {
-                this.notice(`MilestoneIssue is added to ProjectV2 {id: ${project}}`);
+            const projectItem = yield sdk.addProjectItem({
+                project,
+                item,
+            });
+            this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
+            if (((_b = (_a = projectItem.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
+                return (0, neverthrow_1.err)("Fail to add project item.");
             }
-            else {
-                this.warning(`MilestoneIssue isn't added to ProjectV2 {id: ${project}}`);
-            }
+            return (0, neverthrow_1.ok)(projectItem.addProjectV2ItemById.item);
         });
-    }
-    digest(issue) {
-        this.debug(`IssuePropsFragment = ${JSON.stringify(issue, null, 2)}`);
     }
     handle(context, sdk) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const node = (yield sdk.queryNode({
-                id: payload.milestone.node_id,
-            })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Milestone") {
-                return (0, result_1.actionErr)("No milestone found.");
+            const milestone = yield this.queryMilestone(sdk, payload.milestone.node_id);
+            if (milestone.isErr()) {
+                return (0, result_1.actionErr)(milestone.error);
             }
-            const issue = yield sdk.createIssueWithMilestone({
-                repository: node.repository.id,
-                title: payload.milestone.title,
-                body: payload.milestone.description,
-                milestone: node.id,
-            });
-            this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
-            if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
-                return (0, result_1.actionErr)("Fail to create issue.");
+            const issue = yield this.createIssueWithMilestone(sdk, milestone.value);
+            if (issue.isErr()) {
+                return (0, result_1.actionErr)(issue.error);
             }
-            this.digest(issue.createIssue.issue);
-            const projects = yield this.queryProjects(payload.repository.node_id, sdk);
-            const issueId = issue.createIssue.issue.id;
-            projects.match((ids) => {
-                for (const id of ids) {
-                    this.addIssueToProject(sdk, id, issueId);
+            const projects = yield this.queryProjects(sdk, milestone.value.repository.id);
+            if (projects.isErr()) {
+                return (0, result_1.actionErr)(projects.error);
+            }
+            for (const project of projects.value) {
+                const item = yield this.addItemToProject(sdk, project.id, issue.value.id);
+                if (item.isOk()) {
+                    this.notice(`Successfully added MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
                 }
-            }, (err) => this.warning(`No projects found. (${err})`));
-            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.createIssue.issue.id}, title: ${issue.createIssue.issue.title}, body: ${issue.createIssue.issue.body}}`);
+                else {
+                    this.warning(`Failed to add MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
+                }
+            }
+            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.value.id}, title: ${issue.value.title}, body: ${issue.value.body}}`);
         });
     }
 }
@@ -383,7 +397,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.IssueClosedStateReason = exports.IpAllowListForInstalledAppsEnabledSettingValue = exports.IpAllowListEntryOrderField = exports.IpAllowListEnabledSettingValue = exports.IdentityProviderConfigurationState = exports.GitSignatureState = exports.GistPrivacy = exports.GistOrderField = exports.FundingPlatform = exports.FileViewedState = exports.EnterpriseUserDeployment = exports.EnterpriseUserAccountMembershipRole = exports.EnterpriseServerUserAccountsUploadSyncState = exports.EnterpriseServerUserAccountsUploadOrderField = exports.EnterpriseServerUserAccountOrderField = exports.EnterpriseServerUserAccountEmailOrderField = exports.EnterpriseServerInstallationOrderField = exports.EnterpriseMembersCanMakePurchasesSettingValue = exports.EnterpriseMembersCanCreateRepositoriesSettingValue = exports.EnterpriseMemberOrderField = exports.EnterpriseEnabledSettingValue = exports.EnterpriseEnabledDisabledSettingValue = exports.EnterpriseDefaultRepositoryPermissionSettingValue = exports.EnterpriseAllowPrivateRepositoryForkingPolicyValue = exports.EnterpriseAdministratorRole = exports.EnterpriseAdministratorInvitationOrderField = exports.DismissReason = exports.DiscussionPollOptionOrderField = exports.DiscussionOrderField = exports.DiffSide = exports.DeploymentStatusState = exports.DeploymentState = exports.DeploymentReviewState = exports.DeploymentProtectionRuleType = exports.DeploymentOrderField = exports.DependencyGraphEcosystem = exports.DefaultRepositoryPermissionField = exports.ContributionLevel = exports.ComparisonStatus = exports.CommitContributionOrderField = exports.CommentCannotUpdateReason = exports.CommentAuthorAssociation = exports.CollaboratorAffiliation = exports.CheckStatusState = exports.CheckRunType = exports.CheckRunState = exports.CheckConclusionState = exports.CheckAnnotationLevel = exports.AuditLogOrderField = exports.ActorType = void 0;
 exports.ProjectCardState = exports.ProjectCardArchivedState = exports.PinnedDiscussionPattern = exports.PinnedDiscussionGradient = exports.PinnableItemType = exports.PatchStatus = exports.PackageVersionOrderField = exports.PackageType = exports.PackageOrderField = exports.PackageFileOrderField = exports.OrganizationOrderField = exports.OrganizationMigrationState = exports.OrganizationMembersCanCreateRepositoriesSettingValue = exports.OrganizationMemberRole = exports.OrganizationInvitationType = exports.OrganizationInvitationSource = exports.OrganizationInvitationRole = exports.OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility = exports.OrgUpdateMemberAuditEntryPermission = exports.OrgUpdateDefaultRepositoryPermissionAuditEntryPermission = exports.OrgRemoveOutsideCollaboratorAuditEntryReason = exports.OrgRemoveOutsideCollaboratorAuditEntryMembershipType = exports.OrgRemoveMemberAuditEntryReason = exports.OrgRemoveMemberAuditEntryMembershipType = exports.OrgRemoveBillingManagerAuditEntryReason = exports.OrgEnterpriseOwnerOrderField = exports.OrgCreateAuditEntryBillingPlan = exports.OrgAddMemberAuditEntryPermission = exports.OrderDirection = exports.OperationType = exports.OauthApplicationCreateAuditEntryState = exports.OidcProviderType = exports.NotificationRestrictionSettingValue = exports.MilestoneState = exports.MilestoneOrderField = exports.MigrationState = exports.MigrationSourceType = exports.MergeableState = exports.MergeStateStatus = exports.MergeCommitTitle = exports.MergeCommitMessage = exports.MannequinOrderField = exports.LockReason = exports.LanguageOrderField = exports.LabelOrderField = exports.IssueTimelineItemsItemType = exports.IssueStateReason = exports.IssueState = exports.IssueOrderField = exports.IssueCommentOrderField = void 0;
 exports.RepositoryVisibility = exports.RepositoryPrivacy = exports.RepositoryPermission = exports.RepositoryOrderField = exports.RepositoryMigrationOrderField = exports.RepositoryMigrationOrderDirection = exports.RepositoryLockReason = exports.RepositoryInvitationOrderField = exports.RepositoryInteractionLimitOrigin = exports.RepositoryInteractionLimitExpiry = exports.RepositoryInteractionLimit = exports.RepositoryContributionType = exports.RepositoryAffiliation = exports.ReportedContentClassifiers = exports.RepoRemoveMemberAuditEntryVisibility = exports.RepoDestroyAuditEntryVisibility = exports.RepoCreateAuditEntryVisibility = exports.RepoChangeMergeSettingAuditEntryMergeType = exports.RepoArchivedAuditEntryVisibility = exports.RepoAddMemberAuditEntryVisibility = exports.RepoAccessAuditEntryVisibility = exports.ReleaseOrderField = exports.RefOrderField = exports.ReactionOrderField = exports.ReactionContent = exports.PullRequestUpdateState = exports.PullRequestTimelineItemsItemType = exports.PullRequestState = exports.PullRequestReviewState = exports.PullRequestReviewEvent = exports.PullRequestReviewDecision = exports.PullRequestReviewCommentState = exports.PullRequestOrderField = exports.PullRequestMergeMethod = exports.ProjectV2WorkflowsOrderField = exports.ProjectV2ViewOrderField = exports.ProjectV2ViewLayout = exports.ProjectV2State = exports.ProjectV2SingleSelectFieldOptionColor = exports.ProjectV2OrderField = exports.ProjectV2ItemType = exports.ProjectV2ItemOrderField = exports.ProjectV2ItemFieldValueOrderField = exports.ProjectV2FieldType = exports.ProjectV2FieldOrderField = exports.ProjectV2CustomFieldType = exports.ProjectTemplate = exports.ProjectState = exports.ProjectOrderField = exports.ProjectColumnPurpose = void 0;
-exports.IssuePropsFragmentDoc = exports.RepositoryPropsFragmentDoc = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
+exports.RepositoryPropsFragmentDoc = exports.IssuePropsFragmentDoc = exports.WorkflowRunOrderField = exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = void 0;
 exports.getSdk = exports.QueryProjectFieldsDocument = exports.QueryNodeDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.ProjectV2ItemPropsFragmentDoc = exports.ProjectV2PropsFragmentDoc = exports.MilestonePropsFragmentDoc = void 0;
 /** The actor's type. */
 var ActorType;
@@ -3253,18 +3267,6 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
-exports.RepositoryPropsFragmentDoc = `
-    fragment RepositoryProps on Repository {
-  __typename
-  id
-  name
-  nameWithOwner
-  description
-  owner {
-    login
-  }
-}
-    `;
 exports.IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
@@ -3277,6 +3279,18 @@ exports.IssuePropsFragmentDoc = `
   }
 }
     `;
+exports.RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+  owner {
+    login
+  }
+}
+    `;
 exports.MilestonePropsFragmentDoc = `
     fragment MilestoneProps on Milestone {
   __typename
@@ -3285,8 +3299,11 @@ exports.MilestonePropsFragmentDoc = `
   description
   state
   dueOn
+  repository {
+    ...RepositoryProps
+  }
 }
-    `;
+    ${exports.RepositoryPropsFragmentDoc}`;
 exports.ProjectV2PropsFragmentDoc = `
     fragment ProjectV2Props on ProjectV2 {
   __typename
@@ -3359,9 +3376,6 @@ exports.QueryNodeDocument = `
     }
     ... on Milestone {
       ...MilestoneProps
-      repository {
-        ...RepositoryProps
-      }
       issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
         totalCount
         nodes {
