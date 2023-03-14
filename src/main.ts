@@ -10,10 +10,6 @@ async function main(): Promise<void> {
     const octokit = github.getOctokit(token);
     const sdk = getSdk(octokit.graphql);
 
-    core.debug(`octokit = ${JSON.stringify(octokit, null, 2)}`);
-    core.debug(`graphql = ${JSON.stringify(octokit.graphql, null, 2)}`);
-    core.debug(`sdk = ${JSON.stringify(sdk, null, 2)}`);
-
     const inventory = collect();
 
     await inventory.handleContext(github.context, sdk);

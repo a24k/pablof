@@ -12,9 +12,6 @@ query queryNode($id: ID!) {
 
     ... on Milestone {
       ...MilestoneProps
-      repository {
-        ...RepositoryProps
-      }
       issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
         totalCount
         nodes {
