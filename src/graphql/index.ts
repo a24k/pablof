@@ -27789,6 +27789,18 @@ export type RepositoryPropsFragment = {
   readonly owner:
     | { readonly __typename?: "Organization"; readonly login: string }
     | { readonly __typename?: "User"; readonly login: string };
+  readonly projectsV2: {
+    readonly __typename?: "ProjectV2Connection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "ProjectV2";
+      readonly id: string;
+      readonly title: string;
+      readonly shortDescription?: string | null;
+      readonly readme?: string | null;
+      readonly closed: boolean;
+    } | null> | null;
+  };
 };
 
 export type IssuePropsFragment = {
@@ -27801,6 +27813,14 @@ export type IssuePropsFragment = {
     readonly __typename?: "IssueConnection";
     readonly totalCount: number;
   };
+  readonly milestone?: {
+    readonly __typename: "Milestone";
+    readonly id: string;
+    readonly title: string;
+    readonly description?: string | null;
+    readonly state: MilestoneState;
+    readonly dueOn?: any | null;
+  } | null;
 };
 
 export type MilestonePropsFragment = {
@@ -27819,6 +27839,21 @@ export type MilestonePropsFragment = {
     readonly owner:
       | { readonly __typename?: "Organization"; readonly login: string }
       | { readonly __typename?: "User"; readonly login: string };
+  };
+  readonly issues: {
+    readonly __typename?: "IssueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "Issue";
+      readonly id: string;
+      readonly title: string;
+      readonly body: string;
+      readonly state: IssueState;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
+    } | null> | null;
   };
 };
 
@@ -27889,6 +27924,10 @@ export type CreateIssueWithMilestoneMutation = {
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
       readonly milestone?: {
         readonly __typename: "Milestone";
         readonly id: string;
@@ -27896,21 +27935,7 @@ export type CreateIssueWithMilestoneMutation = {
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
-        };
       } | null;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
     } | null;
   } | null;
 };
@@ -27931,6 +27956,10 @@ export type UpdateIssueMutation = {
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
       readonly milestone?: {
         readonly __typename: "Milestone";
         readonly id: string;
@@ -27938,21 +27967,7 @@ export type UpdateIssueMutation = {
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
-        };
       } | null;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
     } | null;
   } | null;
 };
@@ -28053,6 +28068,16 @@ export type QueryNodeQuery = {
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
+        readonly repository: {
+          readonly __typename: "Repository";
+          readonly id: string;
+          readonly name: string;
+          readonly nameWithOwner: string;
+          readonly description?: string | null;
+          readonly owner:
+            | { readonly __typename?: "Organization"; readonly login: string }
+            | { readonly __typename?: "User"; readonly login: string };
+        };
         readonly issues: {
           readonly __typename?: "IssueConnection";
           readonly totalCount: number;
@@ -28067,16 +28092,6 @@ export type QueryNodeQuery = {
               readonly totalCount: number;
             };
           } | null> | null;
-        };
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
         };
       }
     | { readonly __typename: "MilestonedEvent" }
@@ -28192,6 +28207,9 @@ export type QueryNodeQuery = {
         readonly name: string;
         readonly nameWithOwner: string;
         readonly description?: string | null;
+        readonly owner:
+          | { readonly __typename?: "Organization"; readonly login: string }
+          | { readonly __typename?: "User"; readonly login: string };
         readonly projectsV2: {
           readonly __typename?: "ProjectV2Connection";
           readonly totalCount: number;
@@ -28204,9 +28222,6 @@ export type QueryNodeQuery = {
             readonly closed: boolean;
           } | null> | null;
         };
-        readonly owner:
-          | { readonly __typename?: "Organization"; readonly login: string }
-          | { readonly __typename?: "User"; readonly login: string };
       }
     | { readonly __typename: "RepositoryInvitation" }
     | { readonly __typename: "RepositoryMigration" }
@@ -28311,26 +28326,6 @@ export type QueryProjectFieldsQuery = {
   } | null;
 };
 
-export type QueryProjectQueryVariables = Exact<{
-  owner: Scalars["String"];
-  number: Scalars["Int"];
-}>;
-
-export type QueryProjectQuery = {
-  readonly __typename?: "Query";
-  readonly user?: {
-    readonly __typename?: "User";
-    readonly id: string;
-    readonly name?: string | null;
-    readonly login: string;
-    readonly projectV2?: {
-      readonly __typename?: "ProjectV2";
-      readonly id: string;
-      readonly title: string;
-    } | null;
-  } | null;
-};
-
 export const RepositoryPropsFragmentDoc = `
     fragment RepositoryProps on Repository {
   __typename
@@ -28340,6 +28335,17 @@ export const RepositoryPropsFragmentDoc = `
   description
   owner {
     login
+  }
+  projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      __typename
+      id
+      title
+      shortDescription
+      readme
+      closed
+    }
   }
 }
     `;
@@ -28352,6 +28358,14 @@ export const IssuePropsFragmentDoc = `
   state
   trackedInIssues(first: 1) {
     totalCount
+  }
+  milestone {
+    __typename
+    id
+    title
+    description
+    state
+    dueOn
   }
 }
     `;
@@ -28371,6 +28385,19 @@ export const MilestonePropsFragmentDoc = `
     description
     owner {
       login
+    }
+  }
+  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      __typename
+      id
+      title
+      body
+      state
+      trackedInIssues(first: 1) {
+        totalCount
+      }
     }
   }
 }
@@ -28417,58 +28444,31 @@ export const CreateIssueWithMilestoneDocument = `
   ) {
     issue {
       ...IssueProps
-      milestone {
-        ...MilestoneProps
-      }
     }
   }
 }
-    ${IssuePropsFragmentDoc}
-${MilestonePropsFragmentDoc}`;
+    ${IssuePropsFragmentDoc}`;
 export const UpdateIssueDocument = `
     mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
   updateIssue(input: {id: $issue, title: $title, state: $state}) {
     issue {
       ...IssueProps
-      milestone {
-        ...MilestoneProps
-      }
     }
   }
 }
-    ${IssuePropsFragmentDoc}
-${MilestonePropsFragmentDoc}`;
+    ${IssuePropsFragmentDoc}`;
 export const QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
     __typename
-    ... on Repository {
-      ...RepositoryProps
-      projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-        totalCount
-        nodes {
-          ...ProjectV2Props
-        }
-      }
-    }
-    ... on Milestone {
-      ...MilestoneProps
-      issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-        totalCount
-        nodes {
-          ...IssueProps
-        }
-      }
-    }
-    ... on ProjectV2 {
-      ...ProjectV2Props
-    }
+    ...RepositoryProps
+    ...MilestoneProps
+    ...ProjectV2Props
   }
 }
     ${RepositoryPropsFragmentDoc}
-${ProjectV2PropsFragmentDoc}
 ${MilestonePropsFragmentDoc}
-${IssuePropsFragmentDoc}`;
+${ProjectV2PropsFragmentDoc}`;
 export const QueryProjectFieldsDocument = `
     query queryProjectFields($owner: String!, $number: Int!) {
   user(login: $owner) {
@@ -28497,19 +28497,6 @@ export const QueryProjectFieldsDocument = `
           }
         }
       }
-    }
-  }
-}
-    `;
-export const QueryProjectDocument = `
-    query queryProject($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    id
-    name
-    login
-    projectV2(number: $number) {
-      id
-      title
     }
   }
 }
@@ -28576,16 +28563,6 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<QueryProjectFieldsQuery>;
-    },
-    queryProject(
-      variables: QueryProjectQueryVariables,
-      options?: C
-    ): Promise<QueryProjectQuery> {
-      return requester<QueryProjectQuery, QueryProjectQueryVariables>(
-        QueryProjectDocument,
-        variables,
-        options
-      ) as Promise<QueryProjectQuery>;
     },
   };
 }

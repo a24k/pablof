@@ -2,9 +2,6 @@ mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: Stri
   createIssue(input: { title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone }) {
     issue {
       ...IssueProps
-      milestone {
-        ...MilestoneProps
-      }
     }
   }
 }

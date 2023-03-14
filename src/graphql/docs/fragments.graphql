@@ -2,12 +2,23 @@ fragment RepositoryProps on Repository {
   __typename
   id name nameWithOwner description
   owner { login }
+  projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes {
+      __typename
+      id title shortDescription readme closed
+    }
+  }
 }
 
 fragment IssueProps on Issue {
   __typename
   id title body state
   trackedInIssues(first: 1) { totalCount }
+  milestone {
+    __typename
+    id title description state dueOn
+  }
 }
 
 fragment MilestoneProps on Milestone {
@@ -17,6 +28,14 @@ fragment MilestoneProps on Milestone {
     __typename
     id name nameWithOwner description
     owner { login }
+  }
+  issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes {
+      __typename
+      id title body state
+      trackedInIssues(first: 1) { totalCount }
+    }
   }
 }
 
