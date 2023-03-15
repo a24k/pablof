@@ -13,17 +13,17 @@ fragment RepositoryProps on Repository {
 
 fragment IssueProps on Issue {
   __typename
-  id title body state
+  id title body state createdAt updatedAt closedAt
   trackedInIssues(first: 1) { totalCount }
   milestone {
     __typename
-    id title description state dueOn
+    id title description state dueOn createdAt updatedAt closedAt
   }
 }
 
 fragment MilestoneProps on Milestone {
   __typename
-  id title description state dueOn
+  id title description state dueOn createdAt updatedAt closedAt
   repository {
     __typename
     id name nameWithOwner description
@@ -33,7 +33,7 @@ fragment MilestoneProps on Milestone {
     totalCount
     nodes {
       __typename
-      id title body state
+      id title body state createdAt updatedAt closedAt
       trackedInIssues(first: 1) { totalCount }
     }
   }
@@ -68,7 +68,7 @@ fragment ProjectV2ItemProps on ProjectV2Item {
         field { __typename ... on ProjectV2Field { name dataType } }
       }
       ... on ProjectV2ItemFieldMilestoneValue {
-        milestone { __typename id title description state dueOn }
+        milestone { __typename id title description state dueOn createdAt updatedAt closedAt }
         field { __typename ... on ProjectV2Field { name dataType } }
       }
       ... on ProjectV2ItemFieldTextValue {

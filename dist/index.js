@@ -151,7 +151,33 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(result.updateProjectV2ItemFieldValue.projectV2Item);
         });
     }
-    updateDueDateField(sdk, item, milestone) {
+    updateStartDateField(sdk, item, milestone) {
+        var _a, _b, _c;
+        return __awaiter(this, void 0, void 0, function* () {
+            const fields = (_a = item.project.fields.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(field => field === null ||
+                field.__typename !== "ProjectV2Field" ||
+                field.dataType !== "DATE" ||
+                !field.name.match(/^(Begin|Start) [dD]ate$/)
+                ? []
+                : field);
+            if (fields == undefined || fields.length === 0) {
+                return (0, neverthrow_1.err)(`No field for "Start Date" on project(${item.project.id}).`);
+            }
+            const field = fields[0];
+            const result = yield sdk.updateProjectItemFieldByDate({
+                project: item.project.id,
+                item: item.id,
+                field: field.id,
+                date: milestone.createdAt,
+            });
+            this.debug(`updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`);
+            if (((_c = (_b = result.updateProjectV2ItemFieldValue) === null || _b === void 0 ? void 0 : _b.projectV2Item) === null || _c === void 0 ? void 0 : _c.id) == undefined) {
+                return (0, neverthrow_1.err)(`Fail to update field(${field.name}) with value(${milestone.createdAt}) on project(${item.project.id}).`);
+            }
+            return (0, neverthrow_1.ok)(result.updateProjectV2ItemFieldValue.projectV2Item);
+        });
+    }
+    updateTargetDateField(sdk, item, milestone) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             if (milestone.dueOn == undefined) {
@@ -164,7 +190,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 ? []
                 : field);
             if (fields == undefined || fields.length === 0) {
-                return (0, neverthrow_1.err)(`No field for "Due Date" on project(${item.project.id}).`);
+                return (0, neverthrow_1.err)(`No field for "Target Date" on project(${item.project.id}).`);
             }
             const field = fields[0];
             const result = yield sdk.updateProjectItemFieldByDate({
@@ -198,12 +224,19 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
             else {
                 this.warning(`Failed to update status field: ${statusResult.error}`);
             }
-            const dueDateResult = yield this.updateDueDateField(sdk, item.addProjectV2ItemById.item, milestone);
-            if (dueDateResult.isOk()) {
-                this.notice(`Successfully updated due date field on project(${dueDateResult.value.project.id}).`);
+            const startDateResult = yield this.updateStartDateField(sdk, item.addProjectV2ItemById.item, milestone);
+            if (startDateResult.isOk()) {
+                this.notice(`Successfully updated start date field on project(${startDateResult.value.project.id}).`);
             }
             else {
-                this.warning(`Failed to update due date field: ${dueDateResult.error}`);
+                this.warning(`Failed to update start date field: ${startDateResult.error}`);
+            }
+            const targetDateResult = yield this.updateTargetDateField(sdk, item.addProjectV2ItemById.item, milestone);
+            if (targetDateResult.isOk()) {
+                this.notice(`Successfully updated target date field on project(${targetDateResult.value.project.id}).`);
+            }
+            else {
+                this.warning(`Failed to update target date field: ${targetDateResult.error}`);
             }
             return (0, neverthrow_1.ok)(item.addProjectV2ItemById.item);
         });
@@ -3448,6 +3481,9 @@ exports.IssuePropsFragmentDoc = `
   title
   body
   state
+  createdAt
+  updatedAt
+  closedAt
   trackedInIssues(first: 1) {
     totalCount
   }
@@ -3458,6 +3494,9 @@ exports.IssuePropsFragmentDoc = `
     description
     state
     dueOn
+    createdAt
+    updatedAt
+    closedAt
   }
 }
     `;
@@ -3469,6 +3508,9 @@ exports.MilestonePropsFragmentDoc = `
   description
   state
   dueOn
+  createdAt
+  updatedAt
+  closedAt
   repository {
     __typename
     id
@@ -3487,6 +3529,9 @@ exports.MilestonePropsFragmentDoc = `
       title
       body
       state
+      createdAt
+      updatedAt
+      closedAt
       trackedInIssues(first: 1) {
         totalCount
       }
@@ -3565,6 +3610,9 @@ exports.ProjectV2ItemPropsFragmentDoc = `
           description
           state
           dueOn
+          createdAt
+          updatedAt
+          closedAt
         }
         field {
           __typename

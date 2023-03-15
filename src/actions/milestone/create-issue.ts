@@ -87,7 +87,45 @@ export class CreateMilestoneIssue extends TriggerableAction {
     return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
   }
 
-  protected async updateDueDateField(
+  protected async updateStartDateField(
+    sdk: Sdk,
+    item: ProjectV2ItemPropsFragment,
+    milestone: MilestonePropsFragment
+  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    const fields = item.project.fields.nodes?.flatMap(field =>
+      field === null ||
+      field.__typename !== "ProjectV2Field" ||
+      field.dataType !== "DATE" ||
+      !field.name.match(/^(Begin|Start) [dD]ate$/)
+        ? []
+        : field
+    );
+    if (fields == undefined || fields.length === 0) {
+      return err(`No field for "Start Date" on project(${item.project.id}).`);
+    }
+
+    const field = fields[0];
+
+    const result = await sdk.updateProjectItemFieldByDate({
+      project: item.project.id,
+      item: item.id,
+      field: field.id,
+      date: milestone.createdAt,
+    });
+    this.debug(
+      `updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`
+    );
+
+    if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
+      return err(
+        `Fail to update field(${field.name}) with value(${milestone.createdAt}) on project(${item.project.id}).`
+      );
+    }
+
+    return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
+  }
+
+  protected async updateTargetDateField(
     sdk: Sdk,
     item: ProjectV2ItemPropsFragment,
     milestone: MilestonePropsFragment
@@ -105,7 +143,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
         : field
     );
     if (fields == undefined || fields.length === 0) {
-      return err(`No field for "Due Date" on project(${item.project.id}).`);
+      return err(`No field for "Target Date" on project(${item.project.id}).`);
     }
 
     const field = fields[0];
@@ -157,17 +195,34 @@ export class CreateMilestoneIssue extends TriggerableAction {
       this.warning(`Failed to update status field: ${statusResult.error}`);
     }
 
-    const dueDateResult = await this.updateDueDateField(
+    const startDateResult = await this.updateStartDateField(
       sdk,
       item.addProjectV2ItemById.item,
       milestone
     );
-    if (dueDateResult.isOk()) {
+    if (startDateResult.isOk()) {
       this.notice(
-        `Successfully updated due date field on project(${dueDateResult.value.project.id}).`
+        `Successfully updated start date field on project(${startDateResult.value.project.id}).`
       );
     } else {
-      this.warning(`Failed to update due date field: ${dueDateResult.error}`);
+      this.warning(
+        `Failed to update start date field: ${startDateResult.error}`
+      );
+    }
+
+    const targetDateResult = await this.updateTargetDateField(
+      sdk,
+      item.addProjectV2ItemById.item,
+      milestone
+    );
+    if (targetDateResult.isOk()) {
+      this.notice(
+        `Successfully updated target date field on project(${targetDateResult.value.project.id}).`
+      );
+    } else {
+      this.warning(
+        `Failed to update target date field: ${targetDateResult.error}`
+      );
     }
 
     return ok(item.addProjectV2ItemById.item);
