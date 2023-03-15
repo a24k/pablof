@@ -1,0 +1,8 @@
+query queryNode($id: ID!) { 
+  node(id: $id) {
+    __typename
+    ...RepositoryProps
+    ...MilestonePropsWithRepositoryAndIssues
+    ...ProjectV2Props
+  }
+}

@@ -1,0 +1,156 @@
+fragment RepositoryProps on Repository {
+  __typename
+  id name nameWithOwner description
+  owner { login }
+  projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes {
+      __typename
+      id title shortDescription readme closed
+    }
+  }
+}
+
+fragment IssueProps on Issue {
+  __typename
+  id title body state createdAt updatedAt closedAt
+  trackedInIssues(first: 1) { totalCount }
+  milestone {
+    __typename
+    id title description state dueOn createdAt updatedAt closedAt
+  }
+}
+
+fragment IssuePropsWithItems on Issue {
+  __typename
+  id title body state createdAt updatedAt closedAt
+  trackedInIssues(first: 1) { totalCount }
+  milestone {
+    __typename
+    id title description state dueOn createdAt updatedAt closedAt
+  }
+  projectItems(first: 100) {
+    totalCount
+    nodes {
+      __typename
+      id type isArchived
+      project {
+        __typename
+        id title shortDescription readme closed
+        fields(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+          totalCount
+          nodes {
+            __typename
+            ... on ProjectV2Field { id name dataType }
+            ... on ProjectV2SingleSelectField { id name options { id name } }
+          }
+        }
+      }
+      fieldValues(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+        totalCount
+        nodes {
+          __typename
+          ... on ProjectV2ItemFieldRepositoryValue {
+            repository { __typename id name nameWithOwner description }
+            field { __typename ... on ProjectV2Field { name dataType } }
+          }
+          ... on ProjectV2ItemFieldMilestoneValue {
+            milestone { __typename id title description state dueOn createdAt updatedAt closedAt }
+            field { __typename ... on ProjectV2Field { name dataType } }
+          }
+          ... on ProjectV2ItemFieldTextValue {
+            id text
+            field { __typename ... on ProjectV2Field { name dataType } }
+          }
+          ... on ProjectV2ItemFieldNumberValue {
+            id number
+            field { __typename ... on ProjectV2Field { name dataType } }
+          }
+          ... on ProjectV2ItemFieldDateValue {
+            id date
+            field { __typename ... on ProjectV2Field { name dataType } }
+          }
+          ... on ProjectV2ItemFieldSingleSelectValue {
+            id name optionId
+            field { __typename ... on ProjectV2SingleSelectField { name options { id name } } }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment MilestoneProps on Milestone {
+  __typename
+  id title description state dueOn createdAt updatedAt closedAt
+}
+
+fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  __typename
+  id title description state dueOn createdAt updatedAt closedAt
+  repository {
+    __typename
+    id name nameWithOwner description
+    owner { login }
+  }
+  issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes {
+      __typename
+      id title body state createdAt updatedAt closedAt
+      trackedInIssues(first: 1) { totalCount }
+    }
+  }
+}
+
+fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id title shortDescription readme closed
+}
+
+fragment ProjectV2ItemProps on ProjectV2Item {
+  __typename
+  id type isArchived
+  project {
+    __typename
+    id title shortDescription readme closed
+    fields(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+      totalCount
+      nodes {
+        __typename
+        ... on ProjectV2Field { id name dataType }
+        ... on ProjectV2SingleSelectField { id name options { id name } }
+      }
+    }
+  }
+  fieldValues(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+    totalCount
+    nodes {
+      __typename
+      ... on ProjectV2ItemFieldRepositoryValue {
+        repository { __typename id name nameWithOwner description }
+        field { __typename ... on ProjectV2Field { name dataType } }
+      }
+      ... on ProjectV2ItemFieldMilestoneValue {
+        milestone { __typename id title description state dueOn createdAt updatedAt closedAt }
+        field { __typename ... on ProjectV2Field { name dataType } }
+      }
+      ... on ProjectV2ItemFieldTextValue {
+        id text
+        field { __typename ... on ProjectV2Field { name dataType } }
+      }
+      ... on ProjectV2ItemFieldNumberValue {
+        id number
+        field { __typename ... on ProjectV2Field { name dataType } }
+      }
+      ... on ProjectV2ItemFieldDateValue {
+        id date
+        field { __typename ... on ProjectV2Field { name dataType } }
+      }
+      ... on ProjectV2ItemFieldSingleSelectValue {
+        id name optionId
+        field { __typename ... on ProjectV2SingleSelectField { name options { id name } } }
+      }
+    }
+  }
+}
