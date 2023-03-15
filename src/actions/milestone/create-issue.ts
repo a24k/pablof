@@ -67,17 +67,41 @@ export class CreateMilestoneIssue extends TriggerableAction {
           : field
     );
     if (fields == undefined || fields.length === 0) {
-      this.debug(
+      this.warning(
         `No field named "Status" on project(${item.addProjectV2ItemById.item.project.id}).`
       );
-    } /*else {
+    } else {
       const option =
-        fields[0].options.find(option => option.name === "Milestone") ||
-        fields[0].options.find(option => option.name === "Project") ||
+        fields[0].options.find(opt => opt.name === "Milestone") ||
+        fields[0].options.find(opt => opt.name === "Project") ||
         fields[0].options[0];
 
-      //await sdk.updateProjectItemSingleSelectField(project.id, item.addProjectV2ItemById.item.id,
-    }*/
+      const result = await sdk.updateProjectItemSingleSelectField({
+        project: project.id,
+        item: item.addProjectV2ItemById.item.id,
+        field: fields[0].id,
+        option: option.id,
+      });
+      this.debug(
+        `updateProjectItemSingleSelectField = ${JSON.stringify(
+          result,
+          null,
+          2
+        )}`
+      );
+
+      if (
+        result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined
+      ) {
+        this.warning(
+          `Fail to update field(${fields[0].name}) with value(${option.name}) on project(${item.addProjectV2ItemById.item.project.id}).`
+        );
+      }
+
+      this.warning(
+        `Successfully updated field(${fields[0].name}) with value(${option.name}) on project(${item.addProjectV2ItemById.item.project.id}).`
+      );
+    }
 
     return ok(item.addProjectV2ItemById.item);
   }

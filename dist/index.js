@@ -124,7 +124,7 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
         });
     }
     addIssueToProject(sdk, project, issue) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             const item = yield sdk.addProjectItem({
                 project: project.id,
@@ -140,15 +140,24 @@ class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
                 ? []
                 : field);
             if (fields == undefined || fields.length === 0) {
-                this.debug(`No field named "Status" on project(${item.addProjectV2ItemById.item.project.id}).`);
-            } /*else {
-              const option =
-                fields[0].options.find(option => option.name === "Milestone") ||
-                fields[0].options.find(option => option.name === "Project") ||
-                fields[0].options[0];
-        
-              //await sdk.updateProjectItemSingleSelectField(project.id, item.addProjectV2ItemById.item.id,
-            }*/
+                this.warning(`No field named "Status" on project(${item.addProjectV2ItemById.item.project.id}).`);
+            }
+            else {
+                const option = fields[0].options.find(opt => opt.name === "Milestone") ||
+                    fields[0].options.find(opt => opt.name === "Project") ||
+                    fields[0].options[0];
+                const result = yield sdk.updateProjectItemSingleSelectField({
+                    project: project.id,
+                    item: item.addProjectV2ItemById.item.id,
+                    field: fields[0].id,
+                    option: option.id,
+                });
+                this.debug(`updateProjectItemSingleSelectField = ${JSON.stringify(result, null, 2)}`);
+                if (((_e = (_d = result.updateProjectV2ItemFieldValue) === null || _d === void 0 ? void 0 : _d.projectV2Item) === null || _e === void 0 ? void 0 : _e.id) == undefined) {
+                    this.warning(`Fail to update field(${fields[0].name}) with value(${option.name}) on project(${item.addProjectV2ItemById.item.project.id}).`);
+                }
+                this.warning(`Successfully updated field(${fields[0].name}) with value(${option.name}) on project(${item.addProjectV2ItemById.item.project.id}).`);
+            }
             return (0, neverthrow_1.ok)(item.addProjectV2ItemById.item);
         });
     }
