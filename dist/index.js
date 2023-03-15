@@ -153,6 +153,12 @@ class TriggerHandler {
     description() {
         return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dump(tag, object) {
+        core.startGroup(tag);
+        this.debug(JSON.stringify(object, null, 2));
+        core.endGroup();
+    }
     debug(message) {
         core.debug(message);
     }
