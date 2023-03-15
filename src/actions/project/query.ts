@@ -2,8 +2,9 @@
 
 import type { PullRequestEvent } from "@octokit/webhooks-types";
 
-import { Action, actionOk, actionErr } from "../";
+import { actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
+import { Action } from "../base";
 
 export class QueryProject extends Action {
   constructor() {

@@ -215,15 +215,13 @@ exports.TriggerHandler = TriggerHandler;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Action = exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
+exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
 const result_1 = __nccwpck_require__(4983);
 Object.defineProperty(exports, "actionOk", ({ enumerable: true, get: function () { return result_1.actionOk; } }));
 Object.defineProperty(exports, "actionSkip", ({ enumerable: true, get: function () { return result_1.actionSkip; } }));
 Object.defineProperty(exports, "actionErr", ({ enumerable: true, get: function () { return result_1.actionErr; } }));
 const collect_1 = __nccwpck_require__(1510);
 Object.defineProperty(exports, "collect", ({ enumerable: true, get: function () { return collect_1.collect; } }));
-const base_1 = __nccwpck_require__(8460);
-Object.defineProperty(exports, "Action", ({ enumerable: true, get: function () { return base_1.Action; } }));
 
 
 /***/ }),
@@ -285,8 +283,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MilestoneAction = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-const __1 = __nccwpck_require__(9024);
-class MilestoneAction extends __1.Action {
+const base_1 = __nccwpck_require__(8460);
+class MilestoneAction extends base_1.Action {
     queryMilestoneById(milestone) {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield this.sdk().queryNode({ id: milestone })).node;
@@ -516,9 +514,7 @@ exports.CreateMilestoneIssue = CreateMilestoneIssue;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SyncMilestoneIssue = exports.CreateMilestoneIssue = exports.MilestoneAction = void 0;
-const base_1 = __nccwpck_require__(7877);
-Object.defineProperty(exports, "MilestoneAction", ({ enumerable: true, get: function () { return base_1.MilestoneAction; } }));
+exports.SyncMilestoneIssue = exports.CreateMilestoneIssue = void 0;
 const create_issue_1 = __nccwpck_require__(4775);
 Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
 const sync_issue_1 = __nccwpck_require__(5417);
@@ -642,7 +638,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QueryProject = void 0;
 const __1 = __nccwpck_require__(9024);
-class QueryProject extends __1.Action {
+const base_1 = __nccwpck_require__(8460);
+class QueryProject extends base_1.Action {
     constructor() {
         super("pull_request");
     }

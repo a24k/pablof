@@ -14,12 +14,9 @@ import { collect } from "./collect";
 
 import type { Context } from "./handler";
 
-import { Action } from "./base";
 import type { ID } from "./base";
 
 export { actionOk, actionSkip, actionErr, collect };
-
-export { Action };
 
 export type {
   ActionResult,

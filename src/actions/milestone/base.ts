@@ -2,7 +2,7 @@
 
 import { Result, ok, err } from "neverthrow";
 
-import { Action } from "../";
+import { Action } from "../base";
 import type { ID } from "../";
 
 import type {
