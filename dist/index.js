@@ -3549,6 +3549,28 @@ exports.ProjectV2ItemPropsFragmentDoc = `
           }
         }
       }
+      ... on ProjectV2ItemFieldNumberValue {
+        id
+        number
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldDateValue {
+        id
+        date
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
       ... on ProjectV2ItemFieldSingleSelectValue {
         id
         name

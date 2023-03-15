@@ -27907,7 +27907,19 @@ export type ProjectV2ItemPropsFragment = {
     readonly __typename?: "ProjectV2ItemFieldValueConnection";
     readonly totalCount: number;
     readonly nodes?: ReadonlyArray<
-      | { readonly __typename: "ProjectV2ItemFieldDateValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldDateValue";
+          readonly id: string;
+          readonly date?: any | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
       | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
       | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
       | {
@@ -27929,7 +27941,19 @@ export type ProjectV2ItemPropsFragment = {
             | { readonly __typename: "ProjectV2IterationField" }
             | { readonly __typename: "ProjectV2SingleSelectField" };
         }
-      | { readonly __typename: "ProjectV2ItemFieldNumberValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldNumberValue";
+          readonly id: string;
+          readonly number?: number | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
       | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
       | {
           readonly __typename: "ProjectV2ItemFieldRepositoryValue";
@@ -28037,7 +28061,19 @@ export type AddProjectItemMutation = {
         readonly __typename?: "ProjectV2ItemFieldValueConnection";
         readonly totalCount: number;
         readonly nodes?: ReadonlyArray<
-          | { readonly __typename: "ProjectV2ItemFieldDateValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
           | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
           | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
           | {
@@ -28059,7 +28095,19 @@ export type AddProjectItemMutation = {
                 | { readonly __typename: "ProjectV2IterationField" }
                 | { readonly __typename: "ProjectV2SingleSelectField" };
             }
-          | { readonly __typename: "ProjectV2ItemFieldNumberValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
           | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
           | {
               readonly __typename: "ProjectV2ItemFieldRepositoryValue";
@@ -28236,7 +28284,19 @@ export type UpdateProjectItemSingleSelectFieldMutation = {
         readonly __typename?: "ProjectV2ItemFieldValueConnection";
         readonly totalCount: number;
         readonly nodes?: ReadonlyArray<
-          | { readonly __typename: "ProjectV2ItemFieldDateValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
           | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
           | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
           | {
@@ -28258,7 +28318,19 @@ export type UpdateProjectItemSingleSelectFieldMutation = {
                 | { readonly __typename: "ProjectV2IterationField" }
                 | { readonly __typename: "ProjectV2SingleSelectField" };
             }
-          | { readonly __typename: "ProjectV2ItemFieldNumberValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
           | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
           | {
               readonly __typename: "ProjectV2ItemFieldRepositoryValue";
@@ -28831,6 +28903,28 @@ export const ProjectV2ItemPropsFragmentDoc = `
       ... on ProjectV2ItemFieldTextValue {
         id
         text
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldNumberValue {
+        id
+        number
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldDateValue {
+        id
+        date
         field {
           __typename
           ... on ProjectV2Field {
