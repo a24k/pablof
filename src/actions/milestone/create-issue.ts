@@ -9,7 +9,7 @@ import { MilestoneAction } from "./";
 
 import type { Context, Sdk } from "../";
 import type {
-  MilestonePropsFragment,
+  MilestonePropsWithRepositoryAndIssuesFragment,
   IssuePropsFragment,
   ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
@@ -26,7 +26,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
 
   protected async createIssueWithMilestone(
     sdk: Sdk,
-    milestone: MilestonePropsFragment
+    milestone: MilestonePropsWithRepositoryAndIssuesFragment
   ): Promise<Result<IssuePropsFragment, string>> {
     const issue = await sdk.createIssueWithMilestone({
       repository: milestone.repository.id,
@@ -87,91 +87,11 @@ export class CreateMilestoneIssue extends MilestoneAction {
     return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
   }
 
-  protected async updateStartDateField(
-    sdk: Sdk,
-    item: ProjectV2ItemPropsFragment,
-    milestone: MilestonePropsFragment
-  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
-    const fields = item.project.fields.nodes?.flatMap(field =>
-      field === null ||
-      field.__typename !== "ProjectV2Field" ||
-      field.dataType !== "DATE" ||
-      !field.name.match(/^(Begin|Start) [dD]ate$/)
-        ? []
-        : field
-    );
-    if (fields == undefined || fields.length === 0) {
-      return err(`No field for "Start Date" on project(${item.project.id}).`);
-    }
-
-    const field = fields[0];
-
-    const result = await sdk.updateProjectItemFieldByDate({
-      project: item.project.id,
-      item: item.id,
-      field: field.id,
-      date: milestone.createdAt,
-    });
-    this.debug(
-      `updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`
-    );
-
-    if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
-      return err(
-        `Fail to update field(${field.name}) with value(${milestone.createdAt}) on project(${item.project.id}).`
-      );
-    }
-
-    return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
-  }
-
-  protected async updateTargetDateField(
-    sdk: Sdk,
-    item: ProjectV2ItemPropsFragment,
-    milestone: MilestonePropsFragment
-  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
-    if (milestone.dueOn == undefined) {
-      return err(`No due date setted on milestone(${milestone.id}).`);
-    }
-
-    const fields = item.project.fields.nodes?.flatMap(field =>
-      field === null ||
-      field.__typename !== "ProjectV2Field" ||
-      field.dataType !== "DATE" ||
-      !field.name.match(/^(Due|End|Finish|Target) [dD]ate$/)
-        ? []
-        : field
-    );
-    if (fields == undefined || fields.length === 0) {
-      return err(`No field for "Target Date" on project(${item.project.id}).`);
-    }
-
-    const field = fields[0];
-
-    const result = await sdk.updateProjectItemFieldByDate({
-      project: item.project.id,
-      item: item.id,
-      field: field.id,
-      date: milestone.dueOn,
-    });
-    this.debug(
-      `updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`
-    );
-
-    if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
-      return err(
-        `Fail to update field(${field.name}) with value(${milestone.dueOn}) on project(${item.project.id}).`
-      );
-    }
-
-    return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
-  }
-
   protected async addIssueToProject(
     sdk: Sdk,
     project: ProjectV2PropsFragment,
     issue: IssuePropsFragment,
-    milestone: MilestonePropsFragment
+    milestone: MilestonePropsWithRepositoryAndIssuesFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
     const item = await sdk.addProjectItem({
       project: project.id,

@@ -83,6 +83,11 @@ fragment IssuePropsWithItems on Issue {
 fragment MilestoneProps on Milestone {
   __typename
   id title description state dueOn createdAt updatedAt closedAt
+}
+
+fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  __typename
+  id title description state dueOn createdAt updatedAt closedAt
   repository {
     __typename
     id name nameWithOwner description

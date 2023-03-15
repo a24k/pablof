@@ -51,22 +51,32 @@ export class SyncMilestoneIssue extends MilestoneAction {
       return actionErr(milestone.error);
     }
 
-    const roots = milestone.value.issues.nodes?.flatMap(issue =>
-      issue === null || issue.trackedInIssues.totalCount !== 0 ? [] : issue
+    const milestoneIssue = await this.findMilestoneIssueFromMilestone(
+      milestone.value
     );
-    if (roots == undefined || roots.length === 0) {
-      return actionErr("No milestone issue found.");
+    if (milestoneIssue.isErr()) {
+      return actionErr(milestoneIssue.error);
     }
-    this.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
     const issue = await this.updateIssue(
       sdk,
-      roots[0],
+      milestoneIssue.value,
       payload.milestone.title,
       payload.milestone.state === "open" ? IssueState.Open : IssueState.Closed
     );
     if (issue.isErr()) {
       return actionErr(issue.error);
+    }
+
+    const items = issue.value.projectItems.nodes?.flatMap(item =>
+      item === null ? [] : item
+    );
+    if (items == undefined || items.length === 0) {
+      this.warning(`No projects found.`);
+    } else {
+      for (const item of items) {
+        this.updateTargetDateField(sdk, item, milestone.value);
+      }
     }
 
     return actionOk(

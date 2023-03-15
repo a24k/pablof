@@ -28016,6 +28016,18 @@ export type MilestonePropsFragment = {
   readonly createdAt: any;
   readonly updatedAt: any;
   readonly closedAt?: any | null;
+};
+
+export type MilestonePropsWithRepositoryAndIssuesFragment = {
+  readonly __typename: "Milestone";
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null;
+  readonly state: MilestoneState;
+  readonly dueOn?: any | null;
+  readonly createdAt: any;
+  readonly updatedAt: any;
+  readonly closedAt?: any | null;
   readonly repository: {
     readonly __typename: "Repository";
     readonly id: string;
@@ -29484,6 +29496,19 @@ export const MilestonePropsFragmentDoc = `
   createdAt
   updatedAt
   closedAt
+}
+    `;
+export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
+    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  __typename
+  id
+  title
+  description
+  state
+  dueOn
+  createdAt
+  updatedAt
+  closedAt
   repository {
     __typename
     id
@@ -29703,12 +29728,12 @@ export const QueryNodeDocument = `
   node(id: $id) {
     __typename
     ...RepositoryProps
-    ...MilestoneProps
+    ...MilestonePropsWithRepositoryAndIssues
     ...ProjectV2Props
   }
 }
     ${RepositoryPropsFragmentDoc}
-${MilestonePropsFragmentDoc}
+${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
 ${ProjectV2PropsFragmentDoc}`;
 export const QueryProjectFieldsDocument = `
     query queryProjectFields($owner: String!, $number: Int!) {

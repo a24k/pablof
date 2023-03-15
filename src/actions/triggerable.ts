@@ -7,7 +7,6 @@ import { actionSkip } from "./result";
 import type { Context, Sdk, ID, ActionResult } from "./";
 import type {
   RepositoryPropsFragment,
-  MilestonePropsFragment,
   ProjectV2PropsFragment,
 } from "../graphql";
 
@@ -77,20 +76,6 @@ export abstract class TriggerableAction {
 
     if (node == undefined || node.__typename !== "Repository") {
       return err("No repository found.");
-    }
-
-    return ok(node);
-  }
-
-  protected async queryMilestoneById(
-    sdk: Sdk,
-    milestone: ID
-  ): Promise<Result<MilestonePropsFragment, string>> {
-    const node = (await sdk.queryNode({ id: milestone })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-
-    if (node == undefined || node.__typename !== "Milestone") {
-      return err("No milestone found.");
     }
 
     return ok(node);
