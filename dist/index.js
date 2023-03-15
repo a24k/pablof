@@ -389,8 +389,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
 const __1 = __nccwpck_require__(9024);
-const _1 = __nccwpck_require__(5674);
-class CreateMilestoneIssue extends _1.MilestoneAction {
+const base_1 = __nccwpck_require__(7877);
+class CreateMilestoneIssue extends base_1.MilestoneAction {
     constructor() {
         super("milestone", "created");
     }
@@ -546,9 +546,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SyncMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
 const __1 = __nccwpck_require__(9024);
-const _1 = __nccwpck_require__(5674);
+const base_1 = __nccwpck_require__(7877);
 const graphql_1 = __nccwpck_require__(7064);
-class SyncMilestoneIssue extends _1.MilestoneAction {
+class SyncMilestoneIssue extends base_1.MilestoneAction {
     constructor() {
         super("milestone", ["edited", "closed", "opened"]);
     }

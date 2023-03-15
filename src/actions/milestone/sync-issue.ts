@@ -7,7 +7,7 @@ import type { MilestoneEvent } from "@octokit/webhooks-types";
 import { actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
 
-import { MilestoneAction } from "./";
+import { MilestoneAction } from "./base";
 
 import { IssueState } from "../../graphql";
 import type {
