@@ -34,7 +34,7 @@ export class SyncMilestoneIssue extends MilestoneAction {
       title,
       state,
     });
-    this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
+    this.dump(result, "updateIssue");
 
     if (result.updateIssue?.issue?.id == undefined) {
       return err("Fail to update issue.");
@@ -45,7 +45,7 @@ export class SyncMilestoneIssue extends MilestoneAction {
 
   protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
-    this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.dump(payload, "payload");
 
     const milestone = await this.queryMilestoneById(payload.milestone.node_id);
     if (milestone.isErr()) {
