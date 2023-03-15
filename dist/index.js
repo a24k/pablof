@@ -402,7 +402,13 @@ class SyncMilestoneIssue extends _1.MilestoneAction {
             }
             else {
                 for (const item of items) {
-                    this.updateTargetDateField(sdk, item, milestone.value);
+                    const targetDateResult = yield this.updateTargetDateField(sdk, item, milestone.value);
+                    if (targetDateResult.isOk()) {
+                        this.notice(`Successfully updated target date field on project(${targetDateResult.value.project.id}).`);
+                    }
+                    else {
+                        this.warning(`Failed to update target date field: ${targetDateResult.error}`);
+                    }
                 }
             }
             return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`);
