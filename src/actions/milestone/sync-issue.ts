@@ -1,13 +1,20 @@
-import * as core from "@actions/core";
+/* eslint-disable eqeqeq */
+
+import { Result, ok, err } from "neverthrow";
+
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { IssueState } from "../../graphql";
-import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
+import { MilestoneAction } from "./";
 
 import type { Context, Sdk } from "../";
+import type {
+  IssuePropsFragment,
+  IssuePropsWithItemsFragment,
+} from "../../graphql";
 
-export class SyncMilestoneIssue extends TriggerableAction {
+export class SyncMilestoneIssue extends MilestoneAction {
   constructor() {
     super("milestone", ["edited", "closed", "opened"]);
   }
@@ -16,49 +23,77 @@ export class SyncMilestoneIssue extends TriggerableAction {
     return `SyncMilestoneIssue for ${super.description()}`;
   }
 
+  protected async updateIssue(
+    sdk: Sdk,
+    issue: IssuePropsFragment,
+    title: string,
+    state: IssueState
+  ): Promise<Result<IssuePropsWithItemsFragment, string>> {
+    const result = await sdk.updateIssue({ issue: issue.id, title, state });
+    this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
+
+    if (result.updateIssue?.issue?.id == undefined) {
+      return err("Fail to update issue.");
+    }
+
+    return ok(result.updateIssue.issue);
+  }
+
   protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
-    core.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const node = (
-      await sdk.queryNode({
-        id: payload.milestone.node_id,
-      })
-    ).node;
-    core.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-    if (node == undefined || node.__typename !== "Milestone") {
-      return actionErr("No milestone found.");
-    }
-
-    const nodes = node.issues.nodes;
-    if (nodes == undefined) {
-      return actionErr("No issue found.");
-    }
-
-    const roots = nodes.filter(
-      issue => issue !== null && issue.trackedInIssues.totalCount === 0
+    const milestone = await this.queryMilestoneById(
+      sdk,
+      payload.milestone.node_id
     );
-    if (roots.length === 0 || roots[0] == undefined) {
-      return actionErr("No milestone issue found.");
+    if (milestone.isErr()) {
+      return actionErr(milestone.error);
     }
-    core.debug(`foundMilestoneIssue = ${JSON.stringify(roots[0], null, 2)}`);
 
-    const issue = await sdk.updateIssue({
-      issue: roots[0].id,
-      title: payload.milestone.title,
-      state:
-        payload.milestone.state === "open"
-          ? IssueState.Open
-          : IssueState.Closed,
-    });
-    core.debug(`updateIssue = ${JSON.stringify(issue, null, 2)}`);
+    const milestoneIssue = await this.findMilestoneIssueFromMilestone(
+      milestone.value
+    );
+    if (milestoneIssue.isErr()) {
+      return actionErr(milestoneIssue.error);
+    }
 
-    if (issue.updateIssue?.issue?.id == undefined) {
-      return actionErr("Fail to update issue.");
+    const issue = await this.updateIssue(
+      sdk,
+      milestoneIssue.value,
+      payload.milestone.title,
+      payload.milestone.state === "open" ? IssueState.Open : IssueState.Closed
+    );
+    if (issue.isErr()) {
+      return actionErr(issue.error);
+    }
+
+    const items = issue.value.projectItems.nodes?.flatMap(item =>
+      item === null ? [] : item
+    );
+    if (items == undefined || items.length === 0) {
+      this.warning(`No projects found.`);
+    } else {
+      for (const item of items) {
+        const targetDateResult = await this.updateTargetDateField(
+          sdk,
+          item,
+          milestone.value
+        );
+        if (targetDateResult.isOk()) {
+          this.notice(
+            `Successfully updated target date field on project(${targetDateResult.value.project.id}).`
+          );
+        } else {
+          this.warning(
+            `Failed to update target date field: ${targetDateResult.error}`
+          );
+        }
+      }
     }
 
     return actionOk(
-      `MilestoneIssue updated {id: ${issue.updateIssue.issue.id}, number: ${issue.updateIssue.issue.number}, title: ${issue.updateIssue.issue.title}, state: ${issue.updateIssue.issue.state}}`
+      `MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`
     );
   }
 }

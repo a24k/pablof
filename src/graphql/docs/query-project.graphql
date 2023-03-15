@@ -1,8 +1,0 @@
-query queryProject($owner: String!, $number: Int!) { 
-  user(login: $owner) {
-    id name login
-    projectV2(number: $number) {
-      id number title
-    }
-  }
-}

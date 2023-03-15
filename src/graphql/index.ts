@@ -27780,6 +27780,600 @@ export enum WorkflowRunOrderField {
   CreatedAt = "CREATED_AT",
 }
 
+export type RepositoryPropsFragment = {
+  readonly __typename: "Repository";
+  readonly id: string;
+  readonly name: string;
+  readonly nameWithOwner: string;
+  readonly description?: string | null;
+  readonly owner:
+    | { readonly __typename?: "Organization"; readonly login: string }
+    | { readonly __typename?: "User"; readonly login: string };
+  readonly projectsV2: {
+    readonly __typename?: "ProjectV2Connection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "ProjectV2";
+      readonly id: string;
+      readonly title: string;
+      readonly shortDescription?: string | null;
+      readonly readme?: string | null;
+      readonly closed: boolean;
+    } | null> | null;
+  };
+};
+
+export type IssuePropsFragment = {
+  readonly __typename: "Issue";
+  readonly id: string;
+  readonly title: string;
+  readonly body: string;
+  readonly state: IssueState;
+  readonly createdAt: any;
+  readonly updatedAt: any;
+  readonly closedAt?: any | null;
+  readonly trackedInIssues: {
+    readonly __typename?: "IssueConnection";
+    readonly totalCount: number;
+  };
+  readonly milestone?: {
+    readonly __typename: "Milestone";
+    readonly id: string;
+    readonly title: string;
+    readonly description?: string | null;
+    readonly state: MilestoneState;
+    readonly dueOn?: any | null;
+    readonly createdAt: any;
+    readonly updatedAt: any;
+    readonly closedAt?: any | null;
+  } | null;
+};
+
+export type IssuePropsWithItemsFragment = {
+  readonly __typename: "Issue";
+  readonly id: string;
+  readonly title: string;
+  readonly body: string;
+  readonly state: IssueState;
+  readonly createdAt: any;
+  readonly updatedAt: any;
+  readonly closedAt?: any | null;
+  readonly trackedInIssues: {
+    readonly __typename?: "IssueConnection";
+    readonly totalCount: number;
+  };
+  readonly milestone?: {
+    readonly __typename: "Milestone";
+    readonly id: string;
+    readonly title: string;
+    readonly description?: string | null;
+    readonly state: MilestoneState;
+    readonly dueOn?: any | null;
+    readonly createdAt: any;
+    readonly updatedAt: any;
+    readonly closedAt?: any | null;
+  } | null;
+  readonly projectItems: {
+    readonly __typename?: "ProjectV2ItemConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+              readonly milestone?: {
+                readonly __typename: "Milestone";
+                readonly id: string;
+                readonly title: string;
+                readonly description?: string | null;
+                readonly state: MilestoneState;
+                readonly dueOn?: any | null;
+                readonly createdAt: any;
+                readonly updatedAt: any;
+                readonly closedAt?: any | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+              readonly repository?: {
+                readonly __typename: "Repository";
+                readonly id: string;
+                readonly name: string;
+                readonly nameWithOwner: string;
+                readonly description?: string | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename: "ProjectV2Field" }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
+              readonly text?: string | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
+      };
+    } | null> | null;
+  };
+};
+
+export type MilestonePropsFragment = {
+  readonly __typename: "Milestone";
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null;
+  readonly state: MilestoneState;
+  readonly dueOn?: any | null;
+  readonly createdAt: any;
+  readonly updatedAt: any;
+  readonly closedAt?: any | null;
+};
+
+export type MilestonePropsWithRepositoryAndIssuesFragment = {
+  readonly __typename: "Milestone";
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null;
+  readonly state: MilestoneState;
+  readonly dueOn?: any | null;
+  readonly createdAt: any;
+  readonly updatedAt: any;
+  readonly closedAt?: any | null;
+  readonly repository: {
+    readonly __typename: "Repository";
+    readonly id: string;
+    readonly name: string;
+    readonly nameWithOwner: string;
+    readonly description?: string | null;
+    readonly owner:
+      | { readonly __typename?: "Organization"; readonly login: string }
+      | { readonly __typename?: "User"; readonly login: string };
+  };
+  readonly issues: {
+    readonly __typename?: "IssueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "Issue";
+      readonly id: string;
+      readonly title: string;
+      readonly body: string;
+      readonly state: IssueState;
+      readonly createdAt: any;
+      readonly updatedAt: any;
+      readonly closedAt?: any | null;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
+    } | null> | null;
+  };
+};
+
+export type ProjectV2PropsFragment = {
+  readonly __typename: "ProjectV2";
+  readonly id: string;
+  readonly title: string;
+  readonly shortDescription?: string | null;
+  readonly readme?: string | null;
+  readonly closed: boolean;
+};
+
+export type ProjectV2ItemPropsFragment = {
+  readonly __typename: "ProjectV2Item";
+  readonly id: string;
+  readonly type: ProjectV2ItemType;
+  readonly isArchived: boolean;
+  readonly project: {
+    readonly __typename: "ProjectV2";
+    readonly id: string;
+    readonly title: string;
+    readonly shortDescription?: string | null;
+    readonly readme?: string | null;
+    readonly closed: boolean;
+    readonly fields: {
+      readonly __typename?: "ProjectV2FieldConfigurationConnection";
+      readonly totalCount: number;
+      readonly nodes?: ReadonlyArray<
+        | {
+            readonly __typename: "ProjectV2Field";
+            readonly id: string;
+            readonly name: string;
+            readonly dataType: ProjectV2FieldType;
+          }
+        | { readonly __typename: "ProjectV2IterationField" }
+        | {
+            readonly __typename: "ProjectV2SingleSelectField";
+            readonly id: string;
+            readonly name: string;
+            readonly options: ReadonlyArray<{
+              readonly __typename?: "ProjectV2SingleSelectFieldOption";
+              readonly id: string;
+              readonly name: string;
+            }>;
+          }
+        | null
+      > | null;
+    };
+  };
+  readonly fieldValues: {
+    readonly __typename?: "ProjectV2ItemFieldValueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<
+      | {
+          readonly __typename: "ProjectV2ItemFieldDateValue";
+          readonly id: string;
+          readonly date?: any | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+      | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+          readonly milestone?: {
+            readonly __typename: "Milestone";
+            readonly id: string;
+            readonly title: string;
+            readonly description?: string | null;
+            readonly state: MilestoneState;
+            readonly dueOn?: any | null;
+            readonly createdAt: any;
+            readonly updatedAt: any;
+            readonly closedAt?: any | null;
+          } | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
+      | {
+          readonly __typename: "ProjectV2ItemFieldNumberValue";
+          readonly id: string;
+          readonly number?: number | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+          readonly repository?: {
+            readonly __typename: "Repository";
+            readonly id: string;
+            readonly name: string;
+            readonly nameWithOwner: string;
+            readonly description?: string | null;
+          } | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+          readonly id: string;
+          readonly name?: string | null;
+          readonly optionId?: string | null;
+          readonly field:
+            | { readonly __typename: "ProjectV2Field" }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              };
+        }
+      | {
+          readonly __typename: "ProjectV2ItemFieldTextValue";
+          readonly id: string;
+          readonly text?: string | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | { readonly __typename: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+      | null
+    > | null;
+  };
+};
+
+export type AddProjectItemMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+}>;
+
+export type AddProjectItemMutation = {
+  readonly __typename?: "Mutation";
+  readonly addProjectV2ItemById?: {
+    readonly __typename?: "AddProjectV2ItemByIdPayload";
+    readonly item?: {
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+              readonly milestone?: {
+                readonly __typename: "Milestone";
+                readonly id: string;
+                readonly title: string;
+                readonly description?: string | null;
+                readonly state: MilestoneState;
+                readonly dueOn?: any | null;
+                readonly createdAt: any;
+                readonly updatedAt: any;
+                readonly closedAt?: any | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+              readonly repository?: {
+                readonly __typename: "Repository";
+                readonly id: string;
+                readonly name: string;
+                readonly nameWithOwner: string;
+                readonly description?: string | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename: "ProjectV2Field" }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
+              readonly text?: string | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
+      };
+    } | null;
+  } | null;
+};
+
 export type CreateIssueWithMilestoneMutationVariables = Exact<{
   repository: Scalars["ID"];
   title: Scalars["String"];
@@ -27792,20 +28386,28 @@ export type CreateIssueWithMilestoneMutation = {
   readonly createIssue?: {
     readonly __typename?: "CreateIssuePayload";
     readonly issue?: {
-      readonly __typename?: "Issue";
+      readonly __typename: "Issue";
       readonly id: string;
-      readonly number: number;
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
+      readonly createdAt: any;
+      readonly updatedAt: any;
+      readonly closedAt?: any | null;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
       readonly milestone?: {
-        readonly __typename?: "Milestone";
+        readonly __typename: "Milestone";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
+        readonly createdAt: any;
+        readonly updatedAt: any;
+        readonly closedAt?: any | null;
       } | null;
     } | null;
   } | null;
@@ -27822,21 +28424,502 @@ export type UpdateIssueMutation = {
   readonly updateIssue?: {
     readonly __typename?: "UpdateIssuePayload";
     readonly issue?: {
-      readonly __typename?: "Issue";
+      readonly __typename: "Issue";
       readonly id: string;
-      readonly number: number;
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
+      readonly createdAt: any;
+      readonly updatedAt: any;
+      readonly closedAt?: any | null;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
       readonly milestone?: {
-        readonly __typename?: "Milestone";
+        readonly __typename: "Milestone";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
+        readonly createdAt: any;
+        readonly updatedAt: any;
+        readonly closedAt?: any | null;
       } | null;
+      readonly projectItems: {
+        readonly __typename?: "ProjectV2ItemConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<{
+          readonly __typename: "ProjectV2Item";
+          readonly id: string;
+          readonly type: ProjectV2ItemType;
+          readonly isArchived: boolean;
+          readonly project: {
+            readonly __typename: "ProjectV2";
+            readonly id: string;
+            readonly title: string;
+            readonly shortDescription?: string | null;
+            readonly readme?: string | null;
+            readonly closed: boolean;
+            readonly fields: {
+              readonly __typename?: "ProjectV2FieldConfigurationConnection";
+              readonly totalCount: number;
+              readonly nodes?: ReadonlyArray<
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  }
+                | null
+              > | null;
+            };
+          };
+          readonly fieldValues: {
+            readonly __typename?: "ProjectV2ItemFieldValueConnection";
+            readonly totalCount: number;
+            readonly nodes?: ReadonlyArray<
+              | {
+                  readonly __typename: "ProjectV2ItemFieldDateValue";
+                  readonly id: string;
+                  readonly date?: any | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename: "ProjectV2IterationField" }
+                    | { readonly __typename: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+              | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+                  readonly milestone?: {
+                    readonly __typename: "Milestone";
+                    readonly id: string;
+                    readonly title: string;
+                    readonly description?: string | null;
+                    readonly state: MilestoneState;
+                    readonly dueOn?: any | null;
+                    readonly createdAt: any;
+                    readonly updatedAt: any;
+                    readonly closedAt?: any | null;
+                  } | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename: "ProjectV2IterationField" }
+                    | { readonly __typename: "ProjectV2SingleSelectField" };
+                }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldNumberValue";
+                  readonly id: string;
+                  readonly number?: number | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename: "ProjectV2IterationField" }
+                    | { readonly __typename: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+                  readonly repository?: {
+                    readonly __typename: "Repository";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly nameWithOwner: string;
+                    readonly description?: string | null;
+                  } | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename: "ProjectV2IterationField" }
+                    | { readonly __typename: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+                  readonly id: string;
+                  readonly name?: string | null;
+                  readonly optionId?: string | null;
+                  readonly field:
+                    | { readonly __typename: "ProjectV2Field" }
+                    | { readonly __typename: "ProjectV2IterationField" }
+                    | {
+                        readonly __typename: "ProjectV2SingleSelectField";
+                        readonly name: string;
+                        readonly options: ReadonlyArray<{
+                          readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                          readonly id: string;
+                          readonly name: string;
+                        }>;
+                      };
+                }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldTextValue";
+                  readonly id: string;
+                  readonly text?: string | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename: "ProjectV2IterationField" }
+                    | { readonly __typename: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+              | null
+            > | null;
+          };
+        } | null> | null;
+      };
+    } | null;
+  } | null;
+};
+
+export type UpdateProjectItemFieldByDateMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+  field: Scalars["ID"];
+  date: Scalars["Date"];
+}>;
+
+export type UpdateProjectItemFieldByDateMutation = {
+  readonly __typename?: "Mutation";
+  readonly updateProjectV2ItemFieldValue?: {
+    readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
+    readonly projectV2Item?: {
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+              readonly milestone?: {
+                readonly __typename: "Milestone";
+                readonly id: string;
+                readonly title: string;
+                readonly description?: string | null;
+                readonly state: MilestoneState;
+                readonly dueOn?: any | null;
+                readonly createdAt: any;
+                readonly updatedAt: any;
+                readonly closedAt?: any | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+              readonly repository?: {
+                readonly __typename: "Repository";
+                readonly id: string;
+                readonly name: string;
+                readonly nameWithOwner: string;
+                readonly description?: string | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename: "ProjectV2Field" }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
+              readonly text?: string | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
+      };
+    } | null;
+  } | null;
+};
+
+export type UpdateProjectItemFieldBySingleSelectValueMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+  field: Scalars["ID"];
+  option: Scalars["String"];
+}>;
+
+export type UpdateProjectItemFieldBySingleSelectValueMutation = {
+  readonly __typename?: "Mutation";
+  readonly updateProjectV2ItemFieldValue?: {
+    readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
+    readonly projectV2Item?: {
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+              readonly milestone?: {
+                readonly __typename: "Milestone";
+                readonly id: string;
+                readonly title: string;
+                readonly description?: string | null;
+                readonly state: MilestoneState;
+                readonly dueOn?: any | null;
+                readonly createdAt: any;
+                readonly updatedAt: any;
+                readonly closedAt?: any | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+              readonly repository?: {
+                readonly __typename: "Repository";
+                readonly id: string;
+                readonly name: string;
+                readonly nameWithOwner: string;
+                readonly description?: string | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename: "ProjectV2Field" }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
+              readonly text?: string | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
+      };
     } | null;
   } | null;
 };
@@ -27933,15 +29016,19 @@ export type QueryNodeQuery = {
     | {
         readonly __typename: "Milestone";
         readonly id: string;
-        readonly number: number;
         readonly title: string;
         readonly description?: string | null;
         readonly state: MilestoneState;
         readonly dueOn?: any | null;
+        readonly createdAt: any;
+        readonly updatedAt: any;
+        readonly closedAt?: any | null;
         readonly repository: {
-          readonly __typename?: "Repository";
+          readonly __typename: "Repository";
           readonly id: string;
           readonly name: string;
+          readonly nameWithOwner: string;
+          readonly description?: string | null;
           readonly owner:
             | { readonly __typename?: "Organization"; readonly login: string }
             | { readonly __typename?: "User"; readonly login: string };
@@ -27950,11 +29037,14 @@ export type QueryNodeQuery = {
           readonly __typename?: "IssueConnection";
           readonly totalCount: number;
           readonly nodes?: ReadonlyArray<{
-            readonly __typename?: "Issue";
+            readonly __typename: "Issue";
             readonly id: string;
-            readonly number: number;
             readonly title: string;
+            readonly body: string;
             readonly state: IssueState;
+            readonly createdAt: any;
+            readonly updatedAt: any;
+            readonly closedAt?: any | null;
             readonly trackedInIssues: {
               readonly __typename?: "IssueConnection";
               readonly totalCount: number;
@@ -28012,7 +29102,14 @@ export type QueryNodeQuery = {
     | { readonly __typename: "Project" }
     | { readonly __typename: "ProjectCard" }
     | { readonly __typename: "ProjectColumn" }
-    | { readonly __typename: "ProjectV2" }
+    | {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+      }
     | { readonly __typename: "ProjectV2Field" }
     | { readonly __typename: "ProjectV2Item" }
     | { readonly __typename: "ProjectV2ItemFieldDateValue" }
@@ -28062,7 +29159,28 @@ export type QueryNodeQuery = {
     | { readonly __typename: "RepoDestroyAuditEntry" }
     | { readonly __typename: "RepoRemoveMemberAuditEntry" }
     | { readonly __typename: "RepoRemoveTopicAuditEntry" }
-    | { readonly __typename: "Repository" }
+    | {
+        readonly __typename: "Repository";
+        readonly id: string;
+        readonly name: string;
+        readonly nameWithOwner: string;
+        readonly description?: string | null;
+        readonly owner:
+          | { readonly __typename?: "Organization"; readonly login: string }
+          | { readonly __typename?: "User"; readonly login: string };
+        readonly projectsV2: {
+          readonly __typename?: "ProjectV2Connection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<{
+            readonly __typename: "ProjectV2";
+            readonly id: string;
+            readonly title: string;
+            readonly shortDescription?: string | null;
+            readonly readme?: string | null;
+            readonly closed: boolean;
+          } | null> | null;
+        };
+      }
     | { readonly __typename: "RepositoryInvitation" }
     | { readonly __typename: "RepositoryMigration" }
     | { readonly __typename: "RepositoryTopic" }
@@ -28166,98 +29284,200 @@ export type QueryProjectFieldsQuery = {
   } | null;
 };
 
-export type QueryProjectQueryVariables = Exact<{
-  owner: Scalars["String"];
-  number: Scalars["Int"];
-}>;
-
-export type QueryProjectQuery = {
-  readonly __typename?: "Query";
-  readonly user?: {
-    readonly __typename?: "User";
-    readonly id: string;
-    readonly name?: string | null;
-    readonly login: string;
-    readonly projectV2?: {
-      readonly __typename?: "ProjectV2";
-      readonly id: string;
-      readonly number: number;
-      readonly title: string;
-    } | null;
-  } | null;
-};
-
-export const CreateIssueWithMilestoneDocument = `
-    mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
-  createIssue(
-    input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
-  ) {
-    issue {
+export const RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+  owner {
+    login
+  }
+  projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      __typename
       id
-      number
       title
-      body
-      state
-      milestone {
-        id
-        number
-        title
-        description
-        state
-        dueOn
-      }
+      shortDescription
+      readme
+      closed
     }
   }
 }
     `;
-export const UpdateIssueDocument = `
-    mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
-  updateIssue(input: {id: $issue, title: $title, state: $state}) {
-    issue {
-      id
-      number
-      title
-      body
-      state
-      milestone {
-        id
-        number
-        title
-        description
-        state
-        dueOn
-      }
-    }
+export const IssuePropsFragmentDoc = `
+    fragment IssueProps on Issue {
+  __typename
+  id
+  title
+  body
+  state
+  createdAt
+  updatedAt
+  closedAt
+  trackedInIssues(first: 1) {
+    totalCount
   }
-}
-    `;
-export const QueryNodeDocument = `
-    query queryNode($id: ID!) {
-  node(id: $id) {
+  milestone {
     __typename
-    ... on Milestone {
+    id
+    title
+    description
+    state
+    dueOn
+    createdAt
+    updatedAt
+    closedAt
+  }
+}
+    `;
+export const IssuePropsWithItemsFragmentDoc = `
+    fragment IssuePropsWithItems on Issue {
+  __typename
+  id
+  title
+  body
+  state
+  createdAt
+  updatedAt
+  closedAt
+  trackedInIssues(first: 1) {
+    totalCount
+  }
+  milestone {
+    __typename
+    id
+    title
+    description
+    state
+    dueOn
+    createdAt
+    updatedAt
+    closedAt
+  }
+  projectItems(first: 100) {
+    totalCount
+    nodes {
+      __typename
       id
-      number
-      title
-      description
-      state
-      dueOn
-      repository {
+      type
+      isArchived
+      project {
+        __typename
         id
-        name
-        owner {
-          login
+        title
+        shortDescription
+        readme
+        closed
+        fields(first: 100, orderBy: {field: POSITION, direction: ASC}) {
+          totalCount
+          nodes {
+            __typename
+            ... on ProjectV2Field {
+              id
+              name
+              dataType
+            }
+            ... on ProjectV2SingleSelectField {
+              id
+              name
+              options {
+                id
+                name
+              }
+            }
+          }
         }
       }
-      issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+      fieldValues(first: 100, orderBy: {field: POSITION, direction: ASC}) {
         totalCount
         nodes {
-          id
-          number
-          title
-          state
-          trackedInIssues(first: 1) {
-            totalCount
+          __typename
+          ... on ProjectV2ItemFieldRepositoryValue {
+            repository {
+              __typename
+              id
+              name
+              nameWithOwner
+              description
+            }
+            field {
+              __typename
+              ... on ProjectV2Field {
+                name
+                dataType
+              }
+            }
+          }
+          ... on ProjectV2ItemFieldMilestoneValue {
+            milestone {
+              __typename
+              id
+              title
+              description
+              state
+              dueOn
+              createdAt
+              updatedAt
+              closedAt
+            }
+            field {
+              __typename
+              ... on ProjectV2Field {
+                name
+                dataType
+              }
+            }
+          }
+          ... on ProjectV2ItemFieldTextValue {
+            id
+            text
+            field {
+              __typename
+              ... on ProjectV2Field {
+                name
+                dataType
+              }
+            }
+          }
+          ... on ProjectV2ItemFieldNumberValue {
+            id
+            number
+            field {
+              __typename
+              ... on ProjectV2Field {
+                name
+                dataType
+              }
+            }
+          }
+          ... on ProjectV2ItemFieldDateValue {
+            id
+            date
+            field {
+              __typename
+              ... on ProjectV2Field {
+                name
+                dataType
+              }
+            }
+          }
+          ... on ProjectV2ItemFieldSingleSelectValue {
+            id
+            name
+            optionId
+            field {
+              __typename
+              ... on ProjectV2SingleSelectField {
+                name
+                options {
+                  id
+                  name
+                }
+              }
+            }
           }
         }
       }
@@ -28265,6 +29485,256 @@ export const QueryNodeDocument = `
   }
 }
     `;
+export const MilestonePropsFragmentDoc = `
+    fragment MilestoneProps on Milestone {
+  __typename
+  id
+  title
+  description
+  state
+  dueOn
+  createdAt
+  updatedAt
+  closedAt
+}
+    `;
+export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
+    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  __typename
+  id
+  title
+  description
+  state
+  dueOn
+  createdAt
+  updatedAt
+  closedAt
+  repository {
+    __typename
+    id
+    name
+    nameWithOwner
+    description
+    owner {
+      login
+    }
+  }
+  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      __typename
+      id
+      title
+      body
+      state
+      createdAt
+      updatedAt
+      closedAt
+      trackedInIssues(first: 1) {
+        totalCount
+      }
+    }
+  }
+}
+    `;
+export const ProjectV2PropsFragmentDoc = `
+    fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id
+  title
+  shortDescription
+  readme
+  closed
+}
+    `;
+export const ProjectV2ItemPropsFragmentDoc = `
+    fragment ProjectV2ItemProps on ProjectV2Item {
+  __typename
+  id
+  type
+  isArchived
+  project {
+    __typename
+    id
+    title
+    shortDescription
+    readme
+    closed
+    fields(first: 100, orderBy: {field: POSITION, direction: ASC}) {
+      totalCount
+      nodes {
+        __typename
+        ... on ProjectV2Field {
+          id
+          name
+          dataType
+        }
+        ... on ProjectV2SingleSelectField {
+          id
+          name
+          options {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+  fieldValues(first: 100, orderBy: {field: POSITION, direction: ASC}) {
+    totalCount
+    nodes {
+      __typename
+      ... on ProjectV2ItemFieldRepositoryValue {
+        repository {
+          __typename
+          id
+          name
+          nameWithOwner
+          description
+        }
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldMilestoneValue {
+        milestone {
+          __typename
+          id
+          title
+          description
+          state
+          dueOn
+          createdAt
+          updatedAt
+          closedAt
+        }
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldTextValue {
+        id
+        text
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldNumberValue {
+        id
+        number
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldDateValue {
+        id
+        date
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldSingleSelectValue {
+        id
+        name
+        optionId
+        field {
+          __typename
+          ... on ProjectV2SingleSelectField {
+            name
+            options {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const AddProjectItemDocument = `
+    mutation addProjectItem($project: ID!, $item: ID!) {
+  addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
+    item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${ProjectV2ItemPropsFragmentDoc}`;
+export const CreateIssueWithMilestoneDocument = `
+    mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
+  createIssue(
+    input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
+  ) {
+    issue {
+      ...IssueProps
+    }
+  }
+}
+    ${IssuePropsFragmentDoc}`;
+export const UpdateIssueDocument = `
+    mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
+  updateIssue(input: {id: $issue, title: $title, state: $state}) {
+    issue {
+      ...IssuePropsWithItems
+    }
+  }
+}
+    ${IssuePropsWithItemsFragmentDoc}`;
+export const UpdateProjectItemFieldByDateDocument = `
+    mutation updateProjectItemFieldByDate($project: ID!, $item: ID!, $field: ID!, $date: Date!) {
+  updateProjectV2ItemFieldValue(
+    input: {projectId: $project, itemId: $item, fieldId: $field, value: {date: $date}}
+  ) {
+    projectV2Item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${ProjectV2ItemPropsFragmentDoc}`;
+export const UpdateProjectItemFieldBySingleSelectValueDocument = `
+    mutation updateProjectItemFieldBySingleSelectValue($project: ID!, $item: ID!, $field: ID!, $option: String!) {
+  updateProjectV2ItemFieldValue(
+    input: {projectId: $project, itemId: $item, fieldId: $field, value: {singleSelectOptionId: $option}}
+  ) {
+    projectV2Item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${ProjectV2ItemPropsFragmentDoc}`;
+export const QueryNodeDocument = `
+    query queryNode($id: ID!) {
+  node(id: $id) {
+    __typename
+    ...RepositoryProps
+    ...MilestonePropsWithRepositoryAndIssues
+    ...ProjectV2Props
+  }
+}
+    ${RepositoryPropsFragmentDoc}
+${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
+${ProjectV2PropsFragmentDoc}`;
 export const QueryProjectFieldsDocument = `
     query queryProjectFields($owner: String!, $number: Int!) {
   user(login: $owner) {
@@ -28297,20 +29767,6 @@ export const QueryProjectFieldsDocument = `
   }
 }
     `;
-export const QueryProjectDocument = `
-    query queryProject($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    id
-    name
-    login
-    projectV2(number: $number) {
-      id
-      number
-      title
-    }
-  }
-}
-    `;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,
   vars?: V,
@@ -28318,6 +29774,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
+    addProjectItem(
+      variables: AddProjectItemMutationVariables,
+      options?: C
+    ): Promise<AddProjectItemMutation> {
+      return requester<AddProjectItemMutation, AddProjectItemMutationVariables>(
+        AddProjectItemDocument,
+        variables,
+        options
+      ) as Promise<AddProjectItemMutation>;
+    },
     createIssueWithMilestone(
       variables: CreateIssueWithMilestoneMutationVariables,
       options?: C
@@ -28340,6 +29806,32 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<UpdateIssueMutation>;
+    },
+    updateProjectItemFieldByDate(
+      variables: UpdateProjectItemFieldByDateMutationVariables,
+      options?: C
+    ): Promise<UpdateProjectItemFieldByDateMutation> {
+      return requester<
+        UpdateProjectItemFieldByDateMutation,
+        UpdateProjectItemFieldByDateMutationVariables
+      >(
+        UpdateProjectItemFieldByDateDocument,
+        variables,
+        options
+      ) as Promise<UpdateProjectItemFieldByDateMutation>;
+    },
+    updateProjectItemFieldBySingleSelectValue(
+      variables: UpdateProjectItemFieldBySingleSelectValueMutationVariables,
+      options?: C
+    ): Promise<UpdateProjectItemFieldBySingleSelectValueMutation> {
+      return requester<
+        UpdateProjectItemFieldBySingleSelectValueMutation,
+        UpdateProjectItemFieldBySingleSelectValueMutationVariables
+      >(
+        UpdateProjectItemFieldBySingleSelectValueDocument,
+        variables,
+        options
+      ) as Promise<UpdateProjectItemFieldBySingleSelectValueMutation>;
     },
     queryNode(
       variables: QueryNodeQueryVariables,
@@ -28364,16 +29856,889 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         options
       ) as Promise<QueryProjectFieldsQuery>;
     },
-    queryProject(
-      variables: QueryProjectQueryVariables,
-      options?: C
-    ): Promise<QueryProjectQuery> {
-      return requester<QueryProjectQuery, QueryProjectQueryVariables>(
-        QueryProjectDocument,
-        variables,
-        options
-      ) as Promise<QueryProjectQuery>;
-    },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+
+export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[];
+  };
+}
+const result: PossibleTypesResultData = {
+  possibleTypes: {
+    Actor: [
+      "Bot",
+      "EnterpriseUserAccount",
+      "Mannequin",
+      "Organization",
+      "User",
+    ],
+    AnnouncementBanner: ["Enterprise", "Organization"],
+    Assignable: ["Issue", "PullRequest"],
+    Assignee: ["Bot", "Mannequin", "Organization", "User"],
+    AuditEntry: [
+      "MembersCanDeleteReposClearAuditEntry",
+      "MembersCanDeleteReposDisableAuditEntry",
+      "MembersCanDeleteReposEnableAuditEntry",
+      "OauthApplicationCreateAuditEntry",
+      "OrgAddBillingManagerAuditEntry",
+      "OrgAddMemberAuditEntry",
+      "OrgBlockUserAuditEntry",
+      "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+      "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+      "OrgCreateAuditEntry",
+      "OrgDisableOauthAppRestrictionsAuditEntry",
+      "OrgDisableSamlAuditEntry",
+      "OrgDisableTwoFactorRequirementAuditEntry",
+      "OrgEnableOauthAppRestrictionsAuditEntry",
+      "OrgEnableSamlAuditEntry",
+      "OrgEnableTwoFactorRequirementAuditEntry",
+      "OrgInviteMemberAuditEntry",
+      "OrgInviteToBusinessAuditEntry",
+      "OrgOauthAppAccessApprovedAuditEntry",
+      "OrgOauthAppAccessDeniedAuditEntry",
+      "OrgOauthAppAccessRequestedAuditEntry",
+      "OrgRemoveBillingManagerAuditEntry",
+      "OrgRemoveMemberAuditEntry",
+      "OrgRemoveOutsideCollaboratorAuditEntry",
+      "OrgRestoreMemberAuditEntry",
+      "OrgUnblockUserAuditEntry",
+      "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+      "OrgUpdateMemberAuditEntry",
+      "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+      "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "RepoAccessAuditEntry",
+      "RepoAddMemberAuditEntry",
+      "RepoAddTopicAuditEntry",
+      "RepoArchivedAuditEntry",
+      "RepoChangeMergeSettingAuditEntry",
+      "RepoConfigDisableAnonymousGitAccessAuditEntry",
+      "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+      "RepoConfigDisableContributorsOnlyAuditEntry",
+      "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+      "RepoConfigEnableAnonymousGitAccessAuditEntry",
+      "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+      "RepoConfigEnableContributorsOnlyAuditEntry",
+      "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+      "RepoConfigLockAnonymousGitAccessAuditEntry",
+      "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+      "RepoCreateAuditEntry",
+      "RepoDestroyAuditEntry",
+      "RepoRemoveMemberAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+      "RepositoryVisibilityChangeDisableAuditEntry",
+      "RepositoryVisibilityChangeEnableAuditEntry",
+      "TeamAddMemberAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamChangeParentTeamAuditEntry",
+      "TeamRemoveMemberAuditEntry",
+      "TeamRemoveRepositoryAuditEntry",
+    ],
+    AuditEntryActor: ["Bot", "Organization", "User"],
+    BranchActorAllowanceActor: ["App", "Team", "User"],
+    Claimable: ["Mannequin", "User"],
+    Closable: [
+      "Discussion",
+      "Issue",
+      "Milestone",
+      "Project",
+      "ProjectV2",
+      "PullRequest",
+    ],
+    Closer: ["Commit", "PullRequest"],
+    Comment: [
+      "CommitComment",
+      "Discussion",
+      "DiscussionComment",
+      "GistComment",
+      "Issue",
+      "IssueComment",
+      "PullRequest",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+    ],
+    Contribution: [
+      "CreatedCommitContribution",
+      "CreatedIssueContribution",
+      "CreatedPullRequestContribution",
+      "CreatedPullRequestReviewContribution",
+      "CreatedRepositoryContribution",
+      "JoinedGitHubContribution",
+      "RestrictedContribution",
+    ],
+    CreatedIssueOrRestrictedContribution: [
+      "CreatedIssueContribution",
+      "RestrictedContribution",
+    ],
+    CreatedPullRequestOrRestrictedContribution: [
+      "CreatedPullRequestContribution",
+      "RestrictedContribution",
+    ],
+    CreatedRepositoryOrRestrictedContribution: [
+      "CreatedRepositoryContribution",
+      "RestrictedContribution",
+    ],
+    Deletable: [
+      "CommitComment",
+      "Discussion",
+      "DiscussionComment",
+      "GistComment",
+      "IssueComment",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+    ],
+    DeploymentReviewer: ["Team", "User"],
+    EnterpriseAuditEntryData: [
+      "MembersCanDeleteReposClearAuditEntry",
+      "MembersCanDeleteReposDisableAuditEntry",
+      "MembersCanDeleteReposEnableAuditEntry",
+      "OrgInviteToBusinessAuditEntry",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "RepositoryVisibilityChangeDisableAuditEntry",
+      "RepositoryVisibilityChangeEnableAuditEntry",
+    ],
+    EnterpriseMember: ["EnterpriseUserAccount", "User"],
+    GitObject: ["Blob", "Commit", "Tag", "Tree"],
+    GitSignature: [
+      "GpgSignature",
+      "SmimeSignature",
+      "SshSignature",
+      "UnknownSignature",
+    ],
+    HovercardContext: [
+      "GenericHovercardContext",
+      "OrganizationTeamsHovercardContext",
+      "OrganizationsHovercardContext",
+      "ReviewStatusHovercardContext",
+      "ViewerHovercardContext",
+    ],
+    IpAllowListOwner: ["App", "Enterprise", "Organization"],
+    IssueOrPullRequest: ["Issue", "PullRequest"],
+    IssueTimelineItem: [
+      "AssignedEvent",
+      "ClosedEvent",
+      "Commit",
+      "CrossReferencedEvent",
+      "DemilestonedEvent",
+      "IssueComment",
+      "LabeledEvent",
+      "LockedEvent",
+      "MilestonedEvent",
+      "ReferencedEvent",
+      "RenamedTitleEvent",
+      "ReopenedEvent",
+      "SubscribedEvent",
+      "TransferredEvent",
+      "UnassignedEvent",
+      "UnlabeledEvent",
+      "UnlockedEvent",
+      "UnsubscribedEvent",
+      "UserBlockedEvent",
+    ],
+    IssueTimelineItems: [
+      "AddedToProjectEvent",
+      "AssignedEvent",
+      "ClosedEvent",
+      "CommentDeletedEvent",
+      "ConnectedEvent",
+      "ConvertedNoteToIssueEvent",
+      "ConvertedToDiscussionEvent",
+      "CrossReferencedEvent",
+      "DemilestonedEvent",
+      "DisconnectedEvent",
+      "IssueComment",
+      "LabeledEvent",
+      "LockedEvent",
+      "MarkedAsDuplicateEvent",
+      "MentionedEvent",
+      "MilestonedEvent",
+      "MovedColumnsInProjectEvent",
+      "PinnedEvent",
+      "ReferencedEvent",
+      "RemovedFromProjectEvent",
+      "RenamedTitleEvent",
+      "ReopenedEvent",
+      "SubscribedEvent",
+      "TransferredEvent",
+      "UnassignedEvent",
+      "UnlabeledEvent",
+      "UnlockedEvent",
+      "UnmarkedAsDuplicateEvent",
+      "UnpinnedEvent",
+      "UnsubscribedEvent",
+      "UserBlockedEvent",
+    ],
+    Labelable: ["Discussion", "Issue", "PullRequest"],
+    Lockable: ["Discussion", "Issue", "PullRequest"],
+    MemberStatusable: ["Organization", "Team"],
+    Migration: ["RepositoryMigration"],
+    MilestoneItem: ["Issue", "PullRequest"],
+    Minimizable: [
+      "CommitComment",
+      "DiscussionComment",
+      "GistComment",
+      "IssueComment",
+      "PullRequestReviewComment",
+    ],
+    Node: [
+      "AddedToProjectEvent",
+      "App",
+      "AssignedEvent",
+      "AutoMergeDisabledEvent",
+      "AutoMergeEnabledEvent",
+      "AutoRebaseEnabledEvent",
+      "AutoSquashEnabledEvent",
+      "AutomaticBaseChangeFailedEvent",
+      "AutomaticBaseChangeSucceededEvent",
+      "BaseRefChangedEvent",
+      "BaseRefDeletedEvent",
+      "BaseRefForcePushedEvent",
+      "Blob",
+      "Bot",
+      "BranchProtectionRule",
+      "BypassForcePushAllowance",
+      "BypassPullRequestAllowance",
+      "CWE",
+      "CheckRun",
+      "CheckSuite",
+      "ClosedEvent",
+      "CodeOfConduct",
+      "CommentDeletedEvent",
+      "Commit",
+      "CommitComment",
+      "CommitCommentThread",
+      "Comparison",
+      "ConnectedEvent",
+      "ConvertToDraftEvent",
+      "ConvertedNoteToIssueEvent",
+      "ConvertedToDiscussionEvent",
+      "CrossReferencedEvent",
+      "DemilestonedEvent",
+      "DependencyGraphManifest",
+      "DeployKey",
+      "DeployedEvent",
+      "Deployment",
+      "DeploymentEnvironmentChangedEvent",
+      "DeploymentReview",
+      "DeploymentStatus",
+      "DisconnectedEvent",
+      "Discussion",
+      "DiscussionCategory",
+      "DiscussionComment",
+      "DiscussionPoll",
+      "DiscussionPollOption",
+      "DraftIssue",
+      "Enterprise",
+      "EnterpriseAdministratorInvitation",
+      "EnterpriseIdentityProvider",
+      "EnterpriseRepositoryInfo",
+      "EnterpriseServerInstallation",
+      "EnterpriseServerUserAccount",
+      "EnterpriseServerUserAccountEmail",
+      "EnterpriseServerUserAccountsUpload",
+      "EnterpriseUserAccount",
+      "Environment",
+      "ExternalIdentity",
+      "Gist",
+      "GistComment",
+      "HeadRefDeletedEvent",
+      "HeadRefForcePushedEvent",
+      "HeadRefRestoredEvent",
+      "IpAllowListEntry",
+      "Issue",
+      "IssueComment",
+      "Label",
+      "LabeledEvent",
+      "Language",
+      "License",
+      "LinkedBranch",
+      "LockedEvent",
+      "Mannequin",
+      "MarkedAsDuplicateEvent",
+      "MarketplaceCategory",
+      "MarketplaceListing",
+      "MembersCanDeleteReposClearAuditEntry",
+      "MembersCanDeleteReposDisableAuditEntry",
+      "MembersCanDeleteReposEnableAuditEntry",
+      "MentionedEvent",
+      "MergedEvent",
+      "MigrationSource",
+      "Milestone",
+      "MilestonedEvent",
+      "MovedColumnsInProjectEvent",
+      "OIDCProvider",
+      "OauthApplicationCreateAuditEntry",
+      "OrgAddBillingManagerAuditEntry",
+      "OrgAddMemberAuditEntry",
+      "OrgBlockUserAuditEntry",
+      "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+      "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+      "OrgCreateAuditEntry",
+      "OrgDisableOauthAppRestrictionsAuditEntry",
+      "OrgDisableSamlAuditEntry",
+      "OrgDisableTwoFactorRequirementAuditEntry",
+      "OrgEnableOauthAppRestrictionsAuditEntry",
+      "OrgEnableSamlAuditEntry",
+      "OrgEnableTwoFactorRequirementAuditEntry",
+      "OrgInviteMemberAuditEntry",
+      "OrgInviteToBusinessAuditEntry",
+      "OrgOauthAppAccessApprovedAuditEntry",
+      "OrgOauthAppAccessDeniedAuditEntry",
+      "OrgOauthAppAccessRequestedAuditEntry",
+      "OrgRemoveBillingManagerAuditEntry",
+      "OrgRemoveMemberAuditEntry",
+      "OrgRemoveOutsideCollaboratorAuditEntry",
+      "OrgRestoreMemberAuditEntry",
+      "OrgUnblockUserAuditEntry",
+      "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+      "OrgUpdateMemberAuditEntry",
+      "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+      "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+      "Organization",
+      "OrganizationIdentityProvider",
+      "OrganizationInvitation",
+      "OrganizationMigration",
+      "Package",
+      "PackageFile",
+      "PackageTag",
+      "PackageVersion",
+      "PinnedDiscussion",
+      "PinnedEvent",
+      "PinnedIssue",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "Project",
+      "ProjectCard",
+      "ProjectColumn",
+      "ProjectV2",
+      "ProjectV2Field",
+      "ProjectV2Item",
+      "ProjectV2ItemFieldDateValue",
+      "ProjectV2ItemFieldIterationValue",
+      "ProjectV2ItemFieldNumberValue",
+      "ProjectV2ItemFieldSingleSelectValue",
+      "ProjectV2ItemFieldTextValue",
+      "ProjectV2IterationField",
+      "ProjectV2SingleSelectField",
+      "ProjectV2View",
+      "ProjectV2Workflow",
+      "PublicKey",
+      "PullRequest",
+      "PullRequestCommit",
+      "PullRequestCommitCommentThread",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "PullRequestReviewThread",
+      "PullRequestThread",
+      "Push",
+      "PushAllowance",
+      "Reaction",
+      "ReadyForReviewEvent",
+      "Ref",
+      "ReferencedEvent",
+      "Release",
+      "ReleaseAsset",
+      "RemovedFromProjectEvent",
+      "RenamedTitleEvent",
+      "ReopenedEvent",
+      "RepoAccessAuditEntry",
+      "RepoAddMemberAuditEntry",
+      "RepoAddTopicAuditEntry",
+      "RepoArchivedAuditEntry",
+      "RepoChangeMergeSettingAuditEntry",
+      "RepoConfigDisableAnonymousGitAccessAuditEntry",
+      "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+      "RepoConfigDisableContributorsOnlyAuditEntry",
+      "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+      "RepoConfigEnableAnonymousGitAccessAuditEntry",
+      "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+      "RepoConfigEnableContributorsOnlyAuditEntry",
+      "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+      "RepoConfigLockAnonymousGitAccessAuditEntry",
+      "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+      "RepoCreateAuditEntry",
+      "RepoDestroyAuditEntry",
+      "RepoRemoveMemberAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+      "Repository",
+      "RepositoryInvitation",
+      "RepositoryMigration",
+      "RepositoryTopic",
+      "RepositoryVisibilityChangeDisableAuditEntry",
+      "RepositoryVisibilityChangeEnableAuditEntry",
+      "RepositoryVulnerabilityAlert",
+      "ReviewDismissalAllowance",
+      "ReviewDismissedEvent",
+      "ReviewRequest",
+      "ReviewRequestRemovedEvent",
+      "ReviewRequestedEvent",
+      "SavedReply",
+      "SecurityAdvisory",
+      "SponsorsActivity",
+      "SponsorsListing",
+      "SponsorsListingFeaturedItem",
+      "SponsorsTier",
+      "Sponsorship",
+      "SponsorshipNewsletter",
+      "Status",
+      "StatusCheckRollup",
+      "StatusContext",
+      "SubscribedEvent",
+      "Tag",
+      "Team",
+      "TeamAddMemberAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamChangeParentTeamAuditEntry",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+      "TeamRemoveMemberAuditEntry",
+      "TeamRemoveRepositoryAuditEntry",
+      "Topic",
+      "TransferredEvent",
+      "Tree",
+      "UnassignedEvent",
+      "UnlabeledEvent",
+      "UnlockedEvent",
+      "UnmarkedAsDuplicateEvent",
+      "UnpinnedEvent",
+      "UnsubscribedEvent",
+      "User",
+      "UserBlockedEvent",
+      "UserContentEdit",
+      "UserStatus",
+      "VerifiableDomain",
+      "Workflow",
+      "WorkflowRun",
+    ],
+    OauthApplicationAuditEntryData: [
+      "OauthApplicationCreateAuditEntry",
+      "OrgOauthAppAccessApprovedAuditEntry",
+      "OrgOauthAppAccessDeniedAuditEntry",
+      "OrgOauthAppAccessRequestedAuditEntry",
+    ],
+    OrgRestoreMemberAuditEntryMembership: [
+      "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+      "OrgRestoreMemberMembershipRepositoryAuditEntryData",
+      "OrgRestoreMemberMembershipTeamAuditEntryData",
+    ],
+    OrganizationAuditEntry: [
+      "MembersCanDeleteReposClearAuditEntry",
+      "MembersCanDeleteReposDisableAuditEntry",
+      "MembersCanDeleteReposEnableAuditEntry",
+      "OauthApplicationCreateAuditEntry",
+      "OrgAddBillingManagerAuditEntry",
+      "OrgAddMemberAuditEntry",
+      "OrgBlockUserAuditEntry",
+      "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+      "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+      "OrgCreateAuditEntry",
+      "OrgDisableOauthAppRestrictionsAuditEntry",
+      "OrgDisableSamlAuditEntry",
+      "OrgDisableTwoFactorRequirementAuditEntry",
+      "OrgEnableOauthAppRestrictionsAuditEntry",
+      "OrgEnableSamlAuditEntry",
+      "OrgEnableTwoFactorRequirementAuditEntry",
+      "OrgInviteMemberAuditEntry",
+      "OrgInviteToBusinessAuditEntry",
+      "OrgOauthAppAccessApprovedAuditEntry",
+      "OrgOauthAppAccessDeniedAuditEntry",
+      "OrgOauthAppAccessRequestedAuditEntry",
+      "OrgRemoveBillingManagerAuditEntry",
+      "OrgRemoveMemberAuditEntry",
+      "OrgRemoveOutsideCollaboratorAuditEntry",
+      "OrgRestoreMemberAuditEntry",
+      "OrgUnblockUserAuditEntry",
+      "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+      "OrgUpdateMemberAuditEntry",
+      "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+      "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "RepoAccessAuditEntry",
+      "RepoAddMemberAuditEntry",
+      "RepoAddTopicAuditEntry",
+      "RepoArchivedAuditEntry",
+      "RepoChangeMergeSettingAuditEntry",
+      "RepoConfigDisableAnonymousGitAccessAuditEntry",
+      "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+      "RepoConfigDisableContributorsOnlyAuditEntry",
+      "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+      "RepoConfigEnableAnonymousGitAccessAuditEntry",
+      "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+      "RepoConfigEnableContributorsOnlyAuditEntry",
+      "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+      "RepoConfigLockAnonymousGitAccessAuditEntry",
+      "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+      "RepoCreateAuditEntry",
+      "RepoDestroyAuditEntry",
+      "RepoRemoveMemberAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+      "RepositoryVisibilityChangeDisableAuditEntry",
+      "RepositoryVisibilityChangeEnableAuditEntry",
+      "TeamAddMemberAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamChangeParentTeamAuditEntry",
+      "TeamRemoveMemberAuditEntry",
+      "TeamRemoveRepositoryAuditEntry",
+    ],
+    OrganizationAuditEntryData: [
+      "MembersCanDeleteReposClearAuditEntry",
+      "MembersCanDeleteReposDisableAuditEntry",
+      "MembersCanDeleteReposEnableAuditEntry",
+      "OauthApplicationCreateAuditEntry",
+      "OrgAddBillingManagerAuditEntry",
+      "OrgAddMemberAuditEntry",
+      "OrgBlockUserAuditEntry",
+      "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+      "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+      "OrgCreateAuditEntry",
+      "OrgDisableOauthAppRestrictionsAuditEntry",
+      "OrgDisableSamlAuditEntry",
+      "OrgDisableTwoFactorRequirementAuditEntry",
+      "OrgEnableOauthAppRestrictionsAuditEntry",
+      "OrgEnableSamlAuditEntry",
+      "OrgEnableTwoFactorRequirementAuditEntry",
+      "OrgInviteMemberAuditEntry",
+      "OrgInviteToBusinessAuditEntry",
+      "OrgOauthAppAccessApprovedAuditEntry",
+      "OrgOauthAppAccessDeniedAuditEntry",
+      "OrgOauthAppAccessRequestedAuditEntry",
+      "OrgRemoveBillingManagerAuditEntry",
+      "OrgRemoveMemberAuditEntry",
+      "OrgRemoveOutsideCollaboratorAuditEntry",
+      "OrgRestoreMemberAuditEntry",
+      "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+      "OrgUnblockUserAuditEntry",
+      "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+      "OrgUpdateMemberAuditEntry",
+      "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+      "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "RepoAccessAuditEntry",
+      "RepoAddMemberAuditEntry",
+      "RepoAddTopicAuditEntry",
+      "RepoArchivedAuditEntry",
+      "RepoChangeMergeSettingAuditEntry",
+      "RepoConfigDisableAnonymousGitAccessAuditEntry",
+      "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+      "RepoConfigDisableContributorsOnlyAuditEntry",
+      "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+      "RepoConfigEnableAnonymousGitAccessAuditEntry",
+      "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+      "RepoConfigEnableContributorsOnlyAuditEntry",
+      "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+      "RepoConfigLockAnonymousGitAccessAuditEntry",
+      "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+      "RepoCreateAuditEntry",
+      "RepoDestroyAuditEntry",
+      "RepoRemoveMemberAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+      "RepositoryVisibilityChangeDisableAuditEntry",
+      "RepositoryVisibilityChangeEnableAuditEntry",
+      "TeamAddMemberAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamChangeParentTeamAuditEntry",
+      "TeamRemoveMemberAuditEntry",
+      "TeamRemoveRepositoryAuditEntry",
+    ],
+    OrganizationOrUser: ["Organization", "User"],
+    PackageOwner: ["Organization", "Repository", "User"],
+    PermissionGranter: ["Organization", "Repository", "Team"],
+    PinnableItem: ["Gist", "Repository"],
+    ProfileOwner: ["Organization", "User"],
+    ProjectCardItem: ["Issue", "PullRequest"],
+    ProjectOwner: ["Organization", "Repository", "User"],
+    ProjectV2FieldCommon: [
+      "ProjectV2Field",
+      "ProjectV2IterationField",
+      "ProjectV2SingleSelectField",
+    ],
+    ProjectV2FieldConfiguration: [
+      "ProjectV2Field",
+      "ProjectV2IterationField",
+      "ProjectV2SingleSelectField",
+    ],
+    ProjectV2ItemContent: ["DraftIssue", "Issue", "PullRequest"],
+    ProjectV2ItemFieldValue: [
+      "ProjectV2ItemFieldDateValue",
+      "ProjectV2ItemFieldIterationValue",
+      "ProjectV2ItemFieldLabelValue",
+      "ProjectV2ItemFieldMilestoneValue",
+      "ProjectV2ItemFieldNumberValue",
+      "ProjectV2ItemFieldPullRequestValue",
+      "ProjectV2ItemFieldRepositoryValue",
+      "ProjectV2ItemFieldReviewerValue",
+      "ProjectV2ItemFieldSingleSelectValue",
+      "ProjectV2ItemFieldTextValue",
+      "ProjectV2ItemFieldUserValue",
+    ],
+    ProjectV2ItemFieldValueCommon: [
+      "ProjectV2ItemFieldDateValue",
+      "ProjectV2ItemFieldIterationValue",
+      "ProjectV2ItemFieldNumberValue",
+      "ProjectV2ItemFieldSingleSelectValue",
+      "ProjectV2ItemFieldTextValue",
+    ],
+    ProjectV2Owner: ["Issue", "Organization", "PullRequest", "User"],
+    ProjectV2Recent: ["Organization", "Repository", "User"],
+    PullRequestTimelineItem: [
+      "AssignedEvent",
+      "BaseRefDeletedEvent",
+      "BaseRefForcePushedEvent",
+      "ClosedEvent",
+      "Commit",
+      "CommitCommentThread",
+      "CrossReferencedEvent",
+      "DemilestonedEvent",
+      "DeployedEvent",
+      "DeploymentEnvironmentChangedEvent",
+      "HeadRefDeletedEvent",
+      "HeadRefForcePushedEvent",
+      "HeadRefRestoredEvent",
+      "IssueComment",
+      "LabeledEvent",
+      "LockedEvent",
+      "MergedEvent",
+      "MilestonedEvent",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "PullRequestReviewThread",
+      "ReferencedEvent",
+      "RenamedTitleEvent",
+      "ReopenedEvent",
+      "ReviewDismissedEvent",
+      "ReviewRequestRemovedEvent",
+      "ReviewRequestedEvent",
+      "SubscribedEvent",
+      "UnassignedEvent",
+      "UnlabeledEvent",
+      "UnlockedEvent",
+      "UnsubscribedEvent",
+      "UserBlockedEvent",
+    ],
+    PullRequestTimelineItems: [
+      "AddedToProjectEvent",
+      "AssignedEvent",
+      "AutoMergeDisabledEvent",
+      "AutoMergeEnabledEvent",
+      "AutoRebaseEnabledEvent",
+      "AutoSquashEnabledEvent",
+      "AutomaticBaseChangeFailedEvent",
+      "AutomaticBaseChangeSucceededEvent",
+      "BaseRefChangedEvent",
+      "BaseRefDeletedEvent",
+      "BaseRefForcePushedEvent",
+      "ClosedEvent",
+      "CommentDeletedEvent",
+      "ConnectedEvent",
+      "ConvertToDraftEvent",
+      "ConvertedNoteToIssueEvent",
+      "ConvertedToDiscussionEvent",
+      "CrossReferencedEvent",
+      "DemilestonedEvent",
+      "DeployedEvent",
+      "DeploymentEnvironmentChangedEvent",
+      "DisconnectedEvent",
+      "HeadRefDeletedEvent",
+      "HeadRefForcePushedEvent",
+      "HeadRefRestoredEvent",
+      "IssueComment",
+      "LabeledEvent",
+      "LockedEvent",
+      "MarkedAsDuplicateEvent",
+      "MentionedEvent",
+      "MergedEvent",
+      "MilestonedEvent",
+      "MovedColumnsInProjectEvent",
+      "PinnedEvent",
+      "PullRequestCommit",
+      "PullRequestCommitCommentThread",
+      "PullRequestReview",
+      "PullRequestReviewThread",
+      "PullRequestRevisionMarker",
+      "ReadyForReviewEvent",
+      "ReferencedEvent",
+      "RemovedFromProjectEvent",
+      "RenamedTitleEvent",
+      "ReopenedEvent",
+      "ReviewDismissedEvent",
+      "ReviewRequestRemovedEvent",
+      "ReviewRequestedEvent",
+      "SubscribedEvent",
+      "TransferredEvent",
+      "UnassignedEvent",
+      "UnlabeledEvent",
+      "UnlockedEvent",
+      "UnmarkedAsDuplicateEvent",
+      "UnpinnedEvent",
+      "UnsubscribedEvent",
+      "UserBlockedEvent",
+    ],
+    PushAllowanceActor: ["App", "Team", "User"],
+    Reactable: [
+      "CommitComment",
+      "Discussion",
+      "DiscussionComment",
+      "Issue",
+      "IssueComment",
+      "PullRequest",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "Release",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+    ],
+    Reactor: ["Bot", "Mannequin", "Organization", "User"],
+    ReferencedSubject: ["Issue", "PullRequest"],
+    RenamedTitleSubject: ["Issue", "PullRequest"],
+    RepositoryAuditEntryData: [
+      "OrgRestoreMemberMembershipRepositoryAuditEntryData",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "RepoAccessAuditEntry",
+      "RepoAddMemberAuditEntry",
+      "RepoAddTopicAuditEntry",
+      "RepoArchivedAuditEntry",
+      "RepoChangeMergeSettingAuditEntry",
+      "RepoConfigDisableAnonymousGitAccessAuditEntry",
+      "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+      "RepoConfigDisableContributorsOnlyAuditEntry",
+      "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+      "RepoConfigEnableAnonymousGitAccessAuditEntry",
+      "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+      "RepoConfigEnableContributorsOnlyAuditEntry",
+      "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+      "RepoConfigLockAnonymousGitAccessAuditEntry",
+      "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+      "RepoCreateAuditEntry",
+      "RepoDestroyAuditEntry",
+      "RepoRemoveMemberAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamRemoveRepositoryAuditEntry",
+    ],
+    RepositoryDiscussionAuthor: ["Organization", "User"],
+    RepositoryDiscussionCommentAuthor: ["Organization", "User"],
+    RepositoryInfo: ["Repository"],
+    RepositoryNode: [
+      "CommitComment",
+      "CommitCommentThread",
+      "DependabotUpdate",
+      "Discussion",
+      "DiscussionCategory",
+      "Issue",
+      "IssueComment",
+      "PinnedDiscussion",
+      "PullRequest",
+      "PullRequestCommitCommentThread",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "RepositoryVulnerabilityAlert",
+    ],
+    RepositoryOwner: ["Organization", "User"],
+    RequestedReviewer: ["Mannequin", "Team", "User"],
+    RequirableByPullRequest: ["CheckRun", "StatusContext"],
+    ReviewDismissalAllowanceActor: ["App", "Team", "User"],
+    SearchResultItem: [
+      "App",
+      "Discussion",
+      "Issue",
+      "MarketplaceListing",
+      "Organization",
+      "PullRequest",
+      "Repository",
+      "User",
+    ],
+    Sponsor: ["Organization", "User"],
+    Sponsorable: ["Organization", "User"],
+    SponsorableItem: ["Organization", "User"],
+    SponsorsListingFeatureableItem: ["Repository", "User"],
+    Starrable: ["Gist", "Repository", "Topic"],
+    StatusCheckRollupContext: ["CheckRun", "StatusContext"],
+    Subscribable: [
+      "Commit",
+      "Discussion",
+      "Issue",
+      "PullRequest",
+      "Repository",
+      "Team",
+      "TeamDiscussion",
+    ],
+    TeamAuditEntryData: [
+      "OrgRestoreMemberMembershipTeamAuditEntryData",
+      "TeamAddMemberAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamChangeParentTeamAuditEntry",
+      "TeamRemoveMemberAuditEntry",
+      "TeamRemoveRepositoryAuditEntry",
+    ],
+    TopicAuditEntryData: [
+      "RepoAddTopicAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+    ],
+    UniformResourceLocatable: [
+      "Bot",
+      "CheckRun",
+      "ClosedEvent",
+      "Commit",
+      "ConvertToDraftEvent",
+      "CrossReferencedEvent",
+      "Gist",
+      "Issue",
+      "Mannequin",
+      "MergedEvent",
+      "Milestone",
+      "Organization",
+      "PullRequest",
+      "PullRequestCommit",
+      "ReadyForReviewEvent",
+      "Release",
+      "Repository",
+      "RepositoryTopic",
+      "ReviewDismissedEvent",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+      "User",
+      "WorkflowRun",
+    ],
+    Updatable: [
+      "CommitComment",
+      "Discussion",
+      "DiscussionComment",
+      "GistComment",
+      "Issue",
+      "IssueComment",
+      "Project",
+      "ProjectV2",
+      "PullRequest",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+    ],
+    UpdatableComment: [
+      "CommitComment",
+      "DiscussionComment",
+      "GistComment",
+      "Issue",
+      "IssueComment",
+      "PullRequest",
+      "PullRequestReview",
+      "PullRequestReviewComment",
+      "TeamDiscussion",
+      "TeamDiscussionComment",
+    ],
+    VerifiableDomainOwner: ["Enterprise", "Organization"],
+    Votable: ["Discussion", "DiscussionComment"],
+  },
+};
+export default result;
