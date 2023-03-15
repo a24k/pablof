@@ -126,6 +126,12 @@ this action will set the value of `Status` according to following rules in the o
 1. If the `Status` Field has an Option named `Project`, set `Status` to `Project`.
 1. Otherwise, set `Status` to first (most left) one.
 
+##### Due Date Field
+
+If the Project has a Field name matched with `/^(Due|End|Finish|Target) [dD]ate$/`,
+this action will set the field value to `dueOn` of Milestone.
+Only affects for the first Field matched.
+
 ### Sync Milestone Issue
 
 Automatically updates the Milestone Issue when a Milestone is updated.
