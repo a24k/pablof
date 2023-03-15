@@ -3450,8 +3450,11 @@ exports.ProjectV2ItemPropsFragmentDoc = `
       totalCount
       nodes {
         __typename
+        ... on ProjectV2Field {
+          name
+          dataType
+        }
         ... on ProjectV2SingleSelectField {
-          __typename
           name
           options {
             id
@@ -3465,13 +3468,55 @@ exports.ProjectV2ItemPropsFragmentDoc = `
     totalCount
     nodes {
       __typename
+      ... on ProjectV2ItemFieldRepositoryValue {
+        repository {
+          __typename
+          id
+          name
+          nameWithOwner
+          description
+        }
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldMilestoneValue {
+        milestone {
+          __typename
+          id
+          title
+          description
+          state
+          dueOn
+        }
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
+      ... on ProjectV2ItemFieldTextValue {
+        text
+        field {
+          __typename
+          ... on ProjectV2Field {
+            name
+            dataType
+          }
+        }
+      }
       ... on ProjectV2ItemFieldSingleSelectValue {
-        __typename
         name
         optionId
         field {
+          __typename
           ... on ProjectV2SingleSelectField {
-            __typename
             name
             options {
               id
