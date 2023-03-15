@@ -5,13 +5,16 @@ import { Result, ok, err } from "neverthrow";
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
 import { IssueState } from "../../graphql";
-import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
+import { MilestoneAction } from "./";
 
 import type { Context, Sdk } from "../";
-import type { IssuePropsFragment } from "../../graphql";
+import type {
+  IssuePropsFragment,
+  IssuePropsWithItemsFragment,
+} from "../../graphql";
 
-export class SyncMilestoneIssue extends TriggerableAction {
+export class SyncMilestoneIssue extends MilestoneAction {
   constructor() {
     super("milestone", ["edited", "closed", "opened"]);
   }
@@ -25,7 +28,7 @@ export class SyncMilestoneIssue extends TriggerableAction {
     issue: IssuePropsFragment,
     title: string,
     state: IssueState
-  ): Promise<Result<IssuePropsFragment, string>> {
+  ): Promise<Result<IssuePropsWithItemsFragment, string>> {
     const result = await sdk.updateIssue({ issue: issue.id, title, state });
     this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
 

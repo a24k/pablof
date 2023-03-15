@@ -80,6 +80,21 @@ exports.ActionInventory = ActionInventory;
 
 /***/ }),
 
+/***/ 7877:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MilestoneAction = void 0;
+const triggerable_1 = __nccwpck_require__(4953);
+class MilestoneAction extends triggerable_1.TriggerableAction {
+}
+exports.MilestoneAction = MilestoneAction;
+
+
+/***/ }),
+
 /***/ 4775:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -98,9 +113,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
-class CreateMilestoneIssue extends triggerable_1.TriggerableAction {
+const _1 = __nccwpck_require__(5674);
+class CreateMilestoneIssue extends _1.MilestoneAction {
     constructor() {
         super("milestone", "created");
     }
@@ -281,7 +296,9 @@ exports.CreateMilestoneIssue = CreateMilestoneIssue;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SyncMilestoneIssue = exports.CreateMilestoneIssue = void 0;
+exports.SyncMilestoneIssue = exports.CreateMilestoneIssue = exports.MilestoneAction = void 0;
+const base_1 = __nccwpck_require__(7877);
+Object.defineProperty(exports, "MilestoneAction", ({ enumerable: true, get: function () { return base_1.MilestoneAction; } }));
 const create_issue_1 = __nccwpck_require__(4775);
 Object.defineProperty(exports, "CreateMilestoneIssue", ({ enumerable: true, get: function () { return create_issue_1.CreateMilestoneIssue; } }));
 const sync_issue_1 = __nccwpck_require__(5417);
@@ -309,9 +326,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SyncMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
 const graphql_1 = __nccwpck_require__(7064);
-const triggerable_1 = __nccwpck_require__(4953);
 const result_1 = __nccwpck_require__(4983);
-class SyncMilestoneIssue extends triggerable_1.TriggerableAction {
+const _1 = __nccwpck_require__(5674);
+class SyncMilestoneIssue extends _1.MilestoneAction {
     constructor() {
         super("milestone", ["edited", "closed", "opened"]);
     }

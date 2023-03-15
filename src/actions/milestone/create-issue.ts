@@ -4,8 +4,8 @@ import { Result, ok, err } from "neverthrow";
 
 import type { MilestoneEvent } from "@octokit/webhooks-types";
 
-import { TriggerableAction } from "../triggerable";
 import { ActionResult, actionOk, actionErr } from "../result";
+import { MilestoneAction } from "./";
 
 import type { Context, Sdk } from "../";
 import type {
@@ -15,7 +15,7 @@ import type {
   ProjectV2ItemPropsFragment,
 } from "../../graphql";
 
-export class CreateMilestoneIssue extends TriggerableAction {
+export class CreateMilestoneIssue extends MilestoneAction {
   constructor() {
     super("milestone", "created");
   }
