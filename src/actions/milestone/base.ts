@@ -2,22 +2,21 @@
 
 import { Result, ok, err } from "neverthrow";
 
-import { TriggerableAction } from "../triggerable";
+import { Action } from "../";
+import type { ID } from "../";
 
-import type { Sdk, ID } from "../";
 import type {
+  IssuePropsFragment,
   MilestonePropsFragment,
   MilestonePropsWithRepositoryAndIssuesFragment,
-  IssuePropsFragment,
   ProjectV2ItemPropsFragment,
 } from "../../graphql";
 
-export abstract class MilestoneAction extends TriggerableAction {
+export abstract class MilestoneAction extends Action {
   protected async queryMilestoneById(
-    sdk: Sdk,
     milestone: ID
   ): Promise<Result<MilestonePropsWithRepositoryAndIssuesFragment, string>> {
-    const node = (await sdk.queryNode({ id: milestone })).node;
+    const node = (await this.sdk().queryNode({ id: milestone })).node;
     this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
 
     if (node == undefined || node.__typename !== "Milestone") {
@@ -44,7 +43,6 @@ export abstract class MilestoneAction extends TriggerableAction {
   }
 
   protected async updateStartDateField(
-    sdk: Sdk,
     item: ProjectV2ItemPropsFragment,
     milestone: MilestonePropsFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
@@ -62,7 +60,7 @@ export abstract class MilestoneAction extends TriggerableAction {
 
     const field = fields[0];
 
-    const result = await sdk.updateProjectItemFieldByDate({
+    const result = await this.sdk().updateProjectItemFieldByDate({
       project: item.project.id,
       item: item.id,
       field: field.id,
@@ -82,7 +80,6 @@ export abstract class MilestoneAction extends TriggerableAction {
   }
 
   protected async updateTargetDateField(
-    sdk: Sdk,
     item: ProjectV2ItemPropsFragment,
     milestone: MilestonePropsFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
@@ -104,7 +101,7 @@ export abstract class MilestoneAction extends TriggerableAction {
 
     const field = fields[0];
 
-    const result = await sdk.updateProjectItemFieldByDate({
+    const result = await this.sdk().updateProjectItemFieldByDate({
       project: item.project.id,
       item: item.id,
       field: field.id,

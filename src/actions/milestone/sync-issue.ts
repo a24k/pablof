@@ -2,13 +2,13 @@
 
 import { Result, ok, err } from "neverthrow";
 
-import type { MilestoneEvent } from "@octokit/webhooks-types";
+import { actionOk, actionErr } from "../";
+import type { ActionResult, Context } from "../";
+
+import { MilestoneAction } from "./";
+import type { MilestoneEvent } from "./";
 
 import { IssueState } from "../../graphql";
-import { ActionResult, actionOk, actionErr } from "../result";
-import { MilestoneAction } from "./";
-
-import type { Context, Sdk } from "../";
 import type {
   IssuePropsFragment,
   IssuePropsWithItemsFragment,
@@ -24,12 +24,15 @@ export class SyncMilestoneIssue extends MilestoneAction {
   }
 
   protected async updateIssue(
-    sdk: Sdk,
     issue: IssuePropsFragment,
     title: string,
     state: IssueState
   ): Promise<Result<IssuePropsWithItemsFragment, string>> {
-    const result = await sdk.updateIssue({ issue: issue.id, title, state });
+    const result = await this.sdk().updateIssue({
+      issue: issue.id,
+      title,
+      state,
+    });
     this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
 
     if (result.updateIssue?.issue?.id == undefined) {
@@ -39,14 +42,11 @@ export class SyncMilestoneIssue extends MilestoneAction {
     return ok(result.updateIssue.issue);
   }
 
-  protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
+  protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const milestone = await this.queryMilestoneById(
-      sdk,
-      payload.milestone.node_id
-    );
+    const milestone = await this.queryMilestoneById(payload.milestone.node_id);
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }
@@ -59,7 +59,6 @@ export class SyncMilestoneIssue extends MilestoneAction {
     }
 
     const issue = await this.updateIssue(
-      sdk,
       milestoneIssue.value,
       payload.milestone.title,
       payload.milestone.state === "open" ? IssueState.Open : IssueState.Closed
@@ -76,7 +75,6 @@ export class SyncMilestoneIssue extends MilestoneAction {
     } else {
       for (const item of items) {
         const targetDateResult = await this.updateTargetDateField(
-          sdk,
           item,
           milestone.value
         );

@@ -1,13 +1,11 @@
 /* eslint-disable eqeqeq */
 
-import type { PullRequestEvent } from "@octokit/webhooks-types";
+import { Action, actionOk, actionErr } from "../";
+import type { ActionResult, Context } from "../";
 
-import { TriggerableAction } from "../triggerable";
-import { ActionResult, actionOk, actionErr } from "../result";
+import type { PullRequestEvent } from "./";
 
-import type { Context, Sdk } from "../";
-
-export class QueryProject extends TriggerableAction {
+export class QueryProject extends Action {
   constructor() {
     super("pull_request");
   }
@@ -16,12 +14,11 @@ export class QueryProject extends TriggerableAction {
     return `QueryProject for ${super.description()}`;
   }
 
-  protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
+  protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as PullRequestEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
     const repository = await this.queryRepositoryById(
-      sdk,
       payload.repository.node_id
     );
     if (repository.isErr()) {

@@ -1,19 +1,97 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9024:
+/***/ 8460:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+/* eslint-disable eqeqeq */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Action = void 0;
+const neverthrow_1 = __nccwpck_require__(8591);
+const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
+const handler_1 = __nccwpck_require__(7941);
+const graphql_1 = __nccwpck_require__(7064);
+class Action extends handler_1.TriggerHandler {
+    sdk() {
+        return Action.sdk;
+    }
+    queryRepositoryById(repository) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield this.sdk().queryNode({ id: repository })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, neverthrow_1.err)("No repository found.");
+            }
+            return (0, neverthrow_1.ok)(node);
+        });
+    }
+    queryProjectsByRepositoryId(repository) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield this.sdk().queryNode({ id: repository })).node;
+            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            if (node == undefined || node.__typename !== "Repository") {
+                return (0, neverthrow_1.err)("No repository found.");
+            }
+            const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
+            if (projects == undefined || projects.length === 0) {
+                return (0, neverthrow_1.err)("No projects found.");
+            }
+            return (0, neverthrow_1.ok)(projects);
+        });
+    }
+}
+exports.Action = Action;
+Action.sdk = (0, graphql_1.getSdk)(github.getOctokit(core.getInput("token")).graphql);
+
+
+/***/ }),
+
+/***/ 1510:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.collect = exports.TriggerableAction = exports.ActionInventory = void 0;
-const milestone_1 = __nccwpck_require__(5674);
-const project_1 = __nccwpck_require__(9534);
+exports.collect = void 0;
 const inventory_1 = __nccwpck_require__(6253);
-Object.defineProperty(exports, "ActionInventory", ({ enumerable: true, get: function () { return inventory_1.ActionInventory; } }));
-const triggerable_1 = __nccwpck_require__(4953);
-Object.defineProperty(exports, "TriggerableAction", ({ enumerable: true, get: function () { return triggerable_1.TriggerableAction; } }));
+const project_1 = __nccwpck_require__(9534);
+const milestone_1 = __nccwpck_require__(5674);
 function collect() {
     const inventory = new inventory_1.ActionInventory();
     inventory.submit(new project_1.QueryProject());
@@ -22,6 +100,130 @@ function collect() {
     return inventory;
 }
 exports.collect = collect;
+
+
+/***/ }),
+
+/***/ 7941:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TriggerHandler = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const result_1 = __nccwpck_require__(4983);
+class TriggerHandler {
+    constructor(name, action) {
+        this.triggerName = name;
+        this.triggerAction = action;
+    }
+    description() {
+        return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
+    }
+    debug(message) {
+        core.debug(message);
+    }
+    notice(message) {
+        core.notice(message, { title: this.description() });
+    }
+    warning(message) {
+        core.warning(message, { title: this.description() });
+    }
+    error(message) {
+        core.error(message, { title: this.description() });
+    }
+    canHandle(name, action) {
+        return (this.triggerName === name &&
+            (this.triggerAction === undefined ||
+                (Array.isArray(this.triggerAction)
+                    ? action === undefined
+                        ? false
+                        : this.triggerAction.includes(action)
+                    : this.triggerAction === action)));
+    }
+    canHandleContext(context) {
+        return this.canHandle(context.eventName, context.payload.action);
+    }
+    handleContext(context) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug(`handleContext on ${this.description()}`);
+            if (this.canHandleContext(context)) {
+                const result = yield this.handle(context);
+                result.match((r) => {
+                    switch (r.type) {
+                        case "Success":
+                            this.notice(r.message);
+                            break;
+                        case "Skip":
+                        default:
+                            this.debug("Skipped");
+                            break;
+                    }
+                }, (e) => {
+                    this.error(e.message);
+                });
+                return result;
+            }
+            else {
+                this.debug("Skipped");
+                return (0, result_1.actionSkip)();
+            }
+        });
+    }
+}
+exports.TriggerHandler = TriggerHandler;
+
+
+/***/ }),
+
+/***/ 9024:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Action = exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
+const result_1 = __nccwpck_require__(4983);
+Object.defineProperty(exports, "actionOk", ({ enumerable: true, get: function () { return result_1.actionOk; } }));
+Object.defineProperty(exports, "actionSkip", ({ enumerable: true, get: function () { return result_1.actionSkip; } }));
+Object.defineProperty(exports, "actionErr", ({ enumerable: true, get: function () { return result_1.actionErr; } }));
+const collect_1 = __nccwpck_require__(1510);
+Object.defineProperty(exports, "collect", ({ enumerable: true, get: function () { return collect_1.collect; } }));
+const base_1 = __nccwpck_require__(8460);
+Object.defineProperty(exports, "Action", ({ enumerable: true, get: function () { return base_1.Action; } }));
 
 
 /***/ }),
@@ -52,25 +254,10 @@ class ActionInventory {
     length() {
         return this.items.length;
     }
-    handleContext(context, sdk) {
+    handleContext(context) {
         return __awaiter(this, void 0, void 0, function* () {
             for (const item of this.items) {
-                const title = item.description();
-                item.debug(`handleContext on ${title}`);
-                const result = yield item.handleContext(context, sdk);
-                result.match((res) => {
-                    switch (res.type) {
-                        case "Success":
-                            item.notice(res.message);
-                            break;
-                        case "Skip":
-                        default:
-                            item.debug("skipped");
-                            break;
-                    }
-                }, (err) => {
-                    item.error(err.message);
-                });
+                yield item.handleContext(context);
             }
         });
     }
@@ -98,11 +285,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MilestoneAction = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-const triggerable_1 = __nccwpck_require__(4953);
-class MilestoneAction extends triggerable_1.TriggerableAction {
-    queryMilestoneById(sdk, milestone) {
+const __1 = __nccwpck_require__(9024);
+class MilestoneAction extends __1.Action {
+    queryMilestoneById(milestone) {
         return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: milestone })).node;
+            const node = (yield this.sdk().queryNode({ id: milestone })).node;
             this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, neverthrow_1.err)("No milestone found.");
@@ -122,7 +309,7 @@ class MilestoneAction extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(root);
         });
     }
-    updateStartDateField(sdk, item, milestone) {
+    updateStartDateField(item, milestone) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const fields = (_a = item.project.fields.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(field => field === null ||
@@ -135,7 +322,7 @@ class MilestoneAction extends triggerable_1.TriggerableAction {
                 return (0, neverthrow_1.err)(`No field for "Start Date" on project(${item.project.id}).`);
             }
             const field = fields[0];
-            const result = yield sdk.updateProjectItemFieldByDate({
+            const result = yield this.sdk().updateProjectItemFieldByDate({
                 project: item.project.id,
                 item: item.id,
                 field: field.id,
@@ -148,7 +335,7 @@ class MilestoneAction extends triggerable_1.TriggerableAction {
             return (0, neverthrow_1.ok)(result.updateProjectV2ItemFieldValue.projectV2Item);
         });
     }
-    updateTargetDateField(sdk, item, milestone) {
+    updateTargetDateField(item, milestone) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             if (milestone.dueOn == undefined) {
@@ -164,7 +351,7 @@ class MilestoneAction extends triggerable_1.TriggerableAction {
                 return (0, neverthrow_1.err)(`No field for "Target Date" on project(${item.project.id}).`);
             }
             const field = fields[0];
-            const result = yield sdk.updateProjectItemFieldByDate({
+            const result = yield this.sdk().updateProjectItemFieldByDate({
                 project: item.project.id,
                 item: item.id,
                 field: field.id,
@@ -201,7 +388,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-const result_1 = __nccwpck_require__(4983);
+const __1 = __nccwpck_require__(9024);
 const _1 = __nccwpck_require__(5674);
 class CreateMilestoneIssue extends _1.MilestoneAction {
     constructor() {
@@ -210,10 +397,10 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
     description() {
         return `CreateMilestoneIssue for ${super.description()}`;
     }
-    createIssueWithMilestone(sdk, milestone) {
+    createIssueWithMilestone(milestone) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const issue = yield sdk.createIssueWithMilestone({
+            const issue = yield this.sdk().createIssueWithMilestone({
                 repository: milestone.repository.id,
                 title: milestone.title,
                 body: milestone.description,
@@ -226,7 +413,7 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
             return (0, neverthrow_1.ok)(issue.createIssue.issue);
         });
     }
-    updateStatusField(sdk, item) {
+    updateStatusField(item) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const fields = (_a = item.project.fields.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(field => field === null ||
@@ -241,7 +428,7 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
             const option = field.options.find(opt => opt.name === "Milestone") ||
                 field.options.find(opt => opt.name === "Project") ||
                 field.options[0];
-            const result = yield sdk.updateProjectItemFieldBySingleSelectValue({
+            const result = yield this.sdk().updateProjectItemFieldBySingleSelectValue({
                 project: item.project.id,
                 item: item.id,
                 field: field.id,
@@ -254,10 +441,10 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
             return (0, neverthrow_1.ok)(result.updateProjectV2ItemFieldValue.projectV2Item);
         });
     }
-    addIssueToProject(sdk, project, issue, milestone) {
+    addIssueToProject(project, issue, milestone) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const item = yield sdk.addProjectItem({
+            const item = yield this.sdk().addProjectItem({
                 project: project.id,
                 item: issue.id,
             });
@@ -265,21 +452,21 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
             if (((_b = (_a = item.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to add project item.");
             }
-            const statusResult = yield this.updateStatusField(sdk, item.addProjectV2ItemById.item);
+            const statusResult = yield this.updateStatusField(item.addProjectV2ItemById.item);
             if (statusResult.isOk()) {
                 this.notice(`Successfully updated status field on project(${statusResult.value.project.id}).`);
             }
             else {
                 this.warning(`Failed to update status field: ${statusResult.error}`);
             }
-            const startDateResult = yield this.updateStartDateField(sdk, item.addProjectV2ItemById.item, milestone);
+            const startDateResult = yield this.updateStartDateField(item.addProjectV2ItemById.item, milestone);
             if (startDateResult.isOk()) {
                 this.notice(`Successfully updated start date field on project(${startDateResult.value.project.id}).`);
             }
             else {
                 this.warning(`Failed to update start date field: ${startDateResult.error}`);
             }
-            const targetDateResult = yield this.updateTargetDateField(sdk, item.addProjectV2ItemById.item, milestone);
+            const targetDateResult = yield this.updateTargetDateField(item.addProjectV2ItemById.item, milestone);
             if (targetDateResult.isOk()) {
                 this.notice(`Successfully updated target date field on project(${targetDateResult.value.project.id}).`);
             }
@@ -289,24 +476,24 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
             return (0, neverthrow_1.ok)(item.addProjectV2ItemById.item);
         });
     }
-    handle(context, sdk) {
+    handle(context) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const milestone = yield this.queryMilestoneById(sdk, payload.milestone.node_id);
+            const milestone = yield this.queryMilestoneById(payload.milestone.node_id);
             if (milestone.isErr()) {
-                return (0, result_1.actionErr)(milestone.error);
+                return (0, __1.actionErr)(milestone.error);
             }
-            const issue = yield this.createIssueWithMilestone(sdk, milestone.value);
+            const issue = yield this.createIssueWithMilestone(milestone.value);
             if (issue.isErr()) {
-                return (0, result_1.actionErr)(issue.error);
+                return (0, __1.actionErr)(issue.error);
             }
-            const projects = yield this.queryProjectsByRepositoryId(sdk, milestone.value.repository.id);
+            const projects = yield this.queryProjectsByRepositoryId(milestone.value.repository.id);
             if (projects.isErr()) {
-                return (0, result_1.actionErr)(projects.error);
+                return (0, __1.actionErr)(projects.error);
             }
             for (const project of projects.value) {
-                const item = yield this.addIssueToProject(sdk, project, issue.value, milestone.value);
+                const item = yield this.addIssueToProject(project, issue.value, milestone.value);
                 if (item.isOk()) {
                     this.notice(`Successfully added MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
                 }
@@ -314,7 +501,7 @@ class CreateMilestoneIssue extends _1.MilestoneAction {
                     this.warning(`Failed to add MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`);
                 }
             }
-            return (0, result_1.actionOk)(`MilestoneIssue created {id: ${issue.value.id}, title: ${issue.value.title}, body: ${issue.value.body}}`);
+            return (0, __1.actionOk)(`MilestoneIssue created {id: ${issue.value.id}, title: ${issue.value.title}, body: ${issue.value.body}}`);
         });
     }
 }
@@ -358,9 +545,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SyncMilestoneIssue = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
-const graphql_1 = __nccwpck_require__(7064);
-const result_1 = __nccwpck_require__(4983);
+const __1 = __nccwpck_require__(9024);
 const _1 = __nccwpck_require__(5674);
+const graphql_1 = __nccwpck_require__(7064);
 class SyncMilestoneIssue extends _1.MilestoneAction {
     constructor() {
         super("milestone", ["edited", "closed", "opened"]);
@@ -368,10 +555,14 @@ class SyncMilestoneIssue extends _1.MilestoneAction {
     description() {
         return `SyncMilestoneIssue for ${super.description()}`;
     }
-    updateIssue(sdk, issue, title, state) {
+    updateIssue(issue, title, state) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield sdk.updateIssue({ issue: issue.id, title, state });
+            const result = yield this.sdk().updateIssue({
+                issue: issue.id,
+                title,
+                state,
+            });
             this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
             if (((_b = (_a = result.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to update issue.");
@@ -379,22 +570,22 @@ class SyncMilestoneIssue extends _1.MilestoneAction {
             return (0, neverthrow_1.ok)(result.updateIssue.issue);
         });
     }
-    handle(context, sdk) {
+    handle(context) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const milestone = yield this.queryMilestoneById(sdk, payload.milestone.node_id);
+            const milestone = yield this.queryMilestoneById(payload.milestone.node_id);
             if (milestone.isErr()) {
-                return (0, result_1.actionErr)(milestone.error);
+                return (0, __1.actionErr)(milestone.error);
             }
             const milestoneIssue = yield this.findMilestoneIssueFromMilestone(milestone.value);
             if (milestoneIssue.isErr()) {
-                return (0, result_1.actionErr)(milestoneIssue.error);
+                return (0, __1.actionErr)(milestoneIssue.error);
             }
-            const issue = yield this.updateIssue(sdk, milestoneIssue.value, payload.milestone.title, payload.milestone.state === "open" ? graphql_1.IssueState.Open : graphql_1.IssueState.Closed);
+            const issue = yield this.updateIssue(milestoneIssue.value, payload.milestone.title, payload.milestone.state === "open" ? graphql_1.IssueState.Open : graphql_1.IssueState.Closed);
             if (issue.isErr()) {
-                return (0, result_1.actionErr)(issue.error);
+                return (0, __1.actionErr)(issue.error);
             }
             const items = (_a = issue.value.projectItems.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(item => item === null ? [] : item);
             if (items == undefined || items.length === 0) {
@@ -402,7 +593,7 @@ class SyncMilestoneIssue extends _1.MilestoneAction {
             }
             else {
                 for (const item of items) {
-                    const targetDateResult = yield this.updateTargetDateField(sdk, item, milestone.value);
+                    const targetDateResult = yield this.updateTargetDateField(item, milestone.value);
                     if (targetDateResult.isOk()) {
                         this.notice(`Successfully updated target date field on project(${targetDateResult.value.project.id}).`);
                     }
@@ -411,7 +602,7 @@ class SyncMilestoneIssue extends _1.MilestoneAction {
                     }
                 }
             }
-            return (0, result_1.actionOk)(`MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`);
+            return (0, __1.actionOk)(`MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`);
         });
     }
 }
@@ -450,34 +641,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QueryProject = void 0;
-const triggerable_1 = __nccwpck_require__(4953);
-const result_1 = __nccwpck_require__(4983);
-class QueryProject extends triggerable_1.TriggerableAction {
+const __1 = __nccwpck_require__(9024);
+class QueryProject extends __1.Action {
     constructor() {
         super("pull_request");
     }
     description() {
         return `QueryProject for ${super.description()}`;
     }
-    handle(context, sdk) {
+    handle(context) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
-            const repository = yield this.queryRepositoryById(sdk, payload.repository.node_id);
+            const repository = yield this.queryRepositoryById(payload.repository.node_id);
             if (repository.isErr()) {
-                return (0, result_1.actionErr)(repository.error);
+                return (0, __1.actionErr)(repository.error);
             }
             const nodes = repository.value.projectsV2.nodes;
             if (nodes == undefined) {
-                return (0, result_1.actionErr)("No projectsV2 found.");
+                return (0, __1.actionErr)("No projectsV2 found.");
             }
             const projects = (_a = repository.value.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
             if (projects == undefined || projects.length === 0) {
-                return (0, result_1.actionErr)("No projectsV2 found.");
+                return (0, __1.actionErr)("No projectsV2 found.");
             }
             this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
-            return (0, result_1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
+            return (0, __1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
         });
     }
 }
@@ -506,122 +696,6 @@ function actionErr(message) {
     return (0, neverthrow_1.err)({ type: "Failure", message });
 }
 exports.actionErr = actionErr;
-
-
-/***/ }),
-
-/***/ 4953:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-/* eslint-disable eqeqeq */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TriggerableAction = void 0;
-const neverthrow_1 = __nccwpck_require__(8591);
-const core = __importStar(__nccwpck_require__(2186));
-const result_1 = __nccwpck_require__(4983);
-class TriggerableAction {
-    constructor(name, action) {
-        this.triggerName = name;
-        this.triggerAction = action;
-    }
-    description() {
-        return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
-    }
-    debug(message) {
-        core.debug(message);
-    }
-    notice(message) {
-        core.notice(message, { title: this.description() });
-    }
-    warning(message) {
-        core.warning(message, { title: this.description() });
-    }
-    error(message) {
-        core.error(message, { title: this.description() });
-    }
-    canHandle(name, action) {
-        return (this.triggerName === name &&
-            (this.triggerAction === undefined ||
-                (Array.isArray(this.triggerAction)
-                    ? action === undefined
-                        ? false
-                        : this.triggerAction.includes(action)
-                    : this.triggerAction === action)));
-    }
-    canHandleContext(context) {
-        return this.canHandle(context.eventName, context.payload.action);
-    }
-    handleContext(context, sdk) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.canHandleContext(context)) {
-                return yield this.handle(context, sdk);
-            }
-            else {
-                return (0, result_1.actionSkip)();
-            }
-        });
-    }
-    queryRepositoryById(sdk, repository) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Repository") {
-                return (0, neverthrow_1.err)("No repository found.");
-            }
-            return (0, neverthrow_1.ok)(node);
-        });
-    }
-    queryProjectsByRepositoryId(sdk, repository) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield sdk.queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-            if (node == undefined || node.__typename !== "Repository") {
-                return (0, neverthrow_1.err)("No repository found.");
-            }
-            const projects = (_a = node.projectsV2.nodes) === null || _a === void 0 ? void 0 : _a.flatMap(project => project == null || project.closed ? [] : project);
-            if (projects == undefined || projects.length === 0) {
-                return (0, neverthrow_1.err)("No projects found.");
-            }
-            return (0, neverthrow_1.ok)(projects);
-        });
-    }
-}
-exports.TriggerableAction = TriggerableAction;
 
 
 /***/ }),
@@ -5093,16 +5167,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const graphql_1 = __nccwpck_require__(7064);
 const actions_1 = __nccwpck_require__(9024);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const token = core.getInput("token");
-            const octokit = github.getOctokit(token);
-            const sdk = (0, graphql_1.getSdk)(octokit.graphql);
             const inventory = (0, actions_1.collect)();
-            yield inventory.handleContext(github.context, sdk);
+            yield inventory.handleContext(github.context);
         }
         catch (error) {
             if (error instanceof Error)

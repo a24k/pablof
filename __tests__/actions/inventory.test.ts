@@ -1,11 +1,12 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { ActionInventory, TriggerableAction } from "../../src/actions";
-import type { Context } from "../../src/actions";
+import { ActionInventory } from "../../src/actions/inventory";
+import { TriggerHandler } from "../../src/actions/handler";
+import type { Context } from "../../src/actions/handler";
 import { ActionResult, actionOk } from "../../src/actions/result";
 
 describe("ActionInventory", () => {
-  class TestActionA extends TriggerableAction {
+  class TestActionA extends TriggerHandler {
     constructor() {
       super("nameA", "actionA");
     }
@@ -15,7 +16,7 @@ describe("ActionInventory", () => {
     }
   }
 
-  class TestActionB extends TriggerableAction {
+  class TestActionB extends TriggerHandler {
     constructor() {
       super("nameB", "actionB");
     }
@@ -32,7 +33,7 @@ describe("ActionInventory", () => {
       [2, [new TestActionA(), new TestActionB()]],
     ])(
       "submit %d actions(%p)",
-      (expected: number, actions: TriggerableAction[]) => {
+      (expected: number, actions: TriggerHandler[]) => {
         const inventory = new ActionInventory();
         for (const action of actions) {
           inventory.submit(action);

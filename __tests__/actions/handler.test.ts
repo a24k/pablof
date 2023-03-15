@@ -1,11 +1,11 @@
 import { describe, expect, test } from "@jest/globals";
 
-import { TriggerableAction } from "../../src/actions";
-import type { Context } from "../../src/actions";
+import { TriggerHandler } from "../../src/actions/handler";
+import type { Context } from "../../src/actions/handler";
 import { ActionResult, actionOk } from "../../src/actions/result";
 
-describe("TriggerableAction", () => {
-  class TestAction extends TriggerableAction {
+describe("TriggerHandler", () => {
+  class TestAction extends TriggerHandler {
     constructor(name: string, action?: string | string[]) {
       super(name, action);
     }

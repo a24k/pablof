@@ -2,12 +2,12 @@
 
 import { Result, ok, err } from "neverthrow";
 
-import type { MilestoneEvent } from "@octokit/webhooks-types";
+import { actionOk, actionErr } from "../";
+import type { ActionResult, Context } from "../";
 
-import { ActionResult, actionOk, actionErr } from "../result";
 import { MilestoneAction } from "./";
+import type { MilestoneEvent } from "./";
 
-import type { Context, Sdk } from "../";
 import type {
   MilestonePropsWithRepositoryAndIssuesFragment,
   IssuePropsFragment,
@@ -25,10 +25,9 @@ export class CreateMilestoneIssue extends MilestoneAction {
   }
 
   protected async createIssueWithMilestone(
-    sdk: Sdk,
     milestone: MilestonePropsWithRepositoryAndIssuesFragment
   ): Promise<Result<IssuePropsFragment, string>> {
-    const issue = await sdk.createIssueWithMilestone({
+    const issue = await this.sdk().createIssueWithMilestone({
       repository: milestone.repository.id,
       title: milestone.title,
       body: milestone.description,
@@ -44,7 +43,6 @@ export class CreateMilestoneIssue extends MilestoneAction {
   }
 
   protected async updateStatusField(
-    sdk: Sdk,
     item: ProjectV2ItemPropsFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
     const fields = item.project.fields.nodes?.flatMap(field =>
@@ -64,7 +62,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
       field.options.find(opt => opt.name === "Project") ||
       field.options[0];
 
-    const result = await sdk.updateProjectItemFieldBySingleSelectValue({
+    const result = await this.sdk().updateProjectItemFieldBySingleSelectValue({
       project: item.project.id,
       item: item.id,
       field: field.id,
@@ -88,12 +86,11 @@ export class CreateMilestoneIssue extends MilestoneAction {
   }
 
   protected async addIssueToProject(
-    sdk: Sdk,
     project: ProjectV2PropsFragment,
     issue: IssuePropsFragment,
     milestone: MilestonePropsWithRepositoryAndIssuesFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
-    const item = await sdk.addProjectItem({
+    const item = await this.sdk().addProjectItem({
       project: project.id,
       item: issue.id,
     });
@@ -104,7 +101,6 @@ export class CreateMilestoneIssue extends MilestoneAction {
     }
 
     const statusResult = await this.updateStatusField(
-      sdk,
       item.addProjectV2ItemById.item
     );
     if (statusResult.isOk()) {
@@ -116,7 +112,6 @@ export class CreateMilestoneIssue extends MilestoneAction {
     }
 
     const startDateResult = await this.updateStartDateField(
-      sdk,
       item.addProjectV2ItemById.item,
       milestone
     );
@@ -131,7 +126,6 @@ export class CreateMilestoneIssue extends MilestoneAction {
     }
 
     const targetDateResult = await this.updateTargetDateField(
-      sdk,
       item.addProjectV2ItemById.item,
       milestone
     );
@@ -148,25 +142,21 @@ export class CreateMilestoneIssue extends MilestoneAction {
     return ok(item.addProjectV2ItemById.item);
   }
 
-  protected async handle(context: Context, sdk: Sdk): Promise<ActionResult> {
+  protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
     this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
 
-    const milestone = await this.queryMilestoneById(
-      sdk,
-      payload.milestone.node_id
-    );
+    const milestone = await this.queryMilestoneById(payload.milestone.node_id);
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }
 
-    const issue = await this.createIssueWithMilestone(sdk, milestone.value);
+    const issue = await this.createIssueWithMilestone(milestone.value);
     if (issue.isErr()) {
       return actionErr(issue.error);
     }
 
     const projects = await this.queryProjectsByRepositoryId(
-      sdk,
       milestone.value.repository.id
     );
     if (projects.isErr()) {
@@ -175,7 +165,6 @@ export class CreateMilestoneIssue extends MilestoneAction {
 
     for (const project of projects.value) {
       const item = await this.addIssueToProject(
-        sdk,
         project,
         issue.value,
         milestone.value

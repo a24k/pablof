@@ -1,26 +1,34 @@
-import * as github from "@actions/github";
-
 import type { Sdk } from "../graphql";
 
-import { CreateMilestoneIssue, SyncMilestoneIssue } from "./milestone";
-import { QueryProject } from "./project";
+import { actionOk, actionSkip, actionErr } from "./result";
+import type {
+  ActionResult,
+  ActionOk,
+  ActionErr,
+  ActionSuccess,
+  ActionSkip,
+  ActionFailure,
+} from "./result";
 
-import { ActionInventory } from "./inventory";
-import { ActionResult } from "./result";
-import { TriggerableAction } from "./triggerable";
-export { ActionInventory, ActionResult, TriggerableAction };
+import { collect } from "./collect";
 
-type Context = typeof github.context;
-type ID = string;
+import type { Context } from "./handler";
 
-export type { Context, Sdk, ID };
+import { Action } from "./base";
+import type { ID } from "./base";
 
-export function collect(): ActionInventory {
-  const inventory = new ActionInventory();
+export { actionOk, actionSkip, actionErr, collect };
 
-  inventory.submit(new QueryProject());
-  inventory.submit(new CreateMilestoneIssue());
-  inventory.submit(new SyncMilestoneIssue());
+export { Action };
 
-  return inventory;
-}
+export type {
+  ActionResult,
+  ActionOk,
+  ActionErr,
+  ActionSuccess,
+  ActionSkip,
+  ActionFailure,
+  Context,
+  ID,
+  Sdk,
+};

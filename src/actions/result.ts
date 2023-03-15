@@ -19,6 +19,15 @@ type ActionFailure = {
   message: string;
 };
 
+export type {
+  ActionResult,
+  ActionOk,
+  ActionErr,
+  ActionSuccess,
+  ActionSkip,
+  ActionFailure,
+};
+
 function actionOk(message: string): ActionResult {
   return ok({ type: "Success", message });
 }
@@ -30,14 +39,5 @@ function actionSkip(): ActionResult {
 function actionErr(message: string): ActionResult {
   return err({ type: "Failure", message });
 }
-
-export {
-  ActionResult,
-  ActionOk,
-  ActionErr,
-  ActionSuccess,
-  ActionSkip,
-  ActionFailure,
-};
 
 export { actionOk, actionSkip, actionErr };

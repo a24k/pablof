@@ -1,11 +1,10 @@
-import { TriggerableAction } from "./";
-import type { Context, Sdk } from "./";
-import type { ActionOk, ActionErr } from "./result";
+import { TriggerHandler } from "./handler";
+import type { Context } from "./handler";
 
 export class ActionInventory {
-  protected items: TriggerableAction[] = [];
+  protected items: TriggerHandler[] = [];
 
-  submit(item: TriggerableAction): void {
+  submit(item: TriggerHandler): void {
     this.items.push(item);
   }
 
@@ -13,29 +12,9 @@ export class ActionInventory {
     return this.items.length;
   }
 
-  async handleContext(context: Context, sdk: Sdk): Promise<void> {
+  async handleContext(context: Context): Promise<void> {
     for (const item of this.items) {
-      const title = item.description();
-
-      item.debug(`handleContext on ${title}`);
-
-      const result = await item.handleContext(context, sdk);
-      result.match(
-        (res: ActionOk) => {
-          switch (res.type) {
-            case "Success":
-              item.notice(res.message);
-              break;
-            case "Skip":
-            default:
-              item.debug("skipped");
-              break;
-          }
-        },
-        (err: ActionErr) => {
-          item.error(err.message);
-        }
-      );
+      await item.handleContext(context);
     }
   }
 }
