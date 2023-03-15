@@ -112,6 +112,20 @@ The created Milestone Issue will inherit the `title` and `body` of the Milestone
 | ---         | ---       |
 | `milestone` | `created` |
 
+#### Projects (V2) Support
+
+If you have linked Projects on the Repository,
+this action will add the Milestone Issue to every linked Projects.
+
+##### Status Field
+
+If the Project has a Field named `Status`,
+this action will set the value of `Status` according to following rules in the order written.
+
+1. If the `Status` Field has an Option named `Milestone`, set `Status` to `Milestone`.
+1. If the `Status` Field has an Option named `Project`, set `Status` to `Project`.
+1. Otherwise, set `Status` to first (most left) one.
+
 ### Sync Milestone Issue
 
 Automatically updates the Milestone Issue when a Milestone is updated.
