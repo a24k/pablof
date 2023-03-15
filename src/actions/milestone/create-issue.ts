@@ -43,7 +43,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
     return ok(issue.createIssue.issue);
   }
 
-  protected async initStatusField(
+  protected async updateStatusField(
     sdk: Sdk,
     item: ProjectV2ItemPropsFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
@@ -64,19 +64,65 @@ export class CreateMilestoneIssue extends TriggerableAction {
       field.options.find(opt => opt.name === "Project") ||
       field.options[0];
 
-    const result = await sdk.updateProjectItemSingleSelectField({
+    const result = await sdk.updateProjectItemFieldBySingleSelectValue({
       project: item.project.id,
       item: item.id,
-      field: fields[0].id,
+      field: field.id,
       option: option.id,
     });
     this.debug(
-      `updateProjectItemSingleSelectField = ${JSON.stringify(result, null, 2)}`
+      `updateProjectItemFieldBySingleSelectValue = ${JSON.stringify(
+        result,
+        null,
+        2
+      )}`
     );
 
     if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
       return err(
-        `Fail to update field(${fields[0].name}) with value(${option.name}) on project(${item.project.id}).`
+        `Fail to update field(${field.name}) with value(${option.name}) on project(${item.project.id}).`
+      );
+    }
+
+    return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
+  }
+
+  protected async updateDueDateField(
+    sdk: Sdk,
+    item: ProjectV2ItemPropsFragment,
+    milestone: MilestonePropsFragment
+  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    if (milestone.dueOn == undefined) {
+      return err(`No due date setted on milestone(${milestone.id}).`);
+    }
+
+    const fields = item.project.fields.nodes?.flatMap(field =>
+      field === null ||
+      field.__typename !== "ProjectV2Field" ||
+      field.dataType !== "DATE" ||
+      !field.name.match(/^(Due|End|Finish|Target) [dD]ate$/)
+        ? []
+        : field
+    );
+    if (fields == undefined || fields.length === 0) {
+      return err(`No field for "Due Date" on project(${item.project.id}).`);
+    }
+
+    const field = fields[0];
+
+    const result = await sdk.updateProjectItemFieldByDate({
+      project: item.project.id,
+      item: item.id,
+      field: field.id,
+      date: milestone.dueOn,
+    });
+    this.debug(
+      `updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`
+    );
+
+    if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
+      return err(
+        `Fail to update field(${field.name}) with value(${milestone.dueOn}) on project(${item.project.id}).`
       );
     }
 
@@ -86,7 +132,8 @@ export class CreateMilestoneIssue extends TriggerableAction {
   protected async addIssueToProject(
     sdk: Sdk,
     project: ProjectV2PropsFragment,
-    issue: IssuePropsFragment
+    issue: IssuePropsFragment,
+    milestone: MilestonePropsFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
     const item = await sdk.addProjectItem({
       project: project.id,
@@ -98,7 +145,7 @@ export class CreateMilestoneIssue extends TriggerableAction {
       return err("Fail to add project item.");
     }
 
-    const statusResult = await this.initStatusField(
+    const statusResult = await this.updateStatusField(
       sdk,
       item.addProjectV2ItemById.item
     );
@@ -108,6 +155,19 @@ export class CreateMilestoneIssue extends TriggerableAction {
       );
     } else {
       this.warning(`Failed to update status field: ${statusResult.error}`);
+    }
+
+    const dueDateResult = await this.updateDueDateField(
+      sdk,
+      item.addProjectV2ItemById.item,
+      milestone
+    );
+    if (dueDateResult.isOk()) {
+      this.notice(
+        `Successfully updated due date field on project(${dueDateResult.value.project.id}).`
+      );
+    } else {
+      this.warning(`Failed to update due date field: ${dueDateResult.error}`);
     }
 
     return ok(item.addProjectV2ItemById.item);
@@ -139,7 +199,12 @@ export class CreateMilestoneIssue extends TriggerableAction {
     }
 
     for (const project of projects.value) {
-      const item = await this.addIssueToProject(sdk, project, issue.value);
+      const item = await this.addIssueToProject(
+        sdk,
+        project,
+        issue.value,
+        milestone.value
+      );
       if (item.isOk()) {
         this.notice(
           `Successfully added MilestoneIssue to ProjectV2 {id: ${project.id}, title: ${project.title}}`

@@ -28232,14 +28232,172 @@ export type UpdateIssueMutation = {
   } | null;
 };
 
-export type UpdateProjectItemSingleSelectFieldMutationVariables = Exact<{
+export type UpdateProjectItemFieldByDateMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+  field: Scalars["ID"];
+  date: Scalars["Date"];
+}>;
+
+export type UpdateProjectItemFieldByDateMutation = {
+  readonly __typename?: "Mutation";
+  readonly updateProjectV2ItemFieldValue?: {
+    readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
+    readonly projectV2Item?: {
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly shortDescription?: string | null;
+        readonly readme?: string | null;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: any | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+              readonly milestone?: {
+                readonly __typename: "Milestone";
+                readonly id: string;
+                readonly title: string;
+                readonly description?: string | null;
+                readonly state: MilestoneState;
+                readonly dueOn?: any | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+              readonly repository?: {
+                readonly __typename: "Repository";
+                readonly id: string;
+                readonly name: string;
+                readonly nameWithOwner: string;
+                readonly description?: string | null;
+              } | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename: "ProjectV2Field" }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
+              readonly text?: string | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename: "ProjectV2IterationField" }
+                | { readonly __typename: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
+      };
+    } | null;
+  } | null;
+};
+
+export type UpdateProjectItemFieldBySingleSelectValueMutationVariables = Exact<{
   project: Scalars["ID"];
   item: Scalars["ID"];
   field: Scalars["ID"];
   option: Scalars["String"];
 }>;
 
-export type UpdateProjectItemSingleSelectFieldMutation = {
+export type UpdateProjectItemFieldBySingleSelectValueMutation = {
   readonly __typename?: "Mutation";
   readonly updateProjectV2ItemFieldValue?: {
     readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
@@ -28981,8 +29139,19 @@ export const UpdateIssueDocument = `
   }
 }
     ${IssuePropsFragmentDoc}`;
-export const UpdateProjectItemSingleSelectFieldDocument = `
-    mutation updateProjectItemSingleSelectField($project: ID!, $item: ID!, $field: ID!, $option: String!) {
+export const UpdateProjectItemFieldByDateDocument = `
+    mutation updateProjectItemFieldByDate($project: ID!, $item: ID!, $field: ID!, $date: Date!) {
+  updateProjectV2ItemFieldValue(
+    input: {projectId: $project, itemId: $item, fieldId: $field, value: {date: $date}}
+  ) {
+    projectV2Item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${ProjectV2ItemPropsFragmentDoc}`;
+export const UpdateProjectItemFieldBySingleSelectValueDocument = `
+    mutation updateProjectItemFieldBySingleSelectValue($project: ID!, $item: ID!, $field: ID!, $option: String!) {
   updateProjectV2ItemFieldValue(
     input: {projectId: $project, itemId: $item, fieldId: $field, value: {singleSelectOptionId: $option}}
   ) {
@@ -29076,18 +29245,31 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         options
       ) as Promise<UpdateIssueMutation>;
     },
-    updateProjectItemSingleSelectField(
-      variables: UpdateProjectItemSingleSelectFieldMutationVariables,
+    updateProjectItemFieldByDate(
+      variables: UpdateProjectItemFieldByDateMutationVariables,
       options?: C
-    ): Promise<UpdateProjectItemSingleSelectFieldMutation> {
+    ): Promise<UpdateProjectItemFieldByDateMutation> {
       return requester<
-        UpdateProjectItemSingleSelectFieldMutation,
-        UpdateProjectItemSingleSelectFieldMutationVariables
+        UpdateProjectItemFieldByDateMutation,
+        UpdateProjectItemFieldByDateMutationVariables
       >(
-        UpdateProjectItemSingleSelectFieldDocument,
+        UpdateProjectItemFieldByDateDocument,
         variables,
         options
-      ) as Promise<UpdateProjectItemSingleSelectFieldMutation>;
+      ) as Promise<UpdateProjectItemFieldByDateMutation>;
+    },
+    updateProjectItemFieldBySingleSelectValue(
+      variables: UpdateProjectItemFieldBySingleSelectValueMutationVariables,
+      options?: C
+    ): Promise<UpdateProjectItemFieldBySingleSelectValueMutation> {
+      return requester<
+        UpdateProjectItemFieldBySingleSelectValueMutation,
+        UpdateProjectItemFieldBySingleSelectValueMutationVariables
+      >(
+        UpdateProjectItemFieldBySingleSelectValueDocument,
+        variables,
+        options
+      ) as Promise<UpdateProjectItemFieldBySingleSelectValueMutation>;
     },
     queryNode(
       variables: QueryNodeQueryVariables,
