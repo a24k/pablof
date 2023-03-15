@@ -149,3 +149,13 @@ The updated Milestone Issue will have the same `title` and `state` as the Milest
 | ---         | ---       |
 | `milestone` | `edited` `closed` `opened` |
 
+#### Projects (V2) Support
+
+If you have linked Items on the Milestone Issue,
+this action will update Items linked with Projects.
+
+##### Target Date Field
+
+If the Project has a Field name matched with `/^(Due|End|Finish|Target) [dD]ate$/`,
+this action will set the field value to `dueOn` of Milestone.
+Only affects for the first Field matched.
