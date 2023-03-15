@@ -1,9 +1,9 @@
 /* eslint-disable eqeqeq */
 
+import type { PullRequestEvent } from "@octokit/webhooks-types";
+
 import { Action, actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
-
-import type { PullRequestEvent } from "./";
 
 export class QueryProject extends Action {
   constructor() {

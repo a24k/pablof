@@ -2,11 +2,12 @@
 
 import { Result, ok, err } from "neverthrow";
 
+import type { MilestoneEvent } from "@octokit/webhooks-types";
+
 import { actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
 
 import { MilestoneAction } from "./";
-import type { MilestoneEvent } from "./";
 
 import { IssueState } from "../../graphql";
 import type {
