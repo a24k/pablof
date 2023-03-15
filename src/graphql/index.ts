@@ -27884,12 +27884,14 @@ export type ProjectV2ItemPropsFragment = {
       readonly nodes?: ReadonlyArray<
         | {
             readonly __typename: "ProjectV2Field";
+            readonly id: string;
             readonly name: string;
             readonly dataType: ProjectV2FieldType;
           }
         | { readonly __typename: "ProjectV2IterationField" }
         | {
             readonly __typename: "ProjectV2SingleSelectField";
+            readonly id: string;
             readonly name: string;
             readonly options: ReadonlyArray<{
               readonly __typename?: "ProjectV2SingleSelectFieldOption";
@@ -27950,6 +27952,7 @@ export type ProjectV2ItemPropsFragment = {
       | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
       | {
           readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+          readonly id: string;
           readonly name?: string | null;
           readonly optionId?: string | null;
           readonly field:
@@ -27967,6 +27970,7 @@ export type ProjectV2ItemPropsFragment = {
         }
       | {
           readonly __typename: "ProjectV2ItemFieldTextValue";
+          readonly id: string;
           readonly text?: string | null;
           readonly field:
             | {
@@ -28010,12 +28014,14 @@ export type AddProjectItemMutation = {
           readonly nodes?: ReadonlyArray<
             | {
                 readonly __typename: "ProjectV2Field";
+                readonly id: string;
                 readonly name: string;
                 readonly dataType: ProjectV2FieldType;
               }
             | { readonly __typename: "ProjectV2IterationField" }
             | {
                 readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
                 readonly name: string;
                 readonly options: ReadonlyArray<{
                   readonly __typename?: "ProjectV2SingleSelectFieldOption";
@@ -28076,6 +28082,7 @@ export type AddProjectItemMutation = {
           | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
           | {
               readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
               readonly name?: string | null;
               readonly optionId?: string | null;
               readonly field:
@@ -28093,6 +28100,7 @@ export type AddProjectItemMutation = {
             }
           | {
               readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
               readonly text?: string | null;
               readonly field:
                 | {
@@ -28205,12 +28213,14 @@ export type UpdateProjectItemSingleSelectFieldMutation = {
           readonly nodes?: ReadonlyArray<
             | {
                 readonly __typename: "ProjectV2Field";
+                readonly id: string;
                 readonly name: string;
                 readonly dataType: ProjectV2FieldType;
               }
             | { readonly __typename: "ProjectV2IterationField" }
             | {
                 readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
                 readonly name: string;
                 readonly options: ReadonlyArray<{
                   readonly __typename?: "ProjectV2SingleSelectFieldOption";
@@ -28271,6 +28281,7 @@ export type UpdateProjectItemSingleSelectFieldMutation = {
           | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
           | {
               readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
               readonly name?: string | null;
               readonly optionId?: string | null;
               readonly field:
@@ -28288,6 +28299,7 @@ export type UpdateProjectItemSingleSelectFieldMutation = {
             }
           | {
               readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
               readonly text?: string | null;
               readonly field:
                 | {
@@ -28764,10 +28776,12 @@ export const ProjectV2ItemPropsFragmentDoc = `
       nodes {
         __typename
         ... on ProjectV2Field {
+          id
           name
           dataType
         }
         ... on ProjectV2SingleSelectField {
+          id
           name
           options {
             id
@@ -28815,6 +28829,7 @@ export const ProjectV2ItemPropsFragmentDoc = `
         }
       }
       ... on ProjectV2ItemFieldTextValue {
+        id
         text
         field {
           __typename
@@ -28825,6 +28840,7 @@ export const ProjectV2ItemPropsFragmentDoc = `
         }
       }
       ... on ProjectV2ItemFieldSingleSelectValue {
+        id
         name
         optionId
         field {

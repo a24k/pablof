@@ -58,6 +58,27 @@ export class CreateMilestoneIssue extends TriggerableAction {
       return err("Fail to add project item.");
     }
 
+    const fields = item.addProjectV2ItemById.item.project.fields.nodes?.flatMap(
+      field =>
+        field === null ||
+        field.__typename !== "ProjectV2SingleSelectField" ||
+        field.name !== "Status"
+          ? []
+          : field
+    );
+    if (fields == undefined || fields.length === 0) {
+      this.debug(
+        `No field named "Status" on project(${item.addProjectV2ItemById.item.project.id}).`
+      );
+    } /*else {
+      const option =
+        fields[0].options.find(option => option.name === "Milestone") ||
+        fields[0].options.find(option => option.name === "Project") ||
+        fields[0].options[0];
+
+      //await sdk.updateProjectItemSingleSelectField(project.id, item.addProjectV2ItemById.item.id,
+    }*/
+
     return ok(item.addProjectV2ItemById.item);
   }
 

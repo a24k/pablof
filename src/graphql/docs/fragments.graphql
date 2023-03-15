@@ -54,8 +54,8 @@ fragment ProjectV2ItemProps on ProjectV2Item {
       totalCount
       nodes {
         __typename
-        ... on ProjectV2Field { name dataType }
-        ... on ProjectV2SingleSelectField { name options { id name } }
+        ... on ProjectV2Field { id name dataType }
+        ... on ProjectV2SingleSelectField { id name options { id name } }
       }
     }
   }
@@ -72,11 +72,11 @@ fragment ProjectV2ItemProps on ProjectV2Item {
         field { __typename ... on ProjectV2Field { name dataType } }
       }
       ... on ProjectV2ItemFieldTextValue {
-        text
+        id text
         field { __typename ... on ProjectV2Field { name dataType } }
       }
       ... on ProjectV2ItemFieldSingleSelectValue {
-        name optionId
+        id name optionId
         field { __typename ... on ProjectV2SingleSelectField { name options { id name } } }
       }
     }
