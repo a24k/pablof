@@ -43,6 +43,46 @@ export class CreateMilestoneIssue extends TriggerableAction {
     return ok(issue.createIssue.issue);
   }
 
+  protected async initStatusField(
+    sdk: Sdk,
+    item: ProjectV2ItemPropsFragment
+  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    const fields = item.project.fields.nodes?.flatMap(field =>
+      field === null ||
+      field.__typename !== "ProjectV2SingleSelectField" ||
+      field.name !== "Status"
+        ? []
+        : field
+    );
+    if (fields == undefined || fields.length === 0) {
+      return err(`No field named "Status" on project(${item.project.id}).`);
+    }
+
+    const field = fields[0];
+    const option =
+      field.options.find(opt => opt.name === "Milestone") ||
+      field.options.find(opt => opt.name === "Project") ||
+      field.options[0];
+
+    const result = await sdk.updateProjectItemSingleSelectField({
+      project: item.project.id,
+      item: item.id,
+      field: fields[0].id,
+      option: option.id,
+    });
+    this.debug(
+      `updateProjectItemSingleSelectField = ${JSON.stringify(result, null, 2)}`
+    );
+
+    if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
+      return err(
+        `Fail to update field(${fields[0].name}) with value(${option.name}) on project(${item.project.id}).`
+      );
+    }
+
+    return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
+  }
+
   protected async addIssueToProject(
     sdk: Sdk,
     project: ProjectV2PropsFragment,
@@ -58,49 +98,16 @@ export class CreateMilestoneIssue extends TriggerableAction {
       return err("Fail to add project item.");
     }
 
-    const fields = item.addProjectV2ItemById.item.project.fields.nodes?.flatMap(
-      field =>
-        field === null ||
-        field.__typename !== "ProjectV2SingleSelectField" ||
-        field.name !== "Status"
-          ? []
-          : field
+    const statusResult = await this.initStatusField(
+      sdk,
+      item.addProjectV2ItemById.item
     );
-    if (fields == undefined || fields.length === 0) {
-      this.warning(
-        `No field named "Status" on project(${item.addProjectV2ItemById.item.project.id}).`
+    if (statusResult.isOk()) {
+      this.notice(
+        `Successfully updated status field on project(${statusResult.value.project.id}).`
       );
     } else {
-      const option =
-        fields[0].options.find(opt => opt.name === "Milestone") ||
-        fields[0].options.find(opt => opt.name === "Project") ||
-        fields[0].options[0];
-
-      const result = await sdk.updateProjectItemSingleSelectField({
-        project: project.id,
-        item: item.addProjectV2ItemById.item.id,
-        field: fields[0].id,
-        option: option.id,
-      });
-      this.debug(
-        `updateProjectItemSingleSelectField = ${JSON.stringify(
-          result,
-          null,
-          2
-        )}`
-      );
-
-      if (
-        result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined
-      ) {
-        this.warning(
-          `Fail to update field(${fields[0].name}) with value(${option.name}) on project(${item.addProjectV2ItemById.item.project.id}).`
-        );
-      }
-
-      this.warning(
-        `Successfully updated field(${fields[0].name}) with value(${option.name}) on project(${item.addProjectV2ItemById.item.project.id}).`
-      );
+      this.warning(`Failed to update status field: ${statusResult.error}`);
     }
 
     return ok(item.addProjectV2ItemById.item);
