@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-dist:
+  checkdist:
     runs-on: ubuntu-latest
 
     steps:
