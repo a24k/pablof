@@ -1,6 +1,6 @@
-[![build-test](https://github.com/a24k/pablof/actions/workflows/test.yml/badge.svg)](https://github.com/a24k/pablof/actions/workflows/test.yml)
-[![Check dist/](https://github.com/a24k/pablof/actions/workflows/check-dist.yml/badge.svg)](https://github.com/a24k/pablof/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/a24k/pablof/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/a24k/pablof/actions/workflows/codeql-analysis.yml)
+[![Build & Test](https://github.com/a24k/pablof/actions/workflows/ci.yml/badge.svg)](https://github.com/a24k/pablof/actions/workflows/ci.yml)
+[![Check & Test Flight](https://github.com/a24k/pablof/actions/workflows/dist.yml/badge.svg)](https://github.com/a24k/pablof/actions/workflows/dist.yml)
+[![CodeQL](https://github.com/a24k/pablof/actions/workflows/codeql.yml/badge.svg)](https://github.com/a24k/pablof/actions/workflows/codeql.yml)
 
 # About
 
