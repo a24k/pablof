@@ -31,7 +31,7 @@ export abstract class Action extends TriggerHandler {
     repository: ID
   ): Promise<Result<RepositoryPropsFragment, string>> {
     const node = (await this.sdk().queryNode({ id: repository })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+    this.dump(node, "queryNode");
 
     if (node == undefined || node.__typename !== "Repository") {
       return err("No repository found.");
@@ -44,8 +44,6 @@ export abstract class Action extends TriggerHandler {
     repository: ID
   ): Promise<Result<ProjectV2PropsFragment[], string>> {
     const node = (await this.sdk().queryNode({ id: repository })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
-
     if (node == undefined || node.__typename !== "Repository") {
       return err("No repository found.");
     }

@@ -22,6 +22,13 @@ export abstract class TriggerHandler {
     }`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dump(object: any, name = "object"): void {
+    core.startGroup(name);
+    this.debug(JSON.stringify(object, null, 2));
+    core.endGroup();
+  }
+
   debug(message: string): void {
     core.debug(message);
   }

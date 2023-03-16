@@ -34,7 +34,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
       body: milestone.description,
       milestone: milestone.id,
     });
-    this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+    this.dump(issue, "createIssueWithMilestone");
 
     if (issue.createIssue?.issue?.id == undefined) {
       return err("Fail to create issue.");
@@ -69,13 +69,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
       field: field.id,
       option: option.id,
     });
-    this.debug(
-      `updateProjectItemFieldBySingleSelectValue = ${JSON.stringify(
-        result,
-        null,
-        2
-      )}`
-    );
+    this.dump(result, "updateProjectItemFieldBySingleSelectValue");
 
     if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
       return err(
@@ -95,7 +89,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
       project: project.id,
       item: issue.id,
     });
-    this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
+    this.dump(item, "addItemToProject");
 
     if (item.addProjectV2ItemById?.item?.id == undefined) {
       return err("Fail to add project item.");
@@ -145,7 +139,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
 
   protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as MilestoneEvent;
-    this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.dump(payload, "payload");
 
     const milestone = await this.queryMilestoneById(payload.milestone.node_id);
     if (milestone.isErr()) {

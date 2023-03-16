@@ -53,7 +53,7 @@ class Action extends handler_1.TriggerHandler {
     queryRepositoryById(repository) {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield this.sdk().queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.dump(node, "queryNode");
             if (node == undefined || node.__typename !== "Repository") {
                 return (0, neverthrow_1.err)("No repository found.");
             }
@@ -64,7 +64,6 @@ class Action extends handler_1.TriggerHandler {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield this.sdk().queryNode({ id: repository })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
             if (node == undefined || node.__typename !== "Repository") {
                 return (0, neverthrow_1.err)("No repository found.");
             }
@@ -152,6 +151,12 @@ class TriggerHandler {
     }
     description() {
         return `${this.triggerName}${this.triggerAction === undefined ? "" : `-${this.triggerAction}`}`;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dump(object, name = "object") {
+        core.startGroup(name);
+        this.debug(JSON.stringify(object, null, 2));
+        core.endGroup();
     }
     debug(message) {
         core.debug(message);
@@ -288,7 +293,7 @@ class MilestoneAction extends base_1.Action {
     queryMilestoneById(milestone) {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield this.sdk().queryNode({ id: milestone })).node;
-            this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+            this.dump(node, "queryNode");
             if (node == undefined || node.__typename !== "Milestone") {
                 return (0, neverthrow_1.err)("No milestone found.");
             }
@@ -303,7 +308,7 @@ class MilestoneAction extends base_1.Action {
                 return (0, neverthrow_1.err)("No milestone issue found.");
             }
             const root = roots[0];
-            this.debug(`foundMilestoneIssue = ${JSON.stringify(root, null, 2)}`);
+            this.dump(root, "foundMilestoneIssue");
             return (0, neverthrow_1.ok)(root);
         });
     }
@@ -326,7 +331,7 @@ class MilestoneAction extends base_1.Action {
                 field: field.id,
                 date: milestone.createdAt,
             });
-            this.debug(`updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`);
+            this.dump(result, "updateProjectItemFieldByDate");
             if (((_c = (_b = result.updateProjectV2ItemFieldValue) === null || _b === void 0 ? void 0 : _b.projectV2Item) === null || _c === void 0 ? void 0 : _c.id) == undefined) {
                 return (0, neverthrow_1.err)(`Fail to update field(${field.name}) with value(${milestone.createdAt}) on project(${item.project.id}).`);
             }
@@ -355,7 +360,7 @@ class MilestoneAction extends base_1.Action {
                 field: field.id,
                 date: milestone.dueOn,
             });
-            this.debug(`updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`);
+            this.dump(result, "updateProjectItemFieldByDate");
             if (((_c = (_b = result.updateProjectV2ItemFieldValue) === null || _b === void 0 ? void 0 : _b.projectV2Item) === null || _c === void 0 ? void 0 : _c.id) == undefined) {
                 return (0, neverthrow_1.err)(`Fail to update field(${field.name}) with value(${milestone.dueOn}) on project(${item.project.id}).`);
             }
@@ -404,7 +409,7 @@ class CreateMilestoneIssue extends base_1.MilestoneAction {
                 body: milestone.description,
                 milestone: milestone.id,
             });
-            this.debug(`createIssueWithMilestone = ${JSON.stringify(issue, null, 2)}`);
+            this.dump(issue, "createIssueWithMilestone");
             if (((_b = (_a = issue.createIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to create issue.");
             }
@@ -432,7 +437,7 @@ class CreateMilestoneIssue extends base_1.MilestoneAction {
                 field: field.id,
                 option: option.id,
             });
-            this.debug(`updateProjectItemFieldBySingleSelectValue = ${JSON.stringify(result, null, 2)}`);
+            this.dump(result, "updateProjectItemFieldBySingleSelectValue");
             if (((_c = (_b = result.updateProjectV2ItemFieldValue) === null || _b === void 0 ? void 0 : _b.projectV2Item) === null || _c === void 0 ? void 0 : _c.id) == undefined) {
                 return (0, neverthrow_1.err)(`Fail to update field(${field.name}) with value(${option.name}) on project(${item.project.id}).`);
             }
@@ -446,7 +451,7 @@ class CreateMilestoneIssue extends base_1.MilestoneAction {
                 project: project.id,
                 item: issue.id,
             });
-            this.debug(`addItemToProject = ${JSON.stringify(item, null, 2)}`);
+            this.dump(item, "addItemToProject");
             if (((_b = (_a = item.addProjectV2ItemById) === null || _a === void 0 ? void 0 : _a.item) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to add project item.");
             }
@@ -477,7 +482,7 @@ class CreateMilestoneIssue extends base_1.MilestoneAction {
     handle(context) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.dump(payload, "payload");
             const milestone = yield this.queryMilestoneById(payload.milestone.node_id);
             if (milestone.isErr()) {
                 return (0, __1.actionErr)(milestone.error);
@@ -559,7 +564,7 @@ class SyncMilestoneIssue extends base_1.MilestoneAction {
                 title,
                 state,
             });
-            this.debug(`updateIssue = ${JSON.stringify(result, null, 2)}`);
+            this.dump(result, "updateIssue");
             if (((_b = (_a = result.updateIssue) === null || _a === void 0 ? void 0 : _a.issue) === null || _b === void 0 ? void 0 : _b.id) == undefined) {
                 return (0, neverthrow_1.err)("Fail to update issue.");
             }
@@ -570,7 +575,7 @@ class SyncMilestoneIssue extends base_1.MilestoneAction {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.dump(payload, "payload");
             const milestone = yield this.queryMilestoneById(payload.milestone.node_id);
             if (milestone.isErr()) {
                 return (0, __1.actionErr)(milestone.error);
@@ -650,7 +655,7 @@ class QueryProject extends base_1.Action {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
-            this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+            this.dump(payload, "payload");
             const repository = yield this.queryRepositoryById(payload.repository.node_id);
             if (repository.isErr()) {
                 return (0, __1.actionErr)(repository.error);
@@ -663,7 +668,7 @@ class QueryProject extends base_1.Action {
             if (projects == undefined || projects.length === 0) {
                 return (0, __1.actionErr)("No projectsV2 found.");
             }
-            this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
+            this.dump(projects, "foundProjectV2");
             return (0, __1.actionOk)(`Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`);
         });
     }

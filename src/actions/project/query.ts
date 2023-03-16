@@ -17,7 +17,7 @@ export class QueryProject extends Action {
 
   protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as PullRequestEvent;
-    this.debug(`payload = ${JSON.stringify(payload, null, 2)}`);
+    this.dump(payload, "payload");
 
     const repository = await this.queryRepositoryById(
       payload.repository.node_id
@@ -37,7 +37,7 @@ export class QueryProject extends Action {
     if (projects == undefined || projects.length === 0) {
       return actionErr("No projectsV2 found.");
     }
-    this.debug(`foundProjectV2 = ${JSON.stringify(projects, null, 2)}`);
+    this.dump(projects, "foundProjectV2");
 
     return actionOk(
       `Project queried {id: ${projects[0].id}, title: ${projects[0].title}}`

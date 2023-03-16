@@ -17,7 +17,7 @@ export abstract class MilestoneAction extends Action {
     milestone: ID
   ): Promise<Result<MilestonePropsWithRepositoryAndIssuesFragment, string>> {
     const node = (await this.sdk().queryNode({ id: milestone })).node;
-    this.debug(`queryNode = ${JSON.stringify(node, null, 2)}`);
+    this.dump(node, "queryNode");
 
     if (node == undefined || node.__typename !== "Milestone") {
       return err("No milestone found.");
@@ -37,7 +37,7 @@ export abstract class MilestoneAction extends Action {
     }
 
     const root = roots[0];
-    this.debug(`foundMilestoneIssue = ${JSON.stringify(root, null, 2)}`);
+    this.dump(root, "foundMilestoneIssue");
 
     return ok(root);
   }
@@ -66,9 +66,7 @@ export abstract class MilestoneAction extends Action {
       field: field.id,
       date: milestone.createdAt,
     });
-    this.debug(
-      `updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`
-    );
+    this.dump(result, "updateProjectItemFieldByDate");
 
     if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
       return err(
@@ -107,9 +105,7 @@ export abstract class MilestoneAction extends Action {
       field: field.id,
       date: milestone.dueOn,
     });
-    this.debug(
-      `updateProjectItemFieldByDate = ${JSON.stringify(result, null, 2)}`
-    );
+    this.dump(result, "updateProjectItemFieldByDate");
 
     if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
       return err(
