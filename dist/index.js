@@ -91,11 +91,13 @@ exports.collect = void 0;
 const inventory_1 = __nccwpck_require__(6253);
 const project_1 = __nccwpck_require__(9534);
 const milestone_1 = __nccwpck_require__(5674);
+const issue_1 = __nccwpck_require__(4280);
 function collect() {
     const inventory = new inventory_1.ActionInventory();
     inventory.submit(new project_1.QueryProject());
     inventory.submit(new milestone_1.CreateMilestoneIssue());
     inventory.submit(new milestone_1.SyncMilestoneIssue());
+    inventory.submit(new issue_1.DeriveIssue());
     return inventory;
 }
 exports.collect = collect;
@@ -266,6 +268,97 @@ class ActionInventory {
     }
 }
 exports.ActionInventory = ActionInventory;
+
+
+/***/ }),
+
+/***/ 9605:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+/* eslint-disable eqeqeq */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IssueAction = void 0;
+const neverthrow_1 = __nccwpck_require__(8591);
+const base_1 = __nccwpck_require__(8460);
+class IssueAction extends base_1.Action {
+    queryIssueById(issue) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const node = (yield this.sdk().queryNode({ id: issue })).node;
+            this.dump(node, "queryNode");
+            if (node == undefined || node.__typename !== "Issue") {
+                return (0, neverthrow_1.err)("No milestone found.");
+            }
+            return (0, neverthrow_1.ok)(node);
+        });
+    }
+}
+exports.IssueAction = IssueAction;
+
+
+/***/ }),
+
+/***/ 217:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeriveIssue = void 0;
+const __1 = __nccwpck_require__(9024);
+const base_1 = __nccwpck_require__(9605);
+class DeriveIssue extends base_1.IssueAction {
+    constructor() {
+        super("issues", "opened");
+    }
+    description() {
+        return `DeriveIssue for ${super.description()}`;
+    }
+    handle(context) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = context.payload;
+            this.dump(payload, "payload");
+            const issue = yield this.queryIssueById(payload.issue.node_id);
+            if (issue.isErr()) {
+                return (0, __1.actionErr)(issue.error);
+            }
+            return (0, __1.actionErr)("Not implemented.");
+        });
+    }
+}
+exports.DeriveIssue = DeriveIssue;
+
+
+/***/ }),
+
+/***/ 4280:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeriveIssue = void 0;
+const derive_issue_1 = __nccwpck_require__(217);
+Object.defineProperty(exports, "DeriveIssue", ({ enumerable: true, get: function () { return derive_issue_1.DeriveIssue; } }));
 
 
 /***/ }),
