@@ -3767,7 +3767,27 @@ exports.IssuePropsWithTrackedInIssuesFragmentDoc = `
     totalCount
     nodes {
       __typename
-      ...IssueProps
+      id
+      title
+      body
+      issueState: state
+      createdAt
+      updatedAt
+      closedAt
+      trackedInIssues(first: 1) {
+        totalCount
+      }
+      milestone {
+        __typename
+        id
+        title
+        description
+        milestoneState: state
+        dueOn
+        createdAt
+        updatedAt
+        closedAt
+      }
     }
   }
   milestone {
@@ -3782,7 +3802,7 @@ exports.IssuePropsWithTrackedInIssuesFragmentDoc = `
     closedAt
   }
 }
-    ${exports.IssuePropsFragmentDoc}`;
+    `;
 exports.IssuePropsWithItemsFragmentDoc = `
     fragment IssuePropsWithItems on Issue {
   __typename

@@ -28,7 +28,12 @@ fragment IssuePropsWithTrackedInIssues on Issue {
     totalCount
     nodes {
       __typename
-      ...IssueProps
+      id title body issueState: state createdAt updatedAt closedAt
+      trackedInIssues(first: 1) { totalCount }
+      milestone {
+        __typename
+        id title description milestoneState: state dueOn createdAt updatedAt closedAt
+      }
     }
   }
   milestone {
