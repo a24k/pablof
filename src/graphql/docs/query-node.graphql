@@ -4,5 +4,6 @@ query queryNode($id: ID!) {
     ...RepositoryProps
     ...MilestonePropsWithRepositoryAndIssues
     ...ProjectV2Props
+    ...IssueProps
   }
 }

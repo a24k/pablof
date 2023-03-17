@@ -92,7 +92,7 @@ export class SyncMilestoneIssue extends MilestoneAction {
     }
 
     return actionOk(
-      `MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`
+      `MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.issueState}}`
     );
   }
 }

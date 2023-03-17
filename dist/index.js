@@ -603,7 +603,7 @@ class SyncMilestoneIssue extends base_1.MilestoneAction {
                     }
                 }
             }
-            return (0, __1.actionOk)(`MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.state}}`);
+            return (0, __1.actionOk)(`MilestoneIssue updated {id: ${issue.value.id}, title: ${issue.value.title}, state: ${issue.value.issueState}}`);
         });
     }
 }
@@ -3640,7 +3640,7 @@ exports.IssuePropsFragmentDoc = `
   id
   title
   body
-  state
+  issueState: state
   createdAt
   updatedAt
   closedAt
@@ -3652,7 +3652,7 @@ exports.IssuePropsFragmentDoc = `
     id
     title
     description
-    state
+    milestoneState: state
     dueOn
     createdAt
     updatedAt
@@ -3666,7 +3666,7 @@ exports.IssuePropsWithItemsFragmentDoc = `
   id
   title
   body
-  state
+  issueState: state
   createdAt
   updatedAt
   closedAt
@@ -3678,7 +3678,7 @@ exports.IssuePropsWithItemsFragmentDoc = `
     id
     title
     description
-    state
+    milestoneState: state
     dueOn
     createdAt
     updatedAt
@@ -3744,7 +3744,7 @@ exports.IssuePropsWithItemsFragmentDoc = `
               id
               title
               description
-              state
+              milestoneState: state
               dueOn
               createdAt
               updatedAt
@@ -3818,7 +3818,7 @@ exports.MilestonePropsFragmentDoc = `
   id
   title
   description
-  state
+  milestoneState: state
   dueOn
   createdAt
   updatedAt
@@ -3831,7 +3831,7 @@ exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
   id
   title
   description
-  state
+  milestoneState: state
   dueOn
   createdAt
   updatedAt
@@ -3853,7 +3853,7 @@ exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
       id
       title
       body
-      state
+      issueState: state
       createdAt
       updatedAt
       closedAt
@@ -3933,7 +3933,7 @@ exports.ProjectV2ItemPropsFragmentDoc = `
           id
           title
           description
-          state
+          milestoneState: state
           dueOn
           createdAt
           updatedAt
@@ -4057,11 +4057,13 @@ exports.QueryNodeDocument = `
     ...RepositoryProps
     ...MilestonePropsWithRepositoryAndIssues
     ...ProjectV2Props
+    ...IssueProps
   }
 }
     ${exports.RepositoryPropsFragmentDoc}
 ${exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc}
-${exports.ProjectV2PropsFragmentDoc}`;
+${exports.ProjectV2PropsFragmentDoc}
+${exports.IssuePropsFragmentDoc}`;
 exports.QueryProjectFieldsDocument = `
     query queryProjectFields($owner: String!, $number: Int!) {
   user(login: $owner) {
