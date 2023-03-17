@@ -27974,6 +27974,57 @@ export type IssuePropsFragment = {
   } | null;
 };
 
+export type IssuePropsWithTrackedInIssuesFragment = {
+  readonly __typename: "Issue";
+  readonly id: string;
+  readonly title: string;
+  readonly body: string;
+  readonly createdAt: any;
+  readonly updatedAt: any;
+  readonly closedAt?: any | null;
+  readonly issueState: IssueState;
+  readonly trackedInIssues: {
+    readonly __typename?: "IssueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "Issue";
+      readonly id: string;
+      readonly title: string;
+      readonly body: string;
+      readonly createdAt: any;
+      readonly updatedAt: any;
+      readonly closedAt?: any | null;
+      readonly issueState: IssueState;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
+      readonly milestone?: {
+        readonly __typename: "Milestone";
+        readonly id: string;
+        readonly title: string;
+        readonly description?: string | null;
+        readonly dueOn?: any | null;
+        readonly createdAt: any;
+        readonly updatedAt: any;
+        readonly closedAt?: any | null;
+        readonly milestoneState: MilestoneState;
+      } | null;
+    } | null> | null;
+  };
+  readonly milestone?: {
+    readonly __typename: "Milestone";
+    readonly id: string;
+    readonly title: string;
+    readonly description?: string | null;
+    readonly dueOn?: any | null;
+    readonly createdAt: any;
+    readonly updatedAt: any;
+    readonly closedAt?: any | null;
+    readonly milestoneState: MilestoneState;
+  } | null;
+};
+
 export type IssuePropsWithItemsFragment = {
   readonly __typename: "Issue";
   readonly id: string;
@@ -29152,6 +29203,31 @@ export type QueryNodeQuery = {
         readonly trackedInIssues: {
           readonly __typename?: "IssueConnection";
           readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<{
+            readonly __typename: "Issue";
+            readonly id: string;
+            readonly title: string;
+            readonly body: string;
+            readonly createdAt: any;
+            readonly updatedAt: any;
+            readonly closedAt?: any | null;
+            readonly issueState: IssueState;
+            readonly trackedInIssues: {
+              readonly __typename?: "IssueConnection";
+              readonly totalCount: number;
+            };
+            readonly milestone?: {
+              readonly __typename: "Milestone";
+              readonly id: string;
+              readonly title: string;
+              readonly description?: string | null;
+              readonly dueOn?: any | null;
+              readonly createdAt: any;
+              readonly updatedAt: any;
+              readonly closedAt?: any | null;
+              readonly milestoneState: MilestoneState;
+            } | null;
+          } | null> | null;
         };
         readonly milestone?: {
           readonly __typename: "Milestone";
@@ -29502,6 +29578,36 @@ export const IssuePropsFragmentDoc = `
   }
 }
     `;
+export const IssuePropsWithTrackedInIssuesFragmentDoc = `
+    fragment IssuePropsWithTrackedInIssues on Issue {
+  __typename
+  id
+  title
+  body
+  issueState: state
+  createdAt
+  updatedAt
+  closedAt
+  trackedInIssues(first: 100) {
+    totalCount
+    nodes {
+      __typename
+      ...IssueProps
+    }
+  }
+  milestone {
+    __typename
+    id
+    title
+    description
+    milestoneState: state
+    dueOn
+    createdAt
+    updatedAt
+    closedAt
+  }
+}
+    ${IssuePropsFragmentDoc}`;
 export const IssuePropsWithItemsFragmentDoc = `
     fragment IssuePropsWithItems on Issue {
   __typename
@@ -29899,13 +30005,13 @@ export const QueryNodeDocument = `
     ...RepositoryProps
     ...MilestonePropsWithRepositoryAndIssues
     ...ProjectV2Props
-    ...IssueProps
+    ...IssuePropsWithTrackedInIssues
   }
 }
     ${RepositoryPropsFragmentDoc}
 ${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
 ${ProjectV2PropsFragmentDoc}
-${IssuePropsFragmentDoc}`;
+${IssuePropsWithTrackedInIssuesFragmentDoc}`;
 export const QueryProjectFieldsDocument = `
     query queryProjectFields($owner: String!, $number: Int!) {
   user(login: $owner) {

@@ -5,12 +5,12 @@ import { Result, ok, err } from "neverthrow";
 import { Action } from "../base";
 import type { ID } from "../";
 
-import type { IssuePropsFragment } from "../../graphql";
+import type { IssuePropsWithTrackedInIssuesFragment } from "../../graphql";
 
 export abstract class IssueAction extends Action {
   protected async queryIssueById(
     issue: ID
-  ): Promise<Result<IssuePropsFragment, string>> {
+  ): Promise<Result<IssuePropsWithTrackedInIssuesFragment, string>> {
     const node = (await this.sdk().queryNode({ id: issue })).node;
     this.dump(node, "queryNode");
 
