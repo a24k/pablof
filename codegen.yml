@@ -3,6 +3,7 @@ schema: https://docs.github.com/public/schema.docs.graphql
 config:
   documentMode: string
   immutableTypes: true
+  defaultScalarType: unknown
 generates:
   src/graphql/index.ts:
     documents: src/graphql/docs/**/*.graphql
@@ -16,7 +17,7 @@ generates:
       - add:
           content: "/* eslint-disable @typescript-eslint/array-type, @typescript-eslint/promise-function-async */"
       - add:
-          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type */"
+          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type */"
   src/actions/project/graphql.ts:
     documents: src/actions/project/docs/**/*.graphql
     plugins:
@@ -29,4 +30,4 @@ generates:
       - add:
           content: "/* eslint-disable @typescript-eslint/array-type, @typescript-eslint/promise-function-async */"
       - add:
-          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type */"
+          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type */"
