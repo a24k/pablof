@@ -12,11 +12,13 @@ import type {
 
 import { collect } from "./collect";
 
+import { graphql } from "./graphql";
+
 import type { Context } from "./handler";
 
 import type { ID } from "./base";
 
-export { actionOk, actionSkip, actionErr, collect };
+export { actionOk, actionSkip, actionErr, collect, graphql };
 
 export type {
   ActionResult,

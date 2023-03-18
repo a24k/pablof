@@ -4,9 +4,8 @@ import { Result, ok, err } from "neverthrow";
 
 import type { PullRequestEvent } from "@octokit/webhooks-types";
 
-import { actionOk, actionErr } from "../";
+import { actionOk, actionErr, graphql } from "../";
 import { Action } from "../base";
-import { graphql } from "../graphql";
 import type { ActionResult, Context, ID } from "../";
 
 import type { RepositoryPropsFragment } from "./graphql";

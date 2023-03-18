@@ -260,13 +260,15 @@ exports.TriggerHandler = TriggerHandler;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
+exports.graphql = exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
 const result_1 = __nccwpck_require__(4983);
 Object.defineProperty(exports, "actionOk", ({ enumerable: true, get: function () { return result_1.actionOk; } }));
 Object.defineProperty(exports, "actionSkip", ({ enumerable: true, get: function () { return result_1.actionSkip; } }));
 Object.defineProperty(exports, "actionErr", ({ enumerable: true, get: function () { return result_1.actionErr; } }));
 const collect_1 = __nccwpck_require__(1510);
 Object.defineProperty(exports, "collect", ({ enumerable: true, get: function () { return collect_1.collect; } }));
+const graphql_1 = __nccwpck_require__(5450);
+Object.defineProperty(exports, "graphql", ({ enumerable: true, get: function () { return graphql_1.graphql; } }));
 
 
 /***/ }),
@@ -4770,9 +4772,8 @@ exports.QueryProject = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
 const __1 = __nccwpck_require__(9024);
 const base_1 = __nccwpck_require__(8460);
-const graphql_1 = __nccwpck_require__(5450);
-const graphql_2 = __nccwpck_require__(7753);
-const gql = (0, graphql_2.getSdk)(graphql_1.graphql);
+const graphql_1 = __nccwpck_require__(7753);
+const gql = (0, graphql_1.getSdk)(__1.graphql);
 class QueryProject extends base_1.Action {
     constructor() {
         super("pull_request");
