@@ -4,14 +4,13 @@ import { Result, ok, err } from "neverthrow";
 
 import type { PullRequestEvent } from "@octokit/webhooks-types";
 
-import { getSdk } from "./graphql";
-
-import { actionOk, actionErr } from "../";
-import { Action, graphql } from "../base";
+import { actionOk, actionErr, graphql } from "../";
+import { Action } from "../base";
 import type { ActionResult, Context, ID } from "../";
 
 import type { RepositoryPropsFragment } from "./graphql";
 
+import { getSdk } from "./graphql";
 const gql = getSdk(graphql);
 
 export class QueryProject extends Action {

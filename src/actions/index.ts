@@ -1,3 +1,6 @@
+import * as core from "@actions/core";
+import * as github from "@actions/github";
+
 import type { Sdk } from "../graphql";
 
 import { actionOk, actionSkip, actionErr } from "./result";
@@ -16,7 +19,9 @@ import type { Context } from "./handler";
 
 import type { ID } from "./base";
 
-export { actionOk, actionSkip, actionErr, collect };
+const graphql = github.getOctokit(core.getInput("token")).graphql;
+
+export { actionOk, actionSkip, actionErr, collect, graphql };
 
 export type {
   ActionResult,
