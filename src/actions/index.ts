@@ -10,15 +10,13 @@ import type {
   ActionFailure,
 } from "./result";
 
-import { collect } from "./collect";
-
-import { graphql } from "./graphql";
-
 import type { Context } from "./handler";
 
 import type { ID } from "./base";
 
-export { actionOk, actionSkip, actionErr, collect, graphql };
+import { graphql } from "./graphql";
+
+export { actionOk, actionSkip, actionErr, graphql };
 
 export type {
   ActionResult,

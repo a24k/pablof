@@ -260,13 +260,11 @@ exports.TriggerHandler = TriggerHandler;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.graphql = exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
+exports.graphql = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
 const result_1 = __nccwpck_require__(4983);
 Object.defineProperty(exports, "actionOk", ({ enumerable: true, get: function () { return result_1.actionOk; } }));
 Object.defineProperty(exports, "actionSkip", ({ enumerable: true, get: function () { return result_1.actionSkip; } }));
 Object.defineProperty(exports, "actionErr", ({ enumerable: true, get: function () { return result_1.actionErr; } }));
-const collect_1 = __nccwpck_require__(1510);
-Object.defineProperty(exports, "collect", ({ enumerable: true, get: function () { return collect_1.collect; } }));
 const graphql_1 = __nccwpck_require__(5450);
 Object.defineProperty(exports, "graphql", ({ enumerable: true, get: function () { return graphql_1.graphql; } }));
 
@@ -9391,11 +9389,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const actions_1 = __nccwpck_require__(9024);
+const collect_1 = __nccwpck_require__(1510);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const inventory = (0, actions_1.collect)();
+            const inventory = (0, collect_1.collect)();
             yield inventory.handleContext(github.context);
         }
         catch (error) {

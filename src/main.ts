@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { collect } from "./actions";
+import { collect } from "./actions/collect";
 
 async function main(): Promise<void> {
   try {
