@@ -27925,6 +27925,31 @@ export enum WorkflowRunOrderField {
   CreatedAt = "CREATED_AT",
 }
 
+export type RepositoryPropsFragment = {
+  readonly __typename: "Repository";
+  readonly id: string;
+  readonly name: string;
+  readonly nameWithOwner: string;
+  readonly description?: string | null;
+  readonly owner:
+    | { readonly __typename?: "Organization"; readonly login: string }
+    | { readonly __typename?: "User"; readonly login: string };
+  readonly projectsV2: {
+    readonly __typename?: "ProjectV2Connection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "ProjectV2";
+      readonly id: string;
+      readonly title: string;
+      readonly shortDescription?: string | null;
+      readonly readme?: string | null;
+      readonly closed: boolean;
+      readonly createdAt: any;
+      readonly closedAt?: any | null;
+    } | null> | null;
+  };
+};
+
 export type ProjectV2PropsFragment = {
   readonly __typename: "ProjectV2";
   readonly id: string;
@@ -28076,16 +28101,7 @@ export type QueryNodeQuery = {
     | { readonly __typename: "Project" }
     | { readonly __typename: "ProjectCard" }
     | { readonly __typename: "ProjectColumn" }
-    | {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
-        readonly createdAt: any;
-        readonly closedAt?: any | null;
-      }
+    | { readonly __typename: "ProjectV2" }
     | { readonly __typename: "ProjectV2Field" }
     | { readonly __typename: "ProjectV2Item" }
     | { readonly __typename: "ProjectV2ItemFieldDateValue" }
@@ -28135,7 +28151,30 @@ export type QueryNodeQuery = {
     | { readonly __typename: "RepoDestroyAuditEntry" }
     | { readonly __typename: "RepoRemoveMemberAuditEntry" }
     | { readonly __typename: "RepoRemoveTopicAuditEntry" }
-    | { readonly __typename: "Repository" }
+    | {
+        readonly __typename: "Repository";
+        readonly id: string;
+        readonly name: string;
+        readonly nameWithOwner: string;
+        readonly description?: string | null;
+        readonly owner:
+          | { readonly __typename?: "Organization"; readonly login: string }
+          | { readonly __typename?: "User"; readonly login: string };
+        readonly projectsV2: {
+          readonly __typename?: "ProjectV2Connection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<{
+            readonly __typename: "ProjectV2";
+            readonly id: string;
+            readonly title: string;
+            readonly shortDescription?: string | null;
+            readonly readme?: string | null;
+            readonly closed: boolean;
+            readonly createdAt: any;
+            readonly closedAt?: any | null;
+          } | null> | null;
+        };
+      }
     | { readonly __typename: "RepositoryInvitation" }
     | { readonly __typename: "RepositoryMigration" }
     | { readonly __typename: "RepositoryTopic" }
@@ -28199,14 +28238,32 @@ export const ProjectV2PropsFragmentDoc = `
   closedAt
 }
     `;
+export const RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+  owner {
+    login
+  }
+  projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      ...ProjectV2Props
+    }
+  }
+}
+    ${ProjectV2PropsFragmentDoc}`;
 export const QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
     __typename
-    ...ProjectV2Props
+    ...RepositoryProps
   }
 }
-    ${ProjectV2PropsFragmentDoc}`;
+    ${RepositoryPropsFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,
   vars?: V,
