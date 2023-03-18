@@ -18,6 +18,8 @@ type ID = string;
 
 export type { ID };
 
+export const graphql = github.getOctokit(core.getInput("token")).graphql;
+
 export abstract class Action extends TriggerHandler {
   protected static readonly sdk = getSdk(
     github.getOctokit(core.getInput("token")).graphql
