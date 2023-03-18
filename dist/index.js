@@ -246,7 +246,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.graphql = exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = void 0;
+exports.collect = exports.actionErr = exports.actionSkip = exports.actionOk = exports.graphql = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const result_1 = __nccwpck_require__(4983);
@@ -255,8 +255,7 @@ Object.defineProperty(exports, "actionSkip", ({ enumerable: true, get: function 
 Object.defineProperty(exports, "actionErr", ({ enumerable: true, get: function () { return result_1.actionErr; } }));
 const collect_1 = __nccwpck_require__(1510);
 Object.defineProperty(exports, "collect", ({ enumerable: true, get: function () { return collect_1.collect; } }));
-const graphql = github.getOctokit(core.getInput("token")).graphql;
-exports.graphql = graphql;
+exports.graphql = github.getOctokit(core.getInput("token")).graphql;
 
 
 /***/ }),

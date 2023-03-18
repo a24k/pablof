@@ -19,9 +19,9 @@ import type { Context } from "./handler";
 
 import type { ID } from "./base";
 
-const graphql = github.getOctokit(core.getInput("token")).graphql;
+export const graphql = github.getOctokit(core.getInput("token")).graphql;
 
-export { actionOk, actionSkip, actionErr, collect, graphql };
+export { actionOk, actionSkip, actionErr, collect };
 
 export type {
   ActionResult,
