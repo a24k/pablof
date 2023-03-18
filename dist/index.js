@@ -40,13 +40,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Action = exports.graphql = void 0;
+exports.Action = void 0;
 const neverthrow_1 = __nccwpck_require__(8591);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const handler_1 = __nccwpck_require__(7941);
 const graphql_1 = __nccwpck_require__(7064);
-exports.graphql = github.getOctokit(core.getInput("token")).graphql;
 class Action extends handler_1.TriggerHandler {
     sdk() {
         return Action.sdk;
