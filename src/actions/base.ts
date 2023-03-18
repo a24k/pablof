@@ -19,12 +19,11 @@ type ID = string;
 export type { ID };
 
 export abstract class Action extends TriggerHandler {
-  private static readonly sdk: Sdk = getSdk(
-    github.getOctokit(core.getInput("token")).graphql
-  );
+  protected static readonly graphql = github.getOctokit(core.getInput("token"))
+    .graphql;
 
   protected sdk(): Sdk {
-    return Action.sdk;
+    return getSdk(Action.graphql);
   }
 
   protected async queryRepositoryById(

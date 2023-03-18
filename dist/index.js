@@ -48,7 +48,7 @@ const handler_1 = __nccwpck_require__(7941);
 const graphql_1 = __nccwpck_require__(7064);
 class Action extends handler_1.TriggerHandler {
     sdk() {
-        return Action.sdk;
+        return (0, graphql_1.getSdk)(Action.graphql);
     }
     queryRepositoryById(repository) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -75,7 +75,8 @@ class Action extends handler_1.TriggerHandler {
         });
     }
 }
-Action.sdk = (0, graphql_1.getSdk)(github.getOctokit(core.getInput("token")).graphql);
+Action.graphql = github.getOctokit(core.getInput("token"))
+    .graphql;
 exports.Action = Action;
 
 

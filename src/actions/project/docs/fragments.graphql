@@ -1,0 +1,4 @@
+fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id title shortDescription readme closed createdAt closedAt
+}
