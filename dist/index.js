@@ -3671,9 +3671,6 @@ exports.RepositoryPropsFragmentDoc = `
   name
   nameWithOwner
   description
-  owner {
-    login
-  }
   projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
     totalCount
     nodes {
@@ -4776,7 +4773,7 @@ class QueryProject extends base_1.Action {
     constructor() {
         super("pull_request");
     }
-    queryRepositoryById(repository) {
+    _queryRepositoryById(repository) {
         return __awaiter(this, void 0, void 0, function* () {
             const node = (yield gql.queryNode({ id: repository })).node;
             this.dump(node, "queryNode");
@@ -4794,7 +4791,7 @@ class QueryProject extends base_1.Action {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = context.payload;
             this.dump(payload, "payload");
-            const repository = yield this.queryRepositoryById(payload.repository.node_id);
+            const repository = yield this._queryRepositoryById(payload.repository.node_id);
             if (repository.isErr()) {
                 return (0, __1.actionErr)(repository.error);
             }

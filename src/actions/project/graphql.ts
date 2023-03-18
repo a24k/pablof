@@ -27931,9 +27931,6 @@ export type RepositoryPropsFragment = {
   readonly name: string;
   readonly nameWithOwner: string;
   readonly description?: string | null;
-  readonly owner:
-    | { readonly __typename?: "Organization"; readonly login: string }
-    | { readonly __typename?: "User"; readonly login: string };
   readonly projectsV2: {
     readonly __typename?: "ProjectV2Connection";
     readonly totalCount: number;
@@ -28157,9 +28154,6 @@ export type QueryNodeQuery = {
         readonly name: string;
         readonly nameWithOwner: string;
         readonly description?: string | null;
-        readonly owner:
-          | { readonly __typename?: "Organization"; readonly login: string }
-          | { readonly __typename?: "User"; readonly login: string };
         readonly projectsV2: {
           readonly __typename?: "ProjectV2Connection";
           readonly totalCount: number;
@@ -28245,9 +28239,6 @@ export const RepositoryPropsFragmentDoc = `
   name
   nameWithOwner
   description
-  owner {
-    login
-  }
   projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
     totalCount
     nodes {

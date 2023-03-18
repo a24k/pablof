@@ -1,7 +1,6 @@
 fragment RepositoryProps on Repository {
   __typename
   id name nameWithOwner description
-  owner { login }
   projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount
     nodes {

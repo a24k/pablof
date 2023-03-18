@@ -6,7 +6,6 @@ import type { PullRequestEvent } from "@octokit/webhooks-types";
 
 import { actionOk, actionErr, graphql } from "../";
 import { Action } from "../base";
-//import { graphql } from "../graphql";
 import type { ActionResult, Context, ID } from "../";
 
 import type { RepositoryPropsFragment } from "./graphql";
@@ -19,7 +18,7 @@ export class QueryProject extends Action {
     super("pull_request");
   }
 
-  protected async queryRepositoryById(
+  private async _queryRepositoryById(
     repository: ID
   ): Promise<Result<RepositoryPropsFragment, string>> {
     const node = (await gql.queryNode({ id: repository })).node;
@@ -40,7 +39,7 @@ export class QueryProject extends Action {
     const payload = context.payload as PullRequestEvent;
     this.dump(payload, "payload");
 
-    const repository = await this.queryRepositoryById(
+    const repository = await this._queryRepositoryById(
       payload.repository.node_id
     );
     if (repository.isErr()) {
