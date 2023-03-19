@@ -27933,6 +27933,47 @@ export type RepositoryPropsFragment = {
   readonly description?: string | null;
 };
 
+export type MilestonePropsFragment = {
+  readonly __typename: "Milestone";
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null;
+  readonly dueOn?: unknown | null;
+  readonly createdAt: unknown;
+  readonly milestoneState: MilestoneState;
+};
+
+export type MilestonePropsWithRepositoryAndIssuesFragment = {
+  readonly __typename: "Milestone";
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null;
+  readonly dueOn?: unknown | null;
+  readonly createdAt: unknown;
+  readonly milestoneState: MilestoneState;
+  readonly repository: {
+    readonly __typename: "Repository";
+    readonly id: string;
+    readonly name: string;
+    readonly nameWithOwner: string;
+    readonly description?: string | null;
+  };
+  readonly issues: {
+    readonly __typename?: "IssueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "Issue";
+      readonly id: string;
+      readonly title: string;
+      readonly body: string;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
+    } | null> | null;
+  };
+};
+
 export type ProjectV2PropsFragment = {
   readonly __typename: "ProjectV2";
   readonly id: string;
@@ -27959,25 +28000,17 @@ export type IssuePropsFragment = {
   readonly id: string;
   readonly title: string;
   readonly body: string;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly issueState: IssueState;
+};
+
+export type IssuePropsWithTrackedInIssuesCountFragment = {
+  readonly __typename: "Issue";
+  readonly id: string;
+  readonly title: string;
+  readonly body: string;
   readonly trackedInIssues: {
     readonly __typename?: "IssueConnection";
     readonly totalCount: number;
   };
-  readonly milestone?: {
-    readonly __typename: "Milestone";
-    readonly id: string;
-    readonly title: string;
-    readonly description?: string | null;
-    readonly dueOn?: unknown | null;
-    readonly createdAt: unknown;
-    readonly updatedAt: unknown;
-    readonly closedAt?: unknown | null;
-    readonly milestoneState: MilestoneState;
-  } | null;
 };
 
 export type IssuePropsWithTrackedInIssuesFragment = {
@@ -27985,10 +28018,6 @@ export type IssuePropsWithTrackedInIssuesFragment = {
   readonly id: string;
   readonly title: string;
   readonly body: string;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly issueState: IssueState;
   readonly trackedInIssues: {
     readonly __typename?: "IssueConnection";
     readonly totalCount: number;
@@ -27997,14 +28026,6 @@ export type IssuePropsWithTrackedInIssuesFragment = {
       readonly id: string;
       readonly title: string;
       readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
       readonly milestone?: {
         readonly __typename: "Milestone";
         readonly id: string;
@@ -28012,10 +28033,12 @@ export type IssuePropsWithTrackedInIssuesFragment = {
         readonly description?: string | null;
         readonly dueOn?: unknown | null;
         readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
         readonly milestoneState: MilestoneState;
       } | null;
+      readonly trackedInIssues: {
+        readonly __typename?: "IssueConnection";
+        readonly totalCount: number;
+      };
     } | null> | null;
   };
   readonly milestone?: {
@@ -28025,8 +28048,6 @@ export type IssuePropsWithTrackedInIssuesFragment = {
     readonly description?: string | null;
     readonly dueOn?: unknown | null;
     readonly createdAt: unknown;
-    readonly updatedAt: unknown;
-    readonly closedAt?: unknown | null;
     readonly milestoneState: MilestoneState;
   } | null;
 };
@@ -28051,8 +28072,6 @@ export type IssuePropsWithItemsFragment = {
     readonly description?: string | null;
     readonly dueOn?: unknown | null;
     readonly createdAt: unknown;
-    readonly updatedAt: unknown;
-    readonly closedAt?: unknown | null;
     readonly milestoneState: MilestoneState;
   } | null;
   readonly projectItems: {
@@ -28123,8 +28142,6 @@ export type IssuePropsWithItemsFragment = {
                 readonly description?: string | null;
                 readonly dueOn?: unknown | null;
                 readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
                 readonly milestoneState: MilestoneState;
               } | null;
               readonly field:
@@ -28208,51 +28225,6 @@ export type IssuePropsWithItemsFragment = {
   };
 };
 
-export type MilestonePropsFragment = {
-  readonly __typename: "Milestone";
-  readonly id: string;
-  readonly title: string;
-  readonly description?: string | null;
-  readonly dueOn?: unknown | null;
-  readonly createdAt: unknown;
-  readonly milestoneState: MilestoneState;
-};
-
-export type MilestonePropsWithRepositoryAndIssuesFragment = {
-  readonly __typename: "Milestone";
-  readonly id: string;
-  readonly title: string;
-  readonly description?: string | null;
-  readonly dueOn?: unknown | null;
-  readonly createdAt: unknown;
-  readonly milestoneState: MilestoneState;
-  readonly repository: {
-    readonly __typename: "Repository";
-    readonly id: string;
-    readonly name: string;
-    readonly nameWithOwner: string;
-    readonly description?: string | null;
-  };
-  readonly issues: {
-    readonly __typename?: "IssueConnection";
-    readonly totalCount: number;
-    readonly nodes?: ReadonlyArray<{
-      readonly __typename: "Issue";
-      readonly id: string;
-      readonly title: string;
-      readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
-    } | null> | null;
-  };
-};
-
 export type ProjectV2ItemPropsFragment = {
   readonly __typename: "ProjectV2Item";
   readonly id: string;
@@ -28318,8 +28290,6 @@ export type ProjectV2ItemPropsFragment = {
             readonly description?: string | null;
             readonly dueOn?: unknown | null;
             readonly createdAt: unknown;
-            readonly updatedAt: unknown;
-            readonly closedAt?: unknown | null;
             readonly milestoneState: MilestoneState;
           } | null;
           readonly field:
@@ -28475,8 +28445,6 @@ export type AddProjectItemMutation = {
                 readonly description?: string | null;
                 readonly dueOn?: unknown | null;
                 readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
                 readonly milestoneState: MilestoneState;
               } | null;
               readonly field:
@@ -28576,25 +28544,6 @@ export type CreateIssueWithMilestoneMutation = {
       readonly id: string;
       readonly title: string;
       readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
-      readonly milestone?: {
-        readonly __typename: "Milestone";
-        readonly id: string;
-        readonly title: string;
-        readonly description?: string | null;
-        readonly dueOn?: unknown | null;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly milestoneState: MilestoneState;
-      } | null;
     } | null;
   } | null;
 };
@@ -28629,8 +28578,6 @@ export type UpdateIssueMutation = {
         readonly description?: string | null;
         readonly dueOn?: unknown | null;
         readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
         readonly milestoneState: MilestoneState;
       } | null;
       readonly projectItems: {
@@ -28701,8 +28648,6 @@ export type UpdateIssueMutation = {
                     readonly description?: string | null;
                     readonly dueOn?: unknown | null;
                     readonly createdAt: unknown;
-                    readonly updatedAt: unknown;
-                    readonly closedAt?: unknown | null;
                     readonly milestoneState: MilestoneState;
                   } | null;
                   readonly field:
@@ -28864,8 +28809,6 @@ export type UpdateProjectItemFieldByDateMutation = {
                 readonly description?: string | null;
                 readonly dueOn?: unknown | null;
                 readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
                 readonly milestoneState: MilestoneState;
               } | null;
               readonly field:
@@ -29025,8 +28968,6 @@ export type UpdateProjectItemFieldBySingleSelectValueMutation = {
                 readonly description?: string | null;
                 readonly dueOn?: unknown | null;
                 readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
                 readonly milestoneState: MilestoneState;
               } | null;
               readonly field:
@@ -29186,10 +29127,6 @@ export type QueryNodeQuery = {
         readonly id: string;
         readonly title: string;
         readonly body: string;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly issueState: IssueState;
         readonly trackedInIssues: {
           readonly __typename?: "IssueConnection";
           readonly totalCount: number;
@@ -29198,14 +29135,6 @@ export type QueryNodeQuery = {
             readonly id: string;
             readonly title: string;
             readonly body: string;
-            readonly createdAt: unknown;
-            readonly updatedAt: unknown;
-            readonly closedAt?: unknown | null;
-            readonly issueState: IssueState;
-            readonly trackedInIssues: {
-              readonly __typename?: "IssueConnection";
-              readonly totalCount: number;
-            };
             readonly milestone?: {
               readonly __typename: "Milestone";
               readonly id: string;
@@ -29213,10 +29142,12 @@ export type QueryNodeQuery = {
               readonly description?: string | null;
               readonly dueOn?: unknown | null;
               readonly createdAt: unknown;
-              readonly updatedAt: unknown;
-              readonly closedAt?: unknown | null;
               readonly milestoneState: MilestoneState;
             } | null;
+            readonly trackedInIssues: {
+              readonly __typename?: "IssueConnection";
+              readonly totalCount: number;
+            };
           } | null> | null;
         };
         readonly milestone?: {
@@ -29226,8 +29157,6 @@ export type QueryNodeQuery = {
           readonly description?: string | null;
           readonly dueOn?: unknown | null;
           readonly createdAt: unknown;
-          readonly updatedAt: unknown;
-          readonly closedAt?: unknown | null;
           readonly milestoneState: MilestoneState;
         } | null;
       }
@@ -29271,10 +29200,6 @@ export type QueryNodeQuery = {
             readonly id: string;
             readonly title: string;
             readonly body: string;
-            readonly createdAt: unknown;
-            readonly updatedAt: unknown;
-            readonly closedAt?: unknown | null;
-            readonly issueState: IssueState;
             readonly trackedInIssues: {
               readonly __typename?: "IssueConnection";
               readonly totalCount: number;
@@ -29451,6 +29376,56 @@ export type QueryNodeQuery = {
     | null;
 };
 
+export const MilestonePropsFragmentDoc = `
+    fragment MilestoneProps on Milestone {
+  __typename
+  id
+  title
+  description
+  milestoneState: state
+  dueOn
+  createdAt
+}
+    `;
+export const RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+}
+    `;
+export const IssuePropsFragmentDoc = `
+    fragment IssueProps on Issue {
+  __typename
+  id
+  title
+  body
+}
+    `;
+export const IssuePropsWithTrackedInIssuesCountFragmentDoc = `
+    fragment IssuePropsWithTrackedInIssuesCount on Issue {
+  ...IssueProps
+  trackedInIssues(first: 1) {
+    totalCount
+  }
+}
+    `;
+export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
+    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  ...MilestoneProps
+  repository {
+    ...RepositoryProps
+  }
+  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      ...IssuePropsWithTrackedInIssuesCount
+    }
+  }
+}
+    `;
 export const ProjectV2PropsFragmentDoc = `
     fragment ProjectV2Props on ProjectV2 {
   __typename
@@ -29470,79 +29445,20 @@ export const ProjectsV2PropsOnRepositoryFragmentDoc = `
   }
 }
     `;
-export const IssuePropsFragmentDoc = `
-    fragment IssueProps on Issue {
-  __typename
-  id
-  title
-  body
-  issueState: state
-  createdAt
-  updatedAt
-  closedAt
-  trackedInIssues(first: 1) {
-    totalCount
-  }
-  milestone {
-    __typename
-    id
-    title
-    description
-    milestoneState: state
-    dueOn
-    createdAt
-    updatedAt
-    closedAt
-  }
-}
-    `;
 export const IssuePropsWithTrackedInIssuesFragmentDoc = `
     fragment IssuePropsWithTrackedInIssues on Issue {
-  __typename
-  id
-  title
-  body
-  issueState: state
-  createdAt
-  updatedAt
-  closedAt
+  ...IssueProps
   trackedInIssues(first: 100) {
     totalCount
     nodes {
-      __typename
-      id
-      title
-      body
-      issueState: state
-      createdAt
-      updatedAt
-      closedAt
-      trackedInIssues(first: 1) {
-        totalCount
-      }
+      ...IssuePropsWithTrackedInIssuesCount
       milestone {
-        __typename
-        id
-        title
-        description
-        milestoneState: state
-        dueOn
-        createdAt
-        updatedAt
-        closedAt
+        ...MilestoneProps
       }
     }
   }
   milestone {
-    __typename
-    id
-    title
-    description
-    milestoneState: state
-    dueOn
-    createdAt
-    updatedAt
-    closedAt
+    ...MilestoneProps
   }
 }
     `;
@@ -29560,15 +29476,7 @@ export const IssuePropsWithItemsFragmentDoc = `
     totalCount
   }
   milestone {
-    __typename
-    id
-    title
-    description
-    milestoneState: state
-    dueOn
-    createdAt
-    updatedAt
-    closedAt
+    ...MilestoneProps
   }
   projectItems(first: 100) {
     totalCount
@@ -29626,15 +29534,7 @@ export const IssuePropsWithItemsFragmentDoc = `
           }
           ... on ProjectV2ItemFieldMilestoneValue {
             milestone {
-              __typename
-              id
-              title
-              description
-              milestoneState: state
-              dueOn
-              createdAt
-              updatedAt
-              closedAt
+              ...MilestoneProps
             }
             field {
               __typename
@@ -29698,50 +29598,6 @@ export const IssuePropsWithItemsFragmentDoc = `
   }
 }
     `;
-export const MilestonePropsFragmentDoc = `
-    fragment MilestoneProps on Milestone {
-  __typename
-  id
-  title
-  description
-  milestoneState: state
-  dueOn
-  createdAt
-}
-    `;
-export const RepositoryPropsFragmentDoc = `
-    fragment RepositoryProps on Repository {
-  __typename
-  id
-  name
-  nameWithOwner
-  description
-}
-    `;
-export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
-    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  ...MilestoneProps
-  repository {
-    ...RepositoryProps
-  }
-  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-    totalCount
-    nodes {
-      __typename
-      id
-      title
-      body
-      issueState: state
-      createdAt
-      updatedAt
-      closedAt
-      trackedInIssues(first: 1) {
-        totalCount
-      }
-    }
-  }
-}
-    `;
 export const ProjectV2ItemPropsFragmentDoc = `
     fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
@@ -29797,15 +29653,7 @@ export const ProjectV2ItemPropsFragmentDoc = `
       }
       ... on ProjectV2ItemFieldMilestoneValue {
         milestone {
-          __typename
-          id
-          title
-          description
-          milestoneState: state
-          dueOn
-          createdAt
-          updatedAt
-          closedAt
+          ...MilestoneProps
         }
         field {
           __typename
@@ -29875,7 +29723,8 @@ export const AddProjectItemDocument = `
     }
   }
 }
-    ${ProjectV2ItemPropsFragmentDoc}`;
+    ${ProjectV2ItemPropsFragmentDoc}
+${MilestonePropsFragmentDoc}`;
 export const CreateIssueWithMilestoneDocument = `
     mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
   createIssue(
@@ -29895,7 +29744,8 @@ export const UpdateIssueDocument = `
     }
   }
 }
-    ${IssuePropsWithItemsFragmentDoc}`;
+    ${IssuePropsWithItemsFragmentDoc}
+${MilestonePropsFragmentDoc}`;
 export const UpdateProjectItemFieldByDateDocument = `
     mutation updateProjectItemFieldByDate($project: ID!, $item: ID!, $field: ID!, $date: Date!) {
   updateProjectV2ItemFieldValue(
@@ -29906,7 +29756,8 @@ export const UpdateProjectItemFieldByDateDocument = `
     }
   }
 }
-    ${ProjectV2ItemPropsFragmentDoc}`;
+    ${ProjectV2ItemPropsFragmentDoc}
+${MilestonePropsFragmentDoc}`;
 export const UpdateProjectItemFieldBySingleSelectValueDocument = `
     mutation updateProjectItemFieldBySingleSelectValue($project: ID!, $item: ID!, $field: ID!, $option: String!) {
   updateProjectV2ItemFieldValue(
@@ -29917,7 +29768,8 @@ export const UpdateProjectItemFieldBySingleSelectValueDocument = `
     }
   }
 }
-    ${ProjectV2ItemPropsFragmentDoc}`;
+    ${ProjectV2ItemPropsFragmentDoc}
+${MilestonePropsFragmentDoc}`;
 export const QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
@@ -29933,6 +29785,8 @@ ${ProjectV2PropsFragmentDoc}
 ${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
 ${MilestonePropsFragmentDoc}
 ${RepositoryPropsFragmentDoc}
+${IssuePropsWithTrackedInIssuesCountFragmentDoc}
+${IssuePropsFragmentDoc}
 ${IssuePropsWithTrackedInIssuesFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,

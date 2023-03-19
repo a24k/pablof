@@ -3,6 +3,20 @@ fragment RepositoryProps on Repository {
   id name nameWithOwner description
 }
 
+fragment MilestoneProps on Milestone {
+  __typename
+  id title description milestoneState: state dueOn createdAt
+}
+
+fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  ...MilestoneProps
+  repository { ...RepositoryProps }
+  issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes { ...IssuePropsWithTrackedInIssuesCount }
+  }
+}
+
 fragment ProjectV2Props on ProjectV2 {
   __typename
   id title closed
@@ -12,51 +26,37 @@ fragment ProjectsV2PropsOnRepository on Repository {
   __typename
   projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount
-    nodes {
-      ...ProjectV2Props
-    }
+    nodes { ...ProjectV2Props }
   }
 }
 
 fragment IssueProps on Issue {
   __typename
-  id title body issueState: state createdAt updatedAt closedAt
+  id title body
+}
+
+fragment IssuePropsWithTrackedInIssuesCount on Issue {
+  ...IssueProps
   trackedInIssues(first: 1) { totalCount }
-  milestone {
-    __typename
-    id title description milestoneState: state dueOn createdAt updatedAt closedAt
-  }
 }
 
 fragment IssuePropsWithTrackedInIssues on Issue {
-  __typename
-  id title body issueState: state createdAt updatedAt closedAt
+  ...IssueProps
   trackedInIssues(first: 100) {
     totalCount
     nodes {
-      __typename
-      id title body issueState: state createdAt updatedAt closedAt
-      trackedInIssues(first: 1) { totalCount }
-      milestone {
-        __typename
-        id title description milestoneState: state dueOn createdAt updatedAt closedAt
-      }
+      ...IssuePropsWithTrackedInIssuesCount
+      milestone { ...MilestoneProps }
     }
   }
-  milestone {
-    __typename
-    id title description milestoneState: state dueOn createdAt updatedAt closedAt
-  }
+  milestone { ...MilestoneProps }
 }
 
 fragment IssuePropsWithItems on Issue {
   __typename
   id title body issueState: state createdAt updatedAt closedAt
   trackedInIssues(first: 1) { totalCount }
-  milestone {
-    __typename
-    id title description milestoneState: state dueOn createdAt updatedAt closedAt
-  }
+  milestone { ...MilestoneProps }
   projectItems(first: 100) {
     totalCount
     nodes {
@@ -83,7 +83,7 @@ fragment IssuePropsWithItems on Issue {
             field { __typename ... on ProjectV2Field { name dataType } }
           }
           ... on ProjectV2ItemFieldMilestoneValue {
-            milestone { __typename id title description milestoneState: state dueOn createdAt updatedAt closedAt }
+            milestone { ...MilestoneProps }
             field { __typename ... on ProjectV2Field { name dataType } }
           }
           ... on ProjectV2ItemFieldTextValue {
@@ -104,26 +104,6 @@ fragment IssuePropsWithItems on Issue {
           }
         }
       }
-    }
-  }
-}
-
-fragment MilestoneProps on Milestone {
-  __typename
-  id title description milestoneState: state dueOn createdAt
-}
-
-fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  ...MilestoneProps
-  repository {
-    ...RepositoryProps
-  }
-  issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
-    totalCount
-    nodes {
-      __typename
-      id title body issueState: state createdAt updatedAt closedAt
-      trackedInIssues(first: 1) { totalCount }
     }
   }
 }
@@ -152,7 +132,7 @@ fragment ProjectV2ItemProps on ProjectV2Item {
         field { __typename ... on ProjectV2Field { name dataType } }
       }
       ... on ProjectV2ItemFieldMilestoneValue {
-        milestone { __typename id title description milestoneState: state dueOn createdAt updatedAt closedAt }
+        milestone { ...MilestoneProps }
         field { __typename ... on ProjectV2Field { name dataType } }
       }
       ... on ProjectV2ItemFieldTextValue {
