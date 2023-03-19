@@ -116,7 +116,8 @@ fragment MilestoneProps on Milestone {
 fragment MilestonePropsWithRepositoryAndIssues on Milestone {
   ...MilestoneProps
   repository {
-    ...RepositoryProps
+    __typename
+    id name nameWithOwner description
   }
   issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount
