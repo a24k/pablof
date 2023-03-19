@@ -10,13 +10,51 @@ import type {
   MilestonePropsFragment,
   MilestonePropsWithRepositoryAndIssuesFragment,
   ProjectV2ItemPropsFragment,
-} from "../../graphql";
+  RepositoryPropsFragment,
+  ProjectV2PropsFragment,
+} from "./graphql";
+
+import { graphql } from "../";
+import { getSdk } from "./graphql";
+export const gql = getSdk(graphql);
 
 export abstract class MilestoneAction extends Action {
+  protected async queryRepositoryById(
+    repository: ID
+  ): Promise<Result<RepositoryPropsFragment, string>> {
+    const node = (await gql.queryNode({ id: repository })).node;
+    this.dump(node, "queryNode");
+
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    return ok(node);
+  }
+
+  protected async queryProjectsByRepositoryId(
+    repository: ID
+  ): Promise<Result<ProjectV2PropsFragment[], string>> {
+    const node = (await gql.queryNode({ id: repository })).node;
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    const projects = node.projectsV2.nodes?.flatMap(project =>
+      project == null || project.closed ? [] : project
+    );
+
+    if (projects == undefined || projects.length === 0) {
+      return err("No projects found.");
+    }
+
+    return ok(projects);
+  }
+
   protected async queryMilestoneById(
     milestone: ID
   ): Promise<Result<MilestonePropsWithRepositoryAndIssuesFragment, string>> {
-    const node = (await this.sdk().queryNode({ id: milestone })).node;
+    const node = (await gql.queryNode({ id: milestone })).node;
     this.dump(node, "queryNode");
 
     if (node == undefined || node.__typename !== "Milestone") {
@@ -60,7 +98,7 @@ export abstract class MilestoneAction extends Action {
 
     const field = fields[0];
 
-    const result = await this.sdk().updateProjectItemFieldByDate({
+    const result = await gql.updateProjectItemFieldByDate({
       project: item.project.id,
       item: item.id,
       field: field.id,
@@ -99,7 +137,7 @@ export abstract class MilestoneAction extends Action {
 
     const field = fields[0];
 
-    const result = await this.sdk().updateProjectItemFieldByDate({
+    const result = await gql.updateProjectItemFieldByDate({
       project: item.project.id,
       item: item.id,
       field: field.id,

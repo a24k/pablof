@@ -1,5 +1,3 @@
-import type { Sdk } from "../graphql";
-
 import { actionOk, actionSkip, actionErr } from "./result";
 
 import { graphql } from "./graphql";
@@ -28,5 +26,4 @@ export type {
   ActionFailure,
   Context,
   ID,
-  Sdk,
 };

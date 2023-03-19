@@ -1,0 +1,25 @@
+query queryProjectFields($owner: String!, $number: Int!) { 
+  user(login: $owner){
+    projectV2(number: $number) {
+      id title
+      fields(first: 100) {
+        totalCount
+        nodes {
+          ... on ProjectV2FieldCommon {
+            id name dataType
+          }
+          ... on ProjectV2IterationField {
+            configuration {
+              startDay duration
+            }
+          }
+          ... on ProjectV2SingleSelectField {
+            options {
+              id name
+            }
+          }
+        }
+      }
+    }
+  }
+}

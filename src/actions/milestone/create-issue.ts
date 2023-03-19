@@ -7,14 +7,14 @@ import type { MilestoneEvent } from "@octokit/webhooks-types";
 import { actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
 
-import { MilestoneAction } from "./base";
+import { gql, MilestoneAction } from "./base";
 
 import type {
   MilestonePropsWithRepositoryAndIssuesFragment,
   IssuePropsFragment,
   ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
-} from "../../graphql";
+} from "./graphql";
 
 export class CreateMilestoneIssue extends MilestoneAction {
   constructor() {
@@ -28,7 +28,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
   protected async createIssueWithMilestone(
     milestone: MilestonePropsWithRepositoryAndIssuesFragment
   ): Promise<Result<IssuePropsFragment, string>> {
-    const issue = await this.sdk().createIssueWithMilestone({
+    const issue = await gql.createIssueWithMilestone({
       repository: milestone.repository.id,
       title: milestone.title,
       body: milestone.description,
@@ -63,7 +63,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
       field.options.find(opt => opt.name === "Project") ||
       field.options[0];
 
-    const result = await this.sdk().updateProjectItemFieldBySingleSelectValue({
+    const result = await gql.updateProjectItemFieldBySingleSelectValue({
       project: item.project.id,
       item: item.id,
       field: field.id,
@@ -85,7 +85,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
     issue: IssuePropsFragment,
     milestone: MilestonePropsWithRepositoryAndIssuesFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
-    const item = await this.sdk().addProjectItem({
+    const item = await gql.addProjectItem({
       project: project.id,
       item: issue.id,
     });
