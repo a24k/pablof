@@ -10,7 +10,6 @@ import type {
   MilestonePropsFragment,
   MilestonePropsWithRepositoryAndIssuesFragment,
   ProjectV2ItemPropsFragment,
-  RepositoryPropsFragment,
   ProjectV2PropsFragment,
 } from "./graphql";
 
@@ -19,19 +18,6 @@ import { getSdk } from "./graphql";
 export const gql = getSdk(graphql);
 
 export abstract class MilestoneAction extends Action {
-  protected async queryRepositoryById(
-    repository: ID
-  ): Promise<Result<RepositoryPropsFragment, string>> {
-    const node = (await gql.queryNode({ id: repository })).node;
-    this.dump(node, "queryNode");
-
-    if (node == undefined || node.__typename !== "Repository") {
-      return err("No repository found.");
-    }
-
-    return ok(node);
-  }
-
   protected async queryProjectsByRepositoryId(
     repository: ID
   ): Promise<Result<ProjectV2PropsFragment[], string>> {

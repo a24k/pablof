@@ -1,12 +1,19 @@
 fragment RepositoryProps on Repository {
   __typename
   id name nameWithOwner description
-  owner { login }
+}
+
+fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id title closed
+}
+
+fragment ProjectsV2PropsOnRepository on Repository {
+  __typename
   projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount
     nodes {
-      __typename
-      id title shortDescription readme closed
+      ...ProjectV2Props
     }
   }
 }
@@ -103,16 +110,13 @@ fragment IssuePropsWithItems on Issue {
 
 fragment MilestoneProps on Milestone {
   __typename
-  id title description milestoneState: state dueOn createdAt updatedAt closedAt
+  id title description milestoneState: state dueOn createdAt
 }
 
 fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  __typename
-  id title description milestoneState: state dueOn createdAt updatedAt closedAt
+  ...MilestoneProps
   repository {
-    __typename
-    id name nameWithOwner description
-    owner { login }
+    ...RepositoryProps
   }
   issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount
@@ -122,11 +126,6 @@ fragment MilestonePropsWithRepositoryAndIssues on Milestone {
       trackedInIssues(first: 1) { totalCount }
     }
   }
-}
-
-fragment ProjectV2Props on ProjectV2 {
-  __typename
-  id title shortDescription readme closed
 }
 
 fragment ProjectV2ItemProps on ProjectV2Item {
