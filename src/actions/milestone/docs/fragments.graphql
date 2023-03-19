@@ -114,10 +114,10 @@ fragment MilestoneProps on Milestone {
 }
 
 fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  ...MilestoneProps
+  __typename
+  id title description milestoneState: state dueOn createdAt
   repository {
-    __typename
-    id name nameWithOwner description
+    ...RepositoryProps
   }
   issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount

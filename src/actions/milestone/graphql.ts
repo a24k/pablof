@@ -29451,15 +29451,6 @@ export type QueryNodeQuery = {
     | null;
 };
 
-export const RepositoryPropsFragmentDoc = `
-    fragment RepositoryProps on Repository {
-  __typename
-  id
-  name
-  nameWithOwner
-  description
-}
-    `;
 export const ProjectV2PropsFragmentDoc = `
     fragment ProjectV2Props on ProjectV2 {
   __typename
@@ -29718,15 +29709,26 @@ export const MilestonePropsFragmentDoc = `
   createdAt
 }
     `;
+export const RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+}
+    `;
 export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
     fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  ...MilestoneProps
+  __typename
+  id
+  title
+  description
+  milestoneState: state
+  dueOn
+  createdAt
   repository {
-    __typename
-    id
-    name
-    nameWithOwner
-    description
+    ...RepositoryProps
   }
   issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
     totalCount
@@ -29745,7 +29747,7 @@ export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
     }
   }
 }
-    ${MilestonePropsFragmentDoc}`;
+    ${RepositoryPropsFragmentDoc}`;
 export const ProjectV2ItemPropsFragmentDoc = `
     fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
