@@ -28246,7 +28246,7 @@ export const RepositoryPropsFragmentDoc = `
     }
   }
 }
-    ${ProjectV2PropsFragmentDoc}`;
+    `;
 export const QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
@@ -28254,7 +28254,8 @@ export const QueryNodeDocument = `
     ...RepositoryProps
   }
 }
-    ${RepositoryPropsFragmentDoc}`;
+    ${RepositoryPropsFragmentDoc}
+${ProjectV2PropsFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,
   vars?: V,

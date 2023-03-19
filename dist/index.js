@@ -7877,7 +7877,7 @@ exports.ProjectsV2PropsOnRepositoryFragmentDoc = `
     }
   }
 }
-    ${exports.ProjectV2PropsFragmentDoc}`;
+    `;
 exports.IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
@@ -8128,13 +8128,7 @@ exports.RepositoryPropsFragmentDoc = `
     `;
 exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
     fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  __typename
-  id
-  title
-  description
-  milestoneState: state
-  dueOn
-  createdAt
+  ...MilestoneProps
   repository {
     ...RepositoryProps
   }
@@ -8155,7 +8149,7 @@ exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
     }
   }
 }
-    ${exports.RepositoryPropsFragmentDoc}`;
+    `;
 exports.ProjectV2ItemPropsFragmentDoc = `
     fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
@@ -8343,8 +8337,10 @@ exports.QueryNodeDocument = `
   }
 }
     ${exports.ProjectsV2PropsOnRepositoryFragmentDoc}
-${exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc}
 ${exports.ProjectV2PropsFragmentDoc}
+${exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc}
+${exports.MilestonePropsFragmentDoc}
+${exports.RepositoryPropsFragmentDoc}
 ${exports.IssuePropsWithTrackedInIssuesFragmentDoc}`;
 function getSdk(requester) {
     return {
@@ -12284,7 +12280,7 @@ exports.RepositoryPropsFragmentDoc = `
     }
   }
 }
-    ${exports.ProjectV2PropsFragmentDoc}`;
+    `;
 exports.QueryNodeDocument = `
     query queryNode($id: ID!) {
   node(id: $id) {
@@ -12292,7 +12288,8 @@ exports.QueryNodeDocument = `
     ...RepositoryProps
   }
 }
-    ${exports.RepositoryPropsFragmentDoc}`;
+    ${exports.RepositoryPropsFragmentDoc}
+${exports.ProjectV2PropsFragmentDoc}`;
 function getSdk(requester) {
     return {
         queryNode(variables, options) {

@@ -29469,7 +29469,7 @@ export const ProjectsV2PropsOnRepositoryFragmentDoc = `
     }
   }
 }
-    ${ProjectV2PropsFragmentDoc}`;
+    `;
 export const IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
@@ -29720,13 +29720,7 @@ export const RepositoryPropsFragmentDoc = `
     `;
 export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
     fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  __typename
-  id
-  title
-  description
-  milestoneState: state
-  dueOn
-  createdAt
+  ...MilestoneProps
   repository {
     ...RepositoryProps
   }
@@ -29747,7 +29741,7 @@ export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
     }
   }
 }
-    ${RepositoryPropsFragmentDoc}`;
+    `;
 export const ProjectV2ItemPropsFragmentDoc = `
     fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
@@ -29935,8 +29929,10 @@ export const QueryNodeDocument = `
   }
 }
     ${ProjectsV2PropsOnRepositoryFragmentDoc}
-${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
 ${ProjectV2PropsFragmentDoc}
+${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
+${MilestonePropsFragmentDoc}
+${RepositoryPropsFragmentDoc}
 ${IssuePropsWithTrackedInIssuesFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,

@@ -4,6 +4,7 @@ config:
   documentMode: string
   immutableTypes: true
   defaultScalarType: unknown
+  dedupeFragments: true
 hooks:
   afterAllFileWrite:
     - prettier --write
