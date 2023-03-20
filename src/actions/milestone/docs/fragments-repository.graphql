@@ -1,0 +1,12 @@
+fragment RepositoryProps on Repository {
+  __typename
+  id name nameWithOwner description
+}
+
+fragment ProjectsV2PropsOnRepository on Repository {
+  __typename
+  projectsV2(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes { ...ProjectV2Props }
+  }
+}

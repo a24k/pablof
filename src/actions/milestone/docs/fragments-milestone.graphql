@@ -1,0 +1,13 @@
+fragment MilestoneProps on Milestone {
+  __typename
+  id title description milestoneState: state dueOn createdAt
+}
+
+fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  ...MilestoneProps
+  repository { ...RepositoryProps }
+  issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
+    totalCount
+    nodes { ...IssuePropsWithTrackedInIssuesCount }
+  }
+}

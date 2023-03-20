@@ -1,0 +1,30 @@
+fragment IssueProps on Issue {
+  __typename
+  id title body state
+}
+
+fragment IssuePropsWithTrackedInIssuesCount on Issue {
+  ...IssueProps
+  trackedInIssues(first: 1) { totalCount }
+}
+
+fragment IssuePropsWithTrackedInIssues on Issue {
+  ...IssueProps
+  trackedInIssues(first: 100) {
+    totalCount
+    nodes {
+      ...IssuePropsWithTrackedInIssuesCount
+      milestone { ...MilestoneProps }
+    }
+  }
+  milestone { ...MilestoneProps }
+}
+
+fragment IssuePropsWithItems on Issue {
+  ...IssuePropsWithTrackedInIssuesCount
+  milestone { ...MilestoneProps }
+  projectItems(first: 100) {
+    totalCount
+    nodes { ...ProjectV2ItemPropsWithProjectAndFieldValues }
+  }
+}

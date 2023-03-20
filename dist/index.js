@@ -4960,7 +4960,7 @@ exports.IpAllowListEnabledSettingValue = exports.IdentityProviderConfigurationSt
 exports.PinnedDiscussionGradient = exports.PinnableItemType = exports.PatchStatus = exports.PackageVersionOrderField = exports.PackageType = exports.PackageOrderField = exports.PackageFileOrderField = exports.OrganizationOrderField = exports.OrganizationMigrationState = exports.OrganizationMembersCanCreateRepositoriesSettingValue = exports.OrganizationMemberRole = exports.OrganizationInvitationType = exports.OrganizationInvitationSource = exports.OrganizationInvitationRole = exports.OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility = exports.OrgUpdateMemberAuditEntryPermission = exports.OrgUpdateDefaultRepositoryPermissionAuditEntryPermission = exports.OrgRemoveOutsideCollaboratorAuditEntryReason = exports.OrgRemoveOutsideCollaboratorAuditEntryMembershipType = exports.OrgRemoveMemberAuditEntryReason = exports.OrgRemoveMemberAuditEntryMembershipType = exports.OrgRemoveBillingManagerAuditEntryReason = exports.OrgEnterpriseOwnerOrderField = exports.OrgCreateAuditEntryBillingPlan = exports.OrgAddMemberAuditEntryPermission = exports.OrderDirection = exports.OperationType = exports.OauthApplicationCreateAuditEntryState = exports.OidcProviderType = exports.NotificationRestrictionSettingValue = exports.MilestoneState = exports.MilestoneOrderField = exports.MigrationState = exports.MigrationSourceType = exports.MergeableState = exports.MergeStateStatus = exports.MergeCommitTitle = exports.MergeCommitMessage = exports.MannequinOrderField = exports.LockReason = exports.LanguageOrderField = exports.LabelOrderField = exports.IssueTimelineItemsItemType = exports.IssueStateReason = exports.IssueState = exports.IssueOrderField = exports.IssueCommentOrderField = exports.IssueClosedStateReason = exports.IpAllowListForInstalledAppsEnabledSettingValue = exports.IpAllowListEntryOrderField = void 0;
 exports.RepositoryOrderField = exports.RepositoryMigrationOrderField = exports.RepositoryMigrationOrderDirection = exports.RepositoryLockReason = exports.RepositoryInvitationOrderField = exports.RepositoryInteractionLimitOrigin = exports.RepositoryInteractionLimitExpiry = exports.RepositoryInteractionLimit = exports.RepositoryContributionType = exports.RepositoryAffiliation = exports.ReportedContentClassifiers = exports.RepoRemoveMemberAuditEntryVisibility = exports.RepoDestroyAuditEntryVisibility = exports.RepoCreateAuditEntryVisibility = exports.RepoChangeMergeSettingAuditEntryMergeType = exports.RepoArchivedAuditEntryVisibility = exports.RepoAddMemberAuditEntryVisibility = exports.RepoAccessAuditEntryVisibility = exports.ReleaseOrderField = exports.RefOrderField = exports.ReactionOrderField = exports.ReactionContent = exports.PullRequestUpdateState = exports.PullRequestTimelineItemsItemType = exports.PullRequestState = exports.PullRequestReviewState = exports.PullRequestReviewEvent = exports.PullRequestReviewDecision = exports.PullRequestReviewCommentState = exports.PullRequestOrderField = exports.PullRequestMergeMethod = exports.ProjectV2WorkflowsOrderField = exports.ProjectV2ViewOrderField = exports.ProjectV2ViewLayout = exports.ProjectV2State = exports.ProjectV2SingleSelectFieldOptionColor = exports.ProjectV2OrderField = exports.ProjectV2ItemType = exports.ProjectV2ItemOrderField = exports.ProjectV2ItemFieldValueOrderField = exports.ProjectV2FieldType = exports.ProjectV2FieldOrderField = exports.ProjectV2CustomFieldType = exports.ProjectTemplate = exports.ProjectState = exports.ProjectOrderField = exports.ProjectColumnPurpose = exports.ProjectCardState = exports.ProjectCardArchivedState = exports.PinnedDiscussionPattern = void 0;
 exports.VerifiableDomainOrderField = exports.UserStatusOrderField = exports.UserBlockDuration = exports.TrackedIssueStates = exports.TopicSuggestionDeclineReason = exports.TeamRole = exports.TeamReviewAssignmentAlgorithm = exports.TeamRepositoryOrderField = exports.TeamPrivacy = exports.TeamOrderField = exports.TeamMembershipType = exports.TeamMemberRole = exports.TeamMemberOrderField = exports.TeamDiscussionOrderField = exports.TeamDiscussionCommentOrderField = exports.SubscriptionState = exports.StatusState = exports.StarOrderField = exports.SquashMergeCommitTitle = exports.SquashMergeCommitMessage = exports.SponsorshipPrivacy = exports.SponsorshipOrderField = exports.SponsorshipNewsletterOrderField = exports.SponsorsTierOrderField = exports.SponsorsListingFeaturedItemFeatureableType = exports.SponsorsGoalKind = exports.SponsorsCountryOrRegionCode = exports.SponsorsActivityPeriod = exports.SponsorsActivityOrderField = exports.SponsorsActivityAction = exports.SponsorableOrderField = exports.SponsorOrderField = exports.SocialAccountProvider = exports.SecurityVulnerabilityOrderField = exports.SecurityAdvisorySeverity = exports.SecurityAdvisoryOrderField = exports.SecurityAdvisoryIdentifierType = exports.SecurityAdvisoryEcosystem = exports.SecurityAdvisoryClassification = exports.SearchType = exports.SavedReplyOrderField = exports.SamlSignatureAlgorithm = exports.SamlDigestAlgorithm = exports.RoleInOrganization = exports.RequestableCheckStatusState = exports.RepositoryVulnerabilityAlertState = exports.RepositoryVulnerabilityAlertDependencyScope = exports.RepositoryVisibility = exports.RepositoryPrivacy = exports.RepositoryPermission = void 0;
-exports.getSdk = exports.QueryNodeDocument = exports.UpdateProjectItemFieldBySingleSelectValueDocument = exports.UpdateProjectItemFieldByDateDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.IssuePropsWithItemsFragmentDoc = exports.ProjectV2ItemPropsWithProjectAndFieldValuesFragmentDoc = exports.ProjectV2ItemPropsFragmentDoc = exports.IssuePropsWithTrackedInIssuesFragmentDoc = exports.ProjectsV2PropsOnRepositoryFragmentDoc = exports.ProjectV2PropsFragmentDoc = exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = exports.IssuePropsWithTrackedInIssuesCountFragmentDoc = exports.IssuePropsFragmentDoc = exports.RepositoryPropsFragmentDoc = exports.MilestonePropsFragmentDoc = exports.WorkflowRunOrderField = void 0;
+exports.getSdk = exports.QueryNodeDocument = exports.UpdateProjectItemFieldBySingleSelectValueDocument = exports.UpdateProjectItemFieldByDateDocument = exports.UpdateIssueDocument = exports.CreateIssueWithMilestoneDocument = exports.AddProjectItemDocument = exports.ProjectsV2PropsOnRepositoryFragmentDoc = exports.ProjectV2PropsFragmentDoc = exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = exports.RepositoryPropsFragmentDoc = exports.IssuePropsWithItemsFragmentDoc = exports.ProjectV2ItemPropsWithProjectAndFieldValuesFragmentDoc = exports.ProjectV2ItemPropsFragmentDoc = exports.IssuePropsWithTrackedInIssuesFragmentDoc = exports.MilestonePropsFragmentDoc = exports.IssuePropsWithTrackedInIssuesCountFragmentDoc = exports.IssuePropsFragmentDoc = exports.WorkflowRunOrderField = void 0;
 /** The actor's type. */
 var ActorType;
 (function (ActorType) {
@@ -7859,26 +7859,6 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField = exports.WorkflowRunOrderField || (exports.WorkflowRunOrderField = {}));
-exports.MilestonePropsFragmentDoc = `
-    fragment MilestoneProps on Milestone {
-  __typename
-  id
-  title
-  description
-  milestoneState: state
-  dueOn
-  createdAt
-}
-    `;
-exports.RepositoryPropsFragmentDoc = `
-    fragment RepositoryProps on Repository {
-  __typename
-  id
-  name
-  nameWithOwner
-  description
-}
-    `;
 exports.IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
@@ -7896,37 +7876,15 @@ exports.IssuePropsWithTrackedInIssuesCountFragmentDoc = `
   }
 }
     `;
-exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
-    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  ...MilestoneProps
-  repository {
-    ...RepositoryProps
-  }
-  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-    totalCount
-    nodes {
-      ...IssuePropsWithTrackedInIssuesCount
-    }
-  }
-}
-    `;
-exports.ProjectV2PropsFragmentDoc = `
-    fragment ProjectV2Props on ProjectV2 {
+exports.MilestonePropsFragmentDoc = `
+    fragment MilestoneProps on Milestone {
   __typename
   id
   title
-  closed
-}
-    `;
-exports.ProjectsV2PropsOnRepositoryFragmentDoc = `
-    fragment ProjectsV2PropsOnRepository on Repository {
-  __typename
-  projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-    totalCount
-    nodes {
-      ...ProjectV2Props
-    }
-  }
+  description
+  milestoneState: state
+  dueOn
+  createdAt
 }
     `;
 exports.IssuePropsWithTrackedInIssuesFragmentDoc = `
@@ -8078,6 +8036,48 @@ exports.IssuePropsWithItemsFragmentDoc = `
     totalCount
     nodes {
       ...ProjectV2ItemPropsWithProjectAndFieldValues
+    }
+  }
+}
+    `;
+exports.RepositoryPropsFragmentDoc = `
+    fragment RepositoryProps on Repository {
+  __typename
+  id
+  name
+  nameWithOwner
+  description
+}
+    `;
+exports.MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
+    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+  ...MilestoneProps
+  repository {
+    ...RepositoryProps
+  }
+  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      ...IssuePropsWithTrackedInIssuesCount
+    }
+  }
+}
+    `;
+exports.ProjectV2PropsFragmentDoc = `
+    fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id
+  title
+  closed
+}
+    `;
+exports.ProjectsV2PropsOnRepositoryFragmentDoc = `
+    fragment ProjectsV2PropsOnRepository on Repository {
+  __typename
+  projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
+    totalCount
+    nodes {
+      ...ProjectV2Props
     }
   }
 }
