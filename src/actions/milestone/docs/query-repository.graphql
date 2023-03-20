@@ -1,0 +1,3 @@
+query queryRepositoryWithProjectsV2($id: ID!) { 
+  node(id: $id) { ...RepositoryPropsWithProjectsV2 }
+}

@@ -8,7 +8,8 @@ import type { ID } from "../";
 import type {
   IssuePropsFragment,
   MilestonePropsFragment,
-  MilestonePropsWithRepositoryAndIssuesFragment,
+  MilestonePropsWithRepositoryFragment,
+  MilestonePropsWithIssuesFragment,
   ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
   ProjectV2PropsFragment,
 } from "./graphql";
@@ -21,7 +22,8 @@ export abstract class MilestoneAction extends Action {
   protected async queryProjectsByRepositoryId(
     repository: ID
   ): Promise<Result<ProjectV2PropsFragment[], string>> {
-    const node = (await gql.queryNode({ id: repository })).node;
+    const node = (await gql.queryRepositoryWithProjectsV2({ id: repository }))
+      .node;
     if (node == undefined || node.__typename !== "Repository") {
       return err("No repository found.");
     }
@@ -37,10 +39,24 @@ export abstract class MilestoneAction extends Action {
     return ok(projects);
   }
 
-  protected async queryMilestoneById(
+  protected async queryMilestoneWithRepository(
     milestone: ID
-  ): Promise<Result<MilestonePropsWithRepositoryAndIssuesFragment, string>> {
-    const node = (await gql.queryNode({ id: milestone })).node;
+  ): Promise<Result<MilestonePropsWithRepositoryFragment, string>> {
+    const node = (await gql.queryMilestoneWithRepository({ id: milestone }))
+      .node;
+    this.dump(node, "queryNode");
+
+    if (node == undefined || node.__typename !== "Milestone") {
+      return err("No milestone found.");
+    }
+
+    return ok(node);
+  }
+
+  protected async queryMilestoneWithIssues(
+    milestone: ID
+  ): Promise<Result<MilestonePropsWithIssuesFragment, string>> {
+    const node = (await gql.queryMilestoneWithIssues({ id: milestone })).node;
     this.dump(node, "queryNode");
 
     if (node == undefined || node.__typename !== "Milestone") {
@@ -51,7 +67,7 @@ export abstract class MilestoneAction extends Action {
   }
 
   protected async findMilestoneIssueFromMilestone(
-    milestone: MilestonePropsWithRepositoryAndIssuesFragment
+    milestone: MilestonePropsWithIssuesFragment
   ): Promise<Result<IssuePropsFragment, string>> {
     const roots = milestone.issues.nodes?.flatMap(issue =>
       issue === null || issue.trackedInIssues.totalCount !== 0 ? [] : issue

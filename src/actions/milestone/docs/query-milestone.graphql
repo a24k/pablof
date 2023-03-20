@@ -1,0 +1,7 @@
+query queryMilestoneWithRepository($id: ID!) { 
+  node(id: $id) { ...MilestonePropsWithRepository }
+}
+
+query queryMilestoneWithIssues($id: ID!) { 
+  node(id: $id) { ...MilestonePropsWithIssues }
+}

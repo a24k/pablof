@@ -3,9 +3,13 @@ fragment MilestoneProps on Milestone {
   id title description milestoneState: state dueOn createdAt
 }
 
-fragment MilestonePropsWithRepositoryAndIssues on Milestone {
+fragment MilestonePropsWithRepository on Milestone {
   ...MilestoneProps
   repository { ...RepositoryProps }
+}
+
+fragment MilestonePropsWithIssues on Milestone {
+  ...MilestoneProps
   issues(first: 100, orderBy: { field: CREATED_AT, direction: ASC }) {
     totalCount
     nodes { ...IssuePropsWithTrackedInIssuesCount }

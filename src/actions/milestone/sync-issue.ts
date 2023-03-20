@@ -47,7 +47,9 @@ export class SyncMilestoneIssue extends MilestoneAction {
     const payload = context.payload as MilestoneEvent;
     this.dump(payload, "payload");
 
-    const milestone = await this.queryMilestoneById(payload.milestone.node_id);
+    const milestone = await this.queryMilestoneWithIssues(
+      payload.milestone.node_id
+    );
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }

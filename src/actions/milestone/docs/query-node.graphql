@@ -1,7 +1,0 @@
-query queryNode($id: ID!) { 
-  node(id: $id) {
-    __typename
-    ...ProjectsV2PropsOnRepository
-    ...MilestonePropsWithRepositoryAndIssues
-  }
-}

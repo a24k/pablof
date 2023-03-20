@@ -10,7 +10,7 @@ import type { ActionResult, Context } from "../";
 import { gql, MilestoneAction } from "./base";
 
 import type {
-  MilestonePropsWithRepositoryAndIssuesFragment,
+  MilestonePropsWithRepositoryFragment,
   IssuePropsFragment,
   ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
@@ -27,7 +27,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
   }
 
   protected async createIssueWithMilestone(
-    milestone: MilestonePropsWithRepositoryAndIssuesFragment
+    milestone: MilestonePropsWithRepositoryFragment
   ): Promise<Result<IssuePropsFragment, string>> {
     const issue = await gql.createIssueWithMilestone({
       repository: milestone.repository.id,
@@ -86,7 +86,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
   protected async addIssueToProject(
     project: ProjectV2PropsFragment,
     issue: IssuePropsFragment,
-    milestone: MilestonePropsWithRepositoryAndIssuesFragment
+    milestone: MilestonePropsWithRepositoryFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
     const item = await gql.addProjectItem({
       project: project.id,
@@ -144,7 +144,9 @@ export class CreateMilestoneIssue extends MilestoneAction {
     const payload = context.payload as MilestoneEvent;
     this.dump(payload, "payload");
 
-    const milestone = await this.queryMilestoneById(payload.milestone.node_id);
+    const milestone = await this.queryMilestoneWithRepository(
+      payload.milestone.node_id
+    );
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }
