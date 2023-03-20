@@ -4716,7 +4716,8 @@ class MilestoneAction extends base_1.Action {
     queryProjectsByRepositoryId(repository) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const node = (yield exports.gql.queryRepositoryWithProjectsV2({ id: repository })).node;
+            const node = (yield exports.gql.queryRepositoryWithProjectsV2({ id: repository }))
+                .node;
             if (node == undefined || node.__typename !== "Repository") {
                 return (0, neverthrow_1.err)("No repository found.");
             }
