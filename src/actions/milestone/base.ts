@@ -24,7 +24,7 @@ export abstract class MilestoneAction extends Action {
   ): Promise<Result<MilestonePropsWithRepositoryFragment, string>> {
     const node = (await gql.queryMilestoneWithRepository({ id: milestone }))
       .node;
-    this.dump(node, "queryNode");
+    this.dump(node, "queryMilestoneWithRepository");
 
     if (node == undefined || node.__typename !== "Milestone") {
       return err("No milestone found.");
@@ -37,7 +37,7 @@ export abstract class MilestoneAction extends Action {
     milestone: ID
   ): Promise<Result<MilestonePropsWithIssuesFragment, string>> {
     const node = (await gql.queryMilestoneWithIssues({ id: milestone })).node;
-    this.dump(node, "queryNode");
+    this.dump(node, "queryMilestoneWithIssues");
 
     if (node == undefined || node.__typename !== "Milestone") {
       return err("No milestone found.");
@@ -67,6 +67,8 @@ export abstract class MilestoneAction extends Action {
   ): Promise<Result<ProjectV2PropsFragment[], string>> {
     const node = (await gql.queryRepositoryWithProjectsV2({ id: repository }))
       .node;
+    this.dump(node, "queryRepositoryWithProjectsV2");
+
     if (node == undefined || node.__typename !== "Repository") {
       return err("No repository found.");
     }
