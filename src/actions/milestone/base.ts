@@ -6,12 +6,12 @@ import { Action } from "../base";
 import type { ID } from "../";
 
 import type {
-  IssuePropsFragment,
   MilestonePropsFragment,
   MilestonePropsWithRepositoryFragment,
   MilestonePropsWithIssuesFragment,
-  ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
   ProjectV2PropsFragment,
+  ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
+  IssuePropsFragment,
 } from "./graphql";
 
 import { graphql } from "../";
@@ -19,26 +19,6 @@ import { getSdk } from "./graphql";
 export const gql = getSdk(graphql);
 
 export abstract class MilestoneAction extends Action {
-  protected async queryProjectsByRepositoryId(
-    repository: ID
-  ): Promise<Result<ProjectV2PropsFragment[], string>> {
-    const node = (await gql.queryRepositoryWithProjectsV2({ id: repository }))
-      .node;
-    if (node == undefined || node.__typename !== "Repository") {
-      return err("No repository found.");
-    }
-
-    const projects = node.projectsV2.nodes?.flatMap(project =>
-      project == null || project.closed ? [] : project
-    );
-
-    if (projects == undefined || projects.length === 0) {
-      return err("No projects found.");
-    }
-
-    return ok(projects);
-  }
-
   protected async queryMilestoneWithRepository(
     milestone: ID
   ): Promise<Result<MilestonePropsWithRepositoryFragment, string>> {
@@ -80,6 +60,26 @@ export abstract class MilestoneAction extends Action {
     this.dump(root, "foundMilestoneIssue");
 
     return ok(root);
+  }
+
+  protected async queryProjectsByRepositoryId(
+    repository: ID
+  ): Promise<Result<ProjectV2PropsFragment[], string>> {
+    const node = (await gql.queryRepositoryWithProjectsV2({ id: repository }))
+      .node;
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    const projects = node.projectsV2.nodes?.flatMap(project =>
+      project == null || project.closed ? [] : project
+    );
+
+    if (projects == undefined || projects.length === 0) {
+      return err("No projects found.");
+    }
+
+    return ok(projects);
   }
 
   protected async updateStartDateField(
