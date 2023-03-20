@@ -32,7 +32,7 @@ fragment ProjectsV2PropsOnRepository on Repository {
 
 fragment IssueProps on Issue {
   __typename
-  id title body
+  id title body state
 }
 
 fragment IssuePropsWithTrackedInIssuesCount on Issue {
@@ -53,64 +53,21 @@ fragment IssuePropsWithTrackedInIssues on Issue {
 }
 
 fragment IssuePropsWithItems on Issue {
-  __typename
-  id title body issueState: state createdAt updatedAt closedAt
-  trackedInIssues(first: 1) { totalCount }
+  ...IssuePropsWithTrackedInIssuesCount
   milestone { ...MilestoneProps }
   projectItems(first: 100) {
     totalCount
-    nodes {
-      __typename
-      id type isArchived
-      project {
-        __typename
-        id title shortDescription readme closed
-        fields(first: 100, orderBy: { field: POSITION, direction: ASC }) {
-          totalCount
-          nodes {
-            __typename
-            ... on ProjectV2Field { id name dataType }
-            ... on ProjectV2SingleSelectField { id name options { id name } }
-          }
-        }
-      }
-      fieldValues(first: 100, orderBy: { field: POSITION, direction: ASC }) {
-        totalCount
-        nodes {
-          __typename
-          ... on ProjectV2ItemFieldRepositoryValue {
-            repository { __typename id name nameWithOwner description }
-            field { __typename ... on ProjectV2Field { name dataType } }
-          }
-          ... on ProjectV2ItemFieldMilestoneValue {
-            milestone { ...MilestoneProps }
-            field { __typename ... on ProjectV2Field { name dataType } }
-          }
-          ... on ProjectV2ItemFieldTextValue {
-            id text
-            field { __typename ... on ProjectV2Field { name dataType } }
-          }
-          ... on ProjectV2ItemFieldNumberValue {
-            id number
-            field { __typename ... on ProjectV2Field { name dataType } }
-          }
-          ... on ProjectV2ItemFieldDateValue {
-            id date
-            field { __typename ... on ProjectV2Field { name dataType } }
-          }
-          ... on ProjectV2ItemFieldSingleSelectValue {
-            id name optionId
-            field { __typename ... on ProjectV2SingleSelectField { name options { id name } } }
-          }
-        }
-      }
-    }
+    nodes { ...ProjectV2ItemPropsWithProjectAndFieldValues }
   }
 }
 
 fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
   id type isArchived
+}
+
+fragment ProjectV2ItemPropsWithProjectAndFieldValues on ProjectV2Item {
+  ...ProjectV2ItemProps
   project {
     __typename
     id title shortDescription readme closed

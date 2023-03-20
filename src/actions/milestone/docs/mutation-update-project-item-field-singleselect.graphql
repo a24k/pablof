@@ -3,7 +3,7 @@ mutation updateProjectItemFieldBySingleSelectValue($project: ID!, $item: ID!, $f
     projectId: $project, itemId: $item, fieldId: $field, value: { singleSelectOptionId: $option }
   }) {
     projectV2Item {
-      ...ProjectV2ItemProps
+      ...ProjectV2ItemPropsWithProjectAndFieldValues
     }
   }
 }

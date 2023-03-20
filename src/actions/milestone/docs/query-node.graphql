@@ -3,8 +3,5 @@ query queryNode($id: ID!) {
     __typename
     ...ProjectsV2PropsOnRepository
     ...MilestonePropsWithRepositoryAndIssues
-
-    ...ProjectV2Props
-    ...IssuePropsWithTrackedInIssues
   }
 }
