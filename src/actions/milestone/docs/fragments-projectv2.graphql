@@ -8,7 +8,12 @@ fragment ProjectV2ItemProps on ProjectV2Item {
   id type isArchived
 }
 
-fragment ProjectV2ItemPropsWithProjectAndFieldValues on ProjectV2Item {
+fragment ProjectV2ItemPropsWithProject on ProjectV2Item {
+  ...ProjectV2ItemProps
+  project { ...ProjectV2Props }
+}
+
+fragment ProjectV2ItemPropsWithProjectAndFields on ProjectV2Item {
   ...ProjectV2ItemProps
   project {
     ...ProjectV2Props
@@ -17,8 +22,12 @@ fragment ProjectV2ItemPropsWithProjectAndFieldValues on ProjectV2Item {
       nodes { ...ProjectV2FieldConfigurationProps }
     }
   }
-  fieldValues(first: 100, orderBy: { field: POSITION, direction: ASC }) {
-    totalCount
-    nodes { ...ProjectV2ItemFieldValueProps }
-  }
 }
+
+#fragment ProjectV2ItemPropsWithProjectAndFieldValues on ProjectV2Item {
+#  ...ProjectV2ItemPropsWithProjectAndFields
+#  fieldValues(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+#    totalCount
+#    nodes { ...ProjectV2ItemFieldValueProps }
+#  }
+#}

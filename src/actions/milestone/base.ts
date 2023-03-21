@@ -10,7 +10,8 @@ import type {
   MilestonePropsWithRepositoryFragment,
   MilestonePropsWithIssuesFragment,
   ProjectV2PropsFragment,
-  ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
+  ProjectV2ItemPropsWithProjectFragment,
+  ProjectV2ItemPropsWithProjectAndFieldsFragment,
   IssuePropsFragment,
 } from "./graphql";
 
@@ -85,11 +86,9 @@ export abstract class MilestoneAction extends Action {
   }
 
   protected async updateStartDateField(
-    item: ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
+    item: ProjectV2ItemPropsWithProjectAndFieldsFragment,
     milestone: MilestonePropsFragment
-  ): Promise<
-    Result<ProjectV2ItemPropsWithProjectAndFieldValuesFragment, string>
-  > {
+  ): Promise<Result<ProjectV2ItemPropsWithProjectFragment, string>> {
     const fields = item.project.fields.nodes?.flatMap(field =>
       field === null ||
       field.__typename !== "ProjectV2Field" ||
@@ -122,11 +121,9 @@ export abstract class MilestoneAction extends Action {
   }
 
   protected async updateTargetDateField(
-    item: ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
+    item: ProjectV2ItemPropsWithProjectAndFieldsFragment,
     milestone: MilestonePropsFragment
-  ): Promise<
-    Result<ProjectV2ItemPropsWithProjectAndFieldValuesFragment, string>
-  > {
+  ): Promise<Result<ProjectV2ItemPropsWithProjectFragment, string>> {
     if (milestone.dueOn == undefined) {
       return err(`No due date setted on milestone(${milestone.id}).`);
     }

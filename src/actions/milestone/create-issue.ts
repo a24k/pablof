@@ -14,7 +14,8 @@ import type {
   IssuePropsFragment,
   ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
-  ProjectV2ItemPropsWithProjectAndFieldValuesFragment,
+  ProjectV2ItemPropsWithProjectFragment,
+  ProjectV2ItemPropsWithProjectAndFieldsFragment,
 } from "./graphql";
 
 export class CreateMilestoneIssue extends MilestoneAction {
@@ -45,10 +46,8 @@ export class CreateMilestoneIssue extends MilestoneAction {
   }
 
   protected async updateStatusField(
-    item: ProjectV2ItemPropsWithProjectAndFieldValuesFragment
-  ): Promise<
-    Result<ProjectV2ItemPropsWithProjectAndFieldValuesFragment, string>
-  > {
+    item: ProjectV2ItemPropsWithProjectAndFieldsFragment
+  ): Promise<Result<ProjectV2ItemPropsWithProjectFragment, string>> {
     const fields = item.project.fields.nodes?.flatMap(field =>
       field === null ||
       field.__typename !== "ProjectV2SingleSelectField" ||

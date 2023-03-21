@@ -1,6 +1,6 @@
 fragment RepositoryProps on Repository {
   __typename
-  id name nameWithOwner description
+  id
 }
 
 fragment RepositoryPropsWithProjectsV2 on Repository {

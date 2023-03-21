@@ -1,3 +1,13 @@
+fragment ProjectV2FieldProps on ProjectV2Field {
+  __typename
+  id name dataType
+}
+
+fragment ProjectV2SingleSelectFieldProps on ProjectV2SingleSelectField {
+  __typename
+  id name options { id name }
+}
+
 fragment ProjectV2FieldConfigurationProps on ProjectV2FieldConfiguration {
   __typename
   ...ProjectV2FieldProps
@@ -30,14 +40,4 @@ fragment ProjectV2ItemFieldValueProps on ProjectV2ItemFieldValue {
     id name optionId
     field { ...ProjectV2SingleSelectFieldProps }
   }
-}
-
-fragment ProjectV2FieldProps on ProjectV2Field {
-  __typename
-  id name dataType
-}
-
-fragment ProjectV2SingleSelectFieldProps on ProjectV2SingleSelectField {
-  __typename
-  id name options { id name }
 }

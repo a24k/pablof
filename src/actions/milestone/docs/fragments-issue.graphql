@@ -25,6 +25,6 @@ fragment IssuePropsWithItems on Issue {
   milestone { ...MilestoneProps }
   projectItems(first: 100) {
     totalCount
-    nodes { ...ProjectV2ItemPropsWithProjectAndFieldValues }
+    nodes { ...ProjectV2ItemPropsWithProjectAndFields }
   }
 }
