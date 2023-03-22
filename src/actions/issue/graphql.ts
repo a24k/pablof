@@ -27925,53 +27925,12 @@ export enum WorkflowRunOrderField {
   CreatedAt = "CREATED_AT",
 }
 
-export type RepositoryPropsFragment = {
-  readonly __typename: "Repository";
-  readonly id: string;
-  readonly name: string;
-  readonly nameWithOwner: string;
-  readonly description?: string | null;
-  readonly owner:
-    | { readonly __typename?: "Organization"; readonly login: string }
-    | { readonly __typename?: "User"; readonly login: string };
-  readonly projectsV2: {
-    readonly __typename?: "ProjectV2Connection";
-    readonly totalCount: number;
-    readonly nodes?: ReadonlyArray<{
-      readonly __typename: "ProjectV2";
-      readonly id: string;
-      readonly title: string;
-      readonly shortDescription?: string | null;
-      readonly readme?: string | null;
-      readonly closed: boolean;
-    } | null> | null;
-  };
-};
-
 export type IssuePropsFragment = {
   readonly __typename: "Issue";
   readonly id: string;
   readonly title: string;
   readonly body: string;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly issueState: IssueState;
-  readonly trackedInIssues: {
-    readonly __typename?: "IssueConnection";
-    readonly totalCount: number;
-  };
-  readonly milestone?: {
-    readonly __typename: "Milestone";
-    readonly id: string;
-    readonly title: string;
-    readonly description?: string | null;
-    readonly dueOn?: unknown | null;
-    readonly createdAt: unknown;
-    readonly updatedAt: unknown;
-    readonly closedAt?: unknown | null;
-    readonly milestoneState: MilestoneState;
-  } | null;
+  readonly state: IssueState;
 };
 
 export type IssuePropsWithTrackedInIssuesFragment = {
@@ -27979,10 +27938,7 @@ export type IssuePropsWithTrackedInIssuesFragment = {
   readonly id: string;
   readonly title: string;
   readonly body: string;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly issueState: IssueState;
+  readonly state: IssueState;
   readonly trackedInIssues: {
     readonly __typename?: "IssueConnection";
     readonly totalCount: number;
@@ -27991,1215 +27947,88 @@ export type IssuePropsWithTrackedInIssuesFragment = {
       readonly id: string;
       readonly title: string;
       readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
-      readonly milestone?: {
-        readonly __typename: "Milestone";
-        readonly id: string;
-        readonly title: string;
-        readonly description?: string | null;
-        readonly dueOn?: unknown | null;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly milestoneState: MilestoneState;
-      } | null;
-    } | null> | null;
-  };
-  readonly milestone?: {
-    readonly __typename: "Milestone";
-    readonly id: string;
-    readonly title: string;
-    readonly description?: string | null;
-    readonly dueOn?: unknown | null;
-    readonly createdAt: unknown;
-    readonly updatedAt: unknown;
-    readonly closedAt?: unknown | null;
-    readonly milestoneState: MilestoneState;
-  } | null;
-};
-
-export type IssuePropsWithItemsFragment = {
-  readonly __typename: "Issue";
-  readonly id: string;
-  readonly title: string;
-  readonly body: string;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly issueState: IssueState;
-  readonly trackedInIssues: {
-    readonly __typename?: "IssueConnection";
-    readonly totalCount: number;
-  };
-  readonly milestone?: {
-    readonly __typename: "Milestone";
-    readonly id: string;
-    readonly title: string;
-    readonly description?: string | null;
-    readonly dueOn?: unknown | null;
-    readonly createdAt: unknown;
-    readonly updatedAt: unknown;
-    readonly closedAt?: unknown | null;
-    readonly milestoneState: MilestoneState;
-  } | null;
-  readonly projectItems: {
-    readonly __typename?: "ProjectV2ItemConnection";
-    readonly totalCount: number;
-    readonly nodes?: ReadonlyArray<{
-      readonly __typename: "ProjectV2Item";
-      readonly id: string;
-      readonly type: ProjectV2ItemType;
-      readonly isArchived: boolean;
-      readonly project: {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
-        readonly fields: {
-          readonly __typename?: "ProjectV2FieldConfigurationConnection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly id: string;
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | {
-                readonly __typename: "ProjectV2SingleSelectField";
-                readonly id: string;
-                readonly name: string;
-                readonly options: ReadonlyArray<{
-                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                  readonly id: string;
-                  readonly name: string;
-                }>;
-              }
-            | null
-          > | null;
-        };
-      };
-      readonly fieldValues: {
-        readonly __typename?: "ProjectV2ItemFieldValueConnection";
-        readonly totalCount: number;
-        readonly nodes?: ReadonlyArray<
-          | {
-              readonly __typename: "ProjectV2ItemFieldDateValue";
-              readonly id: string;
-              readonly date?: unknown | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
-              readonly milestone?: {
-                readonly __typename: "Milestone";
-                readonly id: string;
-                readonly title: string;
-                readonly description?: string | null;
-                readonly dueOn?: unknown | null;
-                readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
-                readonly milestoneState: MilestoneState;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldNumberValue";
-              readonly id: string;
-              readonly number?: number | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
-              readonly repository?: {
-                readonly __typename: "Repository";
-                readonly id: string;
-                readonly name: string;
-                readonly nameWithOwner: string;
-                readonly description?: string | null;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
-              readonly id: string;
-              readonly name?: string | null;
-              readonly optionId?: string | null;
-              readonly field:
-                | { readonly __typename: "ProjectV2Field" }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | {
-                    readonly __typename: "ProjectV2SingleSelectField";
-                    readonly name: string;
-                    readonly options: ReadonlyArray<{
-                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                      readonly id: string;
-                      readonly name: string;
-                    }>;
-                  };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldTextValue";
-              readonly id: string;
-              readonly text?: string | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
-          | null
-        > | null;
-      };
+      readonly state: IssueState;
     } | null> | null;
   };
 };
 
-export type MilestonePropsFragment = {
-  readonly __typename: "Milestone";
-  readonly id: string;
-  readonly title: string;
-  readonly description?: string | null;
-  readonly dueOn?: unknown | null;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly milestoneState: MilestoneState;
-};
-
-export type MilestonePropsWithRepositoryAndIssuesFragment = {
-  readonly __typename: "Milestone";
-  readonly id: string;
-  readonly title: string;
-  readonly description?: string | null;
-  readonly dueOn?: unknown | null;
-  readonly createdAt: unknown;
-  readonly updatedAt: unknown;
-  readonly closedAt?: unknown | null;
-  readonly milestoneState: MilestoneState;
-  readonly repository: {
-    readonly __typename: "Repository";
-    readonly id: string;
-    readonly name: string;
-    readonly nameWithOwner: string;
-    readonly description?: string | null;
-    readonly owner:
-      | { readonly __typename?: "Organization"; readonly login: string }
-      | { readonly __typename?: "User"; readonly login: string };
-  };
-  readonly issues: {
-    readonly __typename?: "IssueConnection";
-    readonly totalCount: number;
-    readonly nodes?: ReadonlyArray<{
-      readonly __typename: "Issue";
-      readonly id: string;
-      readonly title: string;
-      readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
-    } | null> | null;
-  };
-};
-
-export type ProjectV2PropsFragment = {
-  readonly __typename: "ProjectV2";
-  readonly id: string;
-  readonly title: string;
-  readonly shortDescription?: string | null;
-  readonly readme?: string | null;
-  readonly closed: boolean;
-};
-
-export type ProjectV2ItemPropsFragment = {
-  readonly __typename: "ProjectV2Item";
-  readonly id: string;
-  readonly type: ProjectV2ItemType;
-  readonly isArchived: boolean;
-  readonly project: {
-    readonly __typename: "ProjectV2";
-    readonly id: string;
-    readonly title: string;
-    readonly shortDescription?: string | null;
-    readonly readme?: string | null;
-    readonly closed: boolean;
-    readonly fields: {
-      readonly __typename?: "ProjectV2FieldConfigurationConnection";
-      readonly totalCount: number;
-      readonly nodes?: ReadonlyArray<
-        | {
-            readonly __typename: "ProjectV2Field";
-            readonly id: string;
-            readonly name: string;
-            readonly dataType: ProjectV2FieldType;
-          }
-        | { readonly __typename: "ProjectV2IterationField" }
-        | {
-            readonly __typename: "ProjectV2SingleSelectField";
-            readonly id: string;
-            readonly name: string;
-            readonly options: ReadonlyArray<{
-              readonly __typename?: "ProjectV2SingleSelectFieldOption";
-              readonly id: string;
-              readonly name: string;
-            }>;
-          }
-        | null
-      > | null;
-    };
-  };
-  readonly fieldValues: {
-    readonly __typename?: "ProjectV2ItemFieldValueConnection";
-    readonly totalCount: number;
-    readonly nodes?: ReadonlyArray<
-      | {
-          readonly __typename: "ProjectV2ItemFieldDateValue";
-          readonly id: string;
-          readonly date?: unknown | null;
-          readonly field:
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | { readonly __typename: "ProjectV2SingleSelectField" };
-        }
-      | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-      | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
-      | {
-          readonly __typename: "ProjectV2ItemFieldMilestoneValue";
-          readonly milestone?: {
-            readonly __typename: "Milestone";
-            readonly id: string;
-            readonly title: string;
-            readonly description?: string | null;
-            readonly dueOn?: unknown | null;
-            readonly createdAt: unknown;
-            readonly updatedAt: unknown;
-            readonly closedAt?: unknown | null;
-            readonly milestoneState: MilestoneState;
-          } | null;
-          readonly field:
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | { readonly __typename: "ProjectV2SingleSelectField" };
-        }
-      | {
-          readonly __typename: "ProjectV2ItemFieldNumberValue";
-          readonly id: string;
-          readonly number?: number | null;
-          readonly field:
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | { readonly __typename: "ProjectV2SingleSelectField" };
-        }
-      | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
-      | {
-          readonly __typename: "ProjectV2ItemFieldRepositoryValue";
-          readonly repository?: {
-            readonly __typename: "Repository";
-            readonly id: string;
-            readonly name: string;
-            readonly nameWithOwner: string;
-            readonly description?: string | null;
-          } | null;
-          readonly field:
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | { readonly __typename: "ProjectV2SingleSelectField" };
-        }
-      | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
-      | {
-          readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
-          readonly id: string;
-          readonly name?: string | null;
-          readonly optionId?: string | null;
-          readonly field:
-            | { readonly __typename: "ProjectV2Field" }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | {
-                readonly __typename: "ProjectV2SingleSelectField";
-                readonly name: string;
-                readonly options: ReadonlyArray<{
-                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                  readonly id: string;
-                  readonly name: string;
-                }>;
-              };
-        }
-      | {
-          readonly __typename: "ProjectV2ItemFieldTextValue";
-          readonly id: string;
-          readonly text?: string | null;
-          readonly field:
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | { readonly __typename: "ProjectV2SingleSelectField" };
-        }
-      | { readonly __typename: "ProjectV2ItemFieldUserValue" }
-      | null
-    > | null;
-  };
-};
-
-export type AddProjectItemMutationVariables = Exact<{
-  project: Scalars["ID"];
-  item: Scalars["ID"];
-}>;
-
-export type AddProjectItemMutation = {
-  readonly __typename?: "Mutation";
-  readonly addProjectV2ItemById?: {
-    readonly __typename?: "AddProjectV2ItemByIdPayload";
-    readonly item?: {
-      readonly __typename: "ProjectV2Item";
-      readonly id: string;
-      readonly type: ProjectV2ItemType;
-      readonly isArchived: boolean;
-      readonly project: {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
-        readonly fields: {
-          readonly __typename?: "ProjectV2FieldConfigurationConnection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly id: string;
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | {
-                readonly __typename: "ProjectV2SingleSelectField";
-                readonly id: string;
-                readonly name: string;
-                readonly options: ReadonlyArray<{
-                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                  readonly id: string;
-                  readonly name: string;
-                }>;
-              }
-            | null
-          > | null;
-        };
-      };
-      readonly fieldValues: {
-        readonly __typename?: "ProjectV2ItemFieldValueConnection";
-        readonly totalCount: number;
-        readonly nodes?: ReadonlyArray<
-          | {
-              readonly __typename: "ProjectV2ItemFieldDateValue";
-              readonly id: string;
-              readonly date?: unknown | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
-              readonly milestone?: {
-                readonly __typename: "Milestone";
-                readonly id: string;
-                readonly title: string;
-                readonly description?: string | null;
-                readonly dueOn?: unknown | null;
-                readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
-                readonly milestoneState: MilestoneState;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldNumberValue";
-              readonly id: string;
-              readonly number?: number | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
-              readonly repository?: {
-                readonly __typename: "Repository";
-                readonly id: string;
-                readonly name: string;
-                readonly nameWithOwner: string;
-                readonly description?: string | null;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
-              readonly id: string;
-              readonly name?: string | null;
-              readonly optionId?: string | null;
-              readonly field:
-                | { readonly __typename: "ProjectV2Field" }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | {
-                    readonly __typename: "ProjectV2SingleSelectField";
-                    readonly name: string;
-                    readonly options: ReadonlyArray<{
-                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                      readonly id: string;
-                      readonly name: string;
-                    }>;
-                  };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldTextValue";
-              readonly id: string;
-              readonly text?: string | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
-          | null
-        > | null;
-      };
-    } | null;
-  } | null;
-};
-
-export type CreateIssueWithMilestoneMutationVariables = Exact<{
-  repository: Scalars["ID"];
-  title: Scalars["String"];
-  body?: InputMaybe<Scalars["String"]>;
-  milestone: Scalars["ID"];
-}>;
-
-export type CreateIssueWithMilestoneMutation = {
-  readonly __typename?: "Mutation";
-  readonly createIssue?: {
-    readonly __typename?: "CreateIssuePayload";
-    readonly issue?: {
-      readonly __typename: "Issue";
-      readonly id: string;
-      readonly title: string;
-      readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
-      readonly milestone?: {
-        readonly __typename: "Milestone";
-        readonly id: string;
-        readonly title: string;
-        readonly description?: string | null;
-        readonly dueOn?: unknown | null;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly milestoneState: MilestoneState;
-      } | null;
-    } | null;
-  } | null;
-};
-
-export type UpdateIssueMutationVariables = Exact<{
-  issue: Scalars["ID"];
-  title: Scalars["String"];
-  state: IssueState;
-}>;
-
-export type UpdateIssueMutation = {
-  readonly __typename?: "Mutation";
-  readonly updateIssue?: {
-    readonly __typename?: "UpdateIssuePayload";
-    readonly issue?: {
-      readonly __typename: "Issue";
-      readonly id: string;
-      readonly title: string;
-      readonly body: string;
-      readonly createdAt: unknown;
-      readonly updatedAt: unknown;
-      readonly closedAt?: unknown | null;
-      readonly issueState: IssueState;
-      readonly trackedInIssues: {
-        readonly __typename?: "IssueConnection";
-        readonly totalCount: number;
-      };
-      readonly milestone?: {
-        readonly __typename: "Milestone";
-        readonly id: string;
-        readonly title: string;
-        readonly description?: string | null;
-        readonly dueOn?: unknown | null;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly milestoneState: MilestoneState;
-      } | null;
-      readonly projectItems: {
-        readonly __typename?: "ProjectV2ItemConnection";
-        readonly totalCount: number;
-        readonly nodes?: ReadonlyArray<{
-          readonly __typename: "ProjectV2Item";
-          readonly id: string;
-          readonly type: ProjectV2ItemType;
-          readonly isArchived: boolean;
-          readonly project: {
-            readonly __typename: "ProjectV2";
-            readonly id: string;
-            readonly title: string;
-            readonly shortDescription?: string | null;
-            readonly readme?: string | null;
-            readonly closed: boolean;
-            readonly fields: {
-              readonly __typename?: "ProjectV2FieldConfigurationConnection";
-              readonly totalCount: number;
-              readonly nodes?: ReadonlyArray<
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly id: string;
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | {
-                    readonly __typename: "ProjectV2SingleSelectField";
-                    readonly id: string;
-                    readonly name: string;
-                    readonly options: ReadonlyArray<{
-                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                      readonly id: string;
-                      readonly name: string;
-                    }>;
-                  }
-                | null
-              > | null;
-            };
-          };
-          readonly fieldValues: {
-            readonly __typename?: "ProjectV2ItemFieldValueConnection";
-            readonly totalCount: number;
-            readonly nodes?: ReadonlyArray<
-              | {
-                  readonly __typename: "ProjectV2ItemFieldDateValue";
-                  readonly id: string;
-                  readonly date?: unknown | null;
-                  readonly field:
-                    | {
-                        readonly __typename: "ProjectV2Field";
-                        readonly name: string;
-                        readonly dataType: ProjectV2FieldType;
-                      }
-                    | { readonly __typename: "ProjectV2IterationField" }
-                    | { readonly __typename: "ProjectV2SingleSelectField" };
-                }
-              | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-              | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
-              | {
-                  readonly __typename: "ProjectV2ItemFieldMilestoneValue";
-                  readonly milestone?: {
-                    readonly __typename: "Milestone";
-                    readonly id: string;
-                    readonly title: string;
-                    readonly description?: string | null;
-                    readonly dueOn?: unknown | null;
-                    readonly createdAt: unknown;
-                    readonly updatedAt: unknown;
-                    readonly closedAt?: unknown | null;
-                    readonly milestoneState: MilestoneState;
-                  } | null;
-                  readonly field:
-                    | {
-                        readonly __typename: "ProjectV2Field";
-                        readonly name: string;
-                        readonly dataType: ProjectV2FieldType;
-                      }
-                    | { readonly __typename: "ProjectV2IterationField" }
-                    | { readonly __typename: "ProjectV2SingleSelectField" };
-                }
-              | {
-                  readonly __typename: "ProjectV2ItemFieldNumberValue";
-                  readonly id: string;
-                  readonly number?: number | null;
-                  readonly field:
-                    | {
-                        readonly __typename: "ProjectV2Field";
-                        readonly name: string;
-                        readonly dataType: ProjectV2FieldType;
-                      }
-                    | { readonly __typename: "ProjectV2IterationField" }
-                    | { readonly __typename: "ProjectV2SingleSelectField" };
-                }
-              | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
-              | {
-                  readonly __typename: "ProjectV2ItemFieldRepositoryValue";
-                  readonly repository?: {
-                    readonly __typename: "Repository";
-                    readonly id: string;
-                    readonly name: string;
-                    readonly nameWithOwner: string;
-                    readonly description?: string | null;
-                  } | null;
-                  readonly field:
-                    | {
-                        readonly __typename: "ProjectV2Field";
-                        readonly name: string;
-                        readonly dataType: ProjectV2FieldType;
-                      }
-                    | { readonly __typename: "ProjectV2IterationField" }
-                    | { readonly __typename: "ProjectV2SingleSelectField" };
-                }
-              | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
-              | {
-                  readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
-                  readonly id: string;
-                  readonly name?: string | null;
-                  readonly optionId?: string | null;
-                  readonly field:
-                    | { readonly __typename: "ProjectV2Field" }
-                    | { readonly __typename: "ProjectV2IterationField" }
-                    | {
-                        readonly __typename: "ProjectV2SingleSelectField";
-                        readonly name: string;
-                        readonly options: ReadonlyArray<{
-                          readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                          readonly id: string;
-                          readonly name: string;
-                        }>;
-                      };
-                }
-              | {
-                  readonly __typename: "ProjectV2ItemFieldTextValue";
-                  readonly id: string;
-                  readonly text?: string | null;
-                  readonly field:
-                    | {
-                        readonly __typename: "ProjectV2Field";
-                        readonly name: string;
-                        readonly dataType: ProjectV2FieldType;
-                      }
-                    | { readonly __typename: "ProjectV2IterationField" }
-                    | { readonly __typename: "ProjectV2SingleSelectField" };
-                }
-              | { readonly __typename: "ProjectV2ItemFieldUserValue" }
-              | null
-            > | null;
-          };
-        } | null> | null;
-      };
-    } | null;
-  } | null;
-};
-
-export type UpdateProjectItemFieldByDateMutationVariables = Exact<{
-  project: Scalars["ID"];
-  item: Scalars["ID"];
-  field: Scalars["ID"];
-  date: Scalars["Date"];
-}>;
-
-export type UpdateProjectItemFieldByDateMutation = {
-  readonly __typename?: "Mutation";
-  readonly updateProjectV2ItemFieldValue?: {
-    readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
-    readonly projectV2Item?: {
-      readonly __typename: "ProjectV2Item";
-      readonly id: string;
-      readonly type: ProjectV2ItemType;
-      readonly isArchived: boolean;
-      readonly project: {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
-        readonly fields: {
-          readonly __typename?: "ProjectV2FieldConfigurationConnection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly id: string;
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | {
-                readonly __typename: "ProjectV2SingleSelectField";
-                readonly id: string;
-                readonly name: string;
-                readonly options: ReadonlyArray<{
-                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                  readonly id: string;
-                  readonly name: string;
-                }>;
-              }
-            | null
-          > | null;
-        };
-      };
-      readonly fieldValues: {
-        readonly __typename?: "ProjectV2ItemFieldValueConnection";
-        readonly totalCount: number;
-        readonly nodes?: ReadonlyArray<
-          | {
-              readonly __typename: "ProjectV2ItemFieldDateValue";
-              readonly id: string;
-              readonly date?: unknown | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
-              readonly milestone?: {
-                readonly __typename: "Milestone";
-                readonly id: string;
-                readonly title: string;
-                readonly description?: string | null;
-                readonly dueOn?: unknown | null;
-                readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
-                readonly milestoneState: MilestoneState;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldNumberValue";
-              readonly id: string;
-              readonly number?: number | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
-              readonly repository?: {
-                readonly __typename: "Repository";
-                readonly id: string;
-                readonly name: string;
-                readonly nameWithOwner: string;
-                readonly description?: string | null;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
-              readonly id: string;
-              readonly name?: string | null;
-              readonly optionId?: string | null;
-              readonly field:
-                | { readonly __typename: "ProjectV2Field" }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | {
-                    readonly __typename: "ProjectV2SingleSelectField";
-                    readonly name: string;
-                    readonly options: ReadonlyArray<{
-                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                      readonly id: string;
-                      readonly name: string;
-                    }>;
-                  };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldTextValue";
-              readonly id: string;
-              readonly text?: string | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
-          | null
-        > | null;
-      };
-    } | null;
-  } | null;
-};
-
-export type UpdateProjectItemFieldBySingleSelectValueMutationVariables = Exact<{
-  project: Scalars["ID"];
-  item: Scalars["ID"];
-  field: Scalars["ID"];
-  option: Scalars["String"];
-}>;
-
-export type UpdateProjectItemFieldBySingleSelectValueMutation = {
-  readonly __typename?: "Mutation";
-  readonly updateProjectV2ItemFieldValue?: {
-    readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
-    readonly projectV2Item?: {
-      readonly __typename: "ProjectV2Item";
-      readonly id: string;
-      readonly type: ProjectV2ItemType;
-      readonly isArchived: boolean;
-      readonly project: {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
-        readonly fields: {
-          readonly __typename?: "ProjectV2FieldConfigurationConnection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly id: string;
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | {
-                readonly __typename: "ProjectV2SingleSelectField";
-                readonly id: string;
-                readonly name: string;
-                readonly options: ReadonlyArray<{
-                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                  readonly id: string;
-                  readonly name: string;
-                }>;
-              }
-            | null
-          > | null;
-        };
-      };
-      readonly fieldValues: {
-        readonly __typename?: "ProjectV2ItemFieldValueConnection";
-        readonly totalCount: number;
-        readonly nodes?: ReadonlyArray<
-          | {
-              readonly __typename: "ProjectV2ItemFieldDateValue";
-              readonly id: string;
-              readonly date?: unknown | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldMilestoneValue";
-              readonly milestone?: {
-                readonly __typename: "Milestone";
-                readonly id: string;
-                readonly title: string;
-                readonly description?: string | null;
-                readonly dueOn?: unknown | null;
-                readonly createdAt: unknown;
-                readonly updatedAt: unknown;
-                readonly closedAt?: unknown | null;
-                readonly milestoneState: MilestoneState;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldNumberValue";
-              readonly id: string;
-              readonly number?: number | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldRepositoryValue";
-              readonly repository?: {
-                readonly __typename: "Repository";
-                readonly id: string;
-                readonly name: string;
-                readonly nameWithOwner: string;
-                readonly description?: string | null;
-              } | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
-          | {
-              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
-              readonly id: string;
-              readonly name?: string | null;
-              readonly optionId?: string | null;
-              readonly field:
-                | { readonly __typename: "ProjectV2Field" }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | {
-                    readonly __typename: "ProjectV2SingleSelectField";
-                    readonly name: string;
-                    readonly options: ReadonlyArray<{
-                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                      readonly id: string;
-                      readonly name: string;
-                    }>;
-                  };
-            }
-          | {
-              readonly __typename: "ProjectV2ItemFieldTextValue";
-              readonly id: string;
-              readonly text?: string | null;
-              readonly field:
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | { readonly __typename: "ProjectV2SingleSelectField" };
-            }
-          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
-          | null
-        > | null;
-      };
-    } | null;
-  } | null;
-};
-
-export type QueryNodeQueryVariables = Exact<{
+export type QueryIssueWithTrackedInIssuesQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
 
-export type QueryNodeQuery = {
+export type QueryIssueWithTrackedInIssuesQuery = {
   readonly __typename?: "Query";
   readonly node?:
-    | { readonly __typename: "AddedToProjectEvent" }
-    | { readonly __typename: "App" }
-    | { readonly __typename: "AssignedEvent" }
-    | { readonly __typename: "AutoMergeDisabledEvent" }
-    | { readonly __typename: "AutoMergeEnabledEvent" }
-    | { readonly __typename: "AutoRebaseEnabledEvent" }
-    | { readonly __typename: "AutoSquashEnabledEvent" }
-    | { readonly __typename: "AutomaticBaseChangeFailedEvent" }
-    | { readonly __typename: "AutomaticBaseChangeSucceededEvent" }
-    | { readonly __typename: "BaseRefChangedEvent" }
-    | { readonly __typename: "BaseRefDeletedEvent" }
-    | { readonly __typename: "BaseRefForcePushedEvent" }
-    | { readonly __typename: "Blob" }
-    | { readonly __typename: "Bot" }
-    | { readonly __typename: "BranchProtectionRule" }
-    | { readonly __typename: "BypassForcePushAllowance" }
-    | { readonly __typename: "BypassPullRequestAllowance" }
-    | { readonly __typename: "CWE" }
-    | { readonly __typename: "CheckRun" }
-    | { readonly __typename: "CheckSuite" }
-    | { readonly __typename: "ClosedEvent" }
-    | { readonly __typename: "CodeOfConduct" }
-    | { readonly __typename: "CommentDeletedEvent" }
-    | { readonly __typename: "Commit" }
-    | { readonly __typename: "CommitComment" }
-    | { readonly __typename: "CommitCommentThread" }
-    | { readonly __typename: "Comparison" }
-    | { readonly __typename: "ConnectedEvent" }
-    | { readonly __typename: "ConvertToDraftEvent" }
-    | { readonly __typename: "ConvertedNoteToIssueEvent" }
-    | { readonly __typename: "ConvertedToDiscussionEvent" }
-    | { readonly __typename: "CrossReferencedEvent" }
-    | { readonly __typename: "DemilestonedEvent" }
-    | { readonly __typename: "DependencyGraphManifest" }
-    | { readonly __typename: "DeployKey" }
-    | { readonly __typename: "DeployedEvent" }
-    | { readonly __typename: "Deployment" }
-    | { readonly __typename: "DeploymentEnvironmentChangedEvent" }
-    | { readonly __typename: "DeploymentReview" }
-    | { readonly __typename: "DeploymentStatus" }
-    | { readonly __typename: "DisconnectedEvent" }
-    | { readonly __typename: "Discussion" }
-    | { readonly __typename: "DiscussionCategory" }
-    | { readonly __typename: "DiscussionComment" }
-    | { readonly __typename: "DiscussionPoll" }
-    | { readonly __typename: "DiscussionPollOption" }
-    | { readonly __typename: "DraftIssue" }
-    | { readonly __typename: "Enterprise" }
-    | { readonly __typename: "EnterpriseAdministratorInvitation" }
-    | { readonly __typename: "EnterpriseIdentityProvider" }
-    | { readonly __typename: "EnterpriseRepositoryInfo" }
-    | { readonly __typename: "EnterpriseServerInstallation" }
-    | { readonly __typename: "EnterpriseServerUserAccount" }
-    | { readonly __typename: "EnterpriseServerUserAccountEmail" }
-    | { readonly __typename: "EnterpriseServerUserAccountsUpload" }
-    | { readonly __typename: "EnterpriseUserAccount" }
-    | { readonly __typename: "Environment" }
-    | { readonly __typename: "ExternalIdentity" }
-    | { readonly __typename: "Gist" }
-    | { readonly __typename: "GistComment" }
-    | { readonly __typename: "HeadRefDeletedEvent" }
-    | { readonly __typename: "HeadRefForcePushedEvent" }
-    | { readonly __typename: "HeadRefRestoredEvent" }
-    | { readonly __typename: "IpAllowListEntry" }
+    | { readonly __typename?: "AddedToProjectEvent" }
+    | { readonly __typename?: "App" }
+    | { readonly __typename?: "AssignedEvent" }
+    | { readonly __typename?: "AutoMergeDisabledEvent" }
+    | { readonly __typename?: "AutoMergeEnabledEvent" }
+    | { readonly __typename?: "AutoRebaseEnabledEvent" }
+    | { readonly __typename?: "AutoSquashEnabledEvent" }
+    | { readonly __typename?: "AutomaticBaseChangeFailedEvent" }
+    | { readonly __typename?: "AutomaticBaseChangeSucceededEvent" }
+    | { readonly __typename?: "BaseRefChangedEvent" }
+    | { readonly __typename?: "BaseRefDeletedEvent" }
+    | { readonly __typename?: "BaseRefForcePushedEvent" }
+    | { readonly __typename?: "Blob" }
+    | { readonly __typename?: "Bot" }
+    | { readonly __typename?: "BranchProtectionRule" }
+    | { readonly __typename?: "BypassForcePushAllowance" }
+    | { readonly __typename?: "BypassPullRequestAllowance" }
+    | { readonly __typename?: "CWE" }
+    | { readonly __typename?: "CheckRun" }
+    | { readonly __typename?: "CheckSuite" }
+    | { readonly __typename?: "ClosedEvent" }
+    | { readonly __typename?: "CodeOfConduct" }
+    | { readonly __typename?: "CommentDeletedEvent" }
+    | { readonly __typename?: "Commit" }
+    | { readonly __typename?: "CommitComment" }
+    | { readonly __typename?: "CommitCommentThread" }
+    | { readonly __typename?: "Comparison" }
+    | { readonly __typename?: "ConnectedEvent" }
+    | { readonly __typename?: "ConvertToDraftEvent" }
+    | { readonly __typename?: "ConvertedNoteToIssueEvent" }
+    | { readonly __typename?: "ConvertedToDiscussionEvent" }
+    | { readonly __typename?: "CrossReferencedEvent" }
+    | { readonly __typename?: "DemilestonedEvent" }
+    | { readonly __typename?: "DependencyGraphManifest" }
+    | { readonly __typename?: "DeployKey" }
+    | { readonly __typename?: "DeployedEvent" }
+    | { readonly __typename?: "Deployment" }
+    | { readonly __typename?: "DeploymentEnvironmentChangedEvent" }
+    | { readonly __typename?: "DeploymentReview" }
+    | { readonly __typename?: "DeploymentStatus" }
+    | { readonly __typename?: "DisconnectedEvent" }
+    | { readonly __typename?: "Discussion" }
+    | { readonly __typename?: "DiscussionCategory" }
+    | { readonly __typename?: "DiscussionComment" }
+    | { readonly __typename?: "DiscussionPoll" }
+    | { readonly __typename?: "DiscussionPollOption" }
+    | { readonly __typename?: "DraftIssue" }
+    | { readonly __typename?: "Enterprise" }
+    | { readonly __typename?: "EnterpriseAdministratorInvitation" }
+    | { readonly __typename?: "EnterpriseIdentityProvider" }
+    | { readonly __typename?: "EnterpriseRepositoryInfo" }
+    | { readonly __typename?: "EnterpriseServerInstallation" }
+    | { readonly __typename?: "EnterpriseServerUserAccount" }
+    | { readonly __typename?: "EnterpriseServerUserAccountEmail" }
+    | { readonly __typename?: "EnterpriseServerUserAccountsUpload" }
+    | { readonly __typename?: "EnterpriseUserAccount" }
+    | { readonly __typename?: "Environment" }
+    | { readonly __typename?: "ExternalIdentity" }
+    | { readonly __typename?: "Gist" }
+    | { readonly __typename?: "GistComment" }
+    | { readonly __typename?: "HeadRefDeletedEvent" }
+    | { readonly __typename?: "HeadRefForcePushedEvent" }
+    | { readonly __typename?: "HeadRefRestoredEvent" }
+    | { readonly __typename?: "IpAllowListEntry" }
     | {
         readonly __typename: "Issue";
         readonly id: string;
         readonly title: string;
         readonly body: string;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly issueState: IssueState;
+        readonly state: IssueState;
         readonly trackedInIssues: {
           readonly __typename?: "IssueConnection";
           readonly totalCount: number;
@@ -29208,862 +28037,210 @@ export type QueryNodeQuery = {
             readonly id: string;
             readonly title: string;
             readonly body: string;
-            readonly createdAt: unknown;
-            readonly updatedAt: unknown;
-            readonly closedAt?: unknown | null;
-            readonly issueState: IssueState;
-            readonly trackedInIssues: {
-              readonly __typename?: "IssueConnection";
-              readonly totalCount: number;
-            };
-            readonly milestone?: {
-              readonly __typename: "Milestone";
-              readonly id: string;
-              readonly title: string;
-              readonly description?: string | null;
-              readonly dueOn?: unknown | null;
-              readonly createdAt: unknown;
-              readonly updatedAt: unknown;
-              readonly closedAt?: unknown | null;
-              readonly milestoneState: MilestoneState;
-            } | null;
-          } | null> | null;
-        };
-        readonly milestone?: {
-          readonly __typename: "Milestone";
-          readonly id: string;
-          readonly title: string;
-          readonly description?: string | null;
-          readonly dueOn?: unknown | null;
-          readonly createdAt: unknown;
-          readonly updatedAt: unknown;
-          readonly closedAt?: unknown | null;
-          readonly milestoneState: MilestoneState;
-        } | null;
-      }
-    | { readonly __typename: "IssueComment" }
-    | { readonly __typename: "Label" }
-    | { readonly __typename: "LabeledEvent" }
-    | { readonly __typename: "Language" }
-    | { readonly __typename: "License" }
-    | { readonly __typename: "LinkedBranch" }
-    | { readonly __typename: "LockedEvent" }
-    | { readonly __typename: "Mannequin" }
-    | { readonly __typename: "MarkedAsDuplicateEvent" }
-    | { readonly __typename: "MarketplaceCategory" }
-    | { readonly __typename: "MarketplaceListing" }
-    | { readonly __typename: "MembersCanDeleteReposClearAuditEntry" }
-    | { readonly __typename: "MembersCanDeleteReposDisableAuditEntry" }
-    | { readonly __typename: "MembersCanDeleteReposEnableAuditEntry" }
-    | { readonly __typename: "MentionedEvent" }
-    | { readonly __typename: "MergedEvent" }
-    | { readonly __typename: "MigrationSource" }
-    | {
-        readonly __typename: "Milestone";
-        readonly id: string;
-        readonly title: string;
-        readonly description?: string | null;
-        readonly dueOn?: unknown | null;
-        readonly createdAt: unknown;
-        readonly updatedAt: unknown;
-        readonly closedAt?: unknown | null;
-        readonly milestoneState: MilestoneState;
-        readonly repository: {
-          readonly __typename: "Repository";
-          readonly id: string;
-          readonly name: string;
-          readonly nameWithOwner: string;
-          readonly description?: string | null;
-          readonly owner:
-            | { readonly __typename?: "Organization"; readonly login: string }
-            | { readonly __typename?: "User"; readonly login: string };
-        };
-        readonly issues: {
-          readonly __typename?: "IssueConnection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<{
-            readonly __typename: "Issue";
-            readonly id: string;
-            readonly title: string;
-            readonly body: string;
-            readonly createdAt: unknown;
-            readonly updatedAt: unknown;
-            readonly closedAt?: unknown | null;
-            readonly issueState: IssueState;
-            readonly trackedInIssues: {
-              readonly __typename?: "IssueConnection";
-              readonly totalCount: number;
-            };
+            readonly state: IssueState;
           } | null> | null;
         };
       }
-    | { readonly __typename: "MilestonedEvent" }
-    | { readonly __typename: "MovedColumnsInProjectEvent" }
-    | { readonly __typename: "OIDCProvider" }
-    | { readonly __typename: "OauthApplicationCreateAuditEntry" }
-    | { readonly __typename: "OrgAddBillingManagerAuditEntry" }
-    | { readonly __typename: "OrgAddMemberAuditEntry" }
-    | { readonly __typename: "OrgBlockUserAuditEntry" }
-    | { readonly __typename: "OrgConfigDisableCollaboratorsOnlyAuditEntry" }
-    | { readonly __typename: "OrgConfigEnableCollaboratorsOnlyAuditEntry" }
-    | { readonly __typename: "OrgCreateAuditEntry" }
-    | { readonly __typename: "OrgDisableOauthAppRestrictionsAuditEntry" }
-    | { readonly __typename: "OrgDisableSamlAuditEntry" }
-    | { readonly __typename: "OrgDisableTwoFactorRequirementAuditEntry" }
-    | { readonly __typename: "OrgEnableOauthAppRestrictionsAuditEntry" }
-    | { readonly __typename: "OrgEnableSamlAuditEntry" }
-    | { readonly __typename: "OrgEnableTwoFactorRequirementAuditEntry" }
-    | { readonly __typename: "OrgInviteMemberAuditEntry" }
-    | { readonly __typename: "OrgInviteToBusinessAuditEntry" }
-    | { readonly __typename: "OrgOauthAppAccessApprovedAuditEntry" }
-    | { readonly __typename: "OrgOauthAppAccessDeniedAuditEntry" }
-    | { readonly __typename: "OrgOauthAppAccessRequestedAuditEntry" }
-    | { readonly __typename: "OrgRemoveBillingManagerAuditEntry" }
-    | { readonly __typename: "OrgRemoveMemberAuditEntry" }
-    | { readonly __typename: "OrgRemoveOutsideCollaboratorAuditEntry" }
-    | { readonly __typename: "OrgRestoreMemberAuditEntry" }
-    | { readonly __typename: "OrgUnblockUserAuditEntry" }
-    | { readonly __typename: "OrgUpdateDefaultRepositoryPermissionAuditEntry" }
-    | { readonly __typename: "OrgUpdateMemberAuditEntry" }
+    | { readonly __typename?: "IssueComment" }
+    | { readonly __typename?: "Label" }
+    | { readonly __typename?: "LabeledEvent" }
+    | { readonly __typename?: "Language" }
+    | { readonly __typename?: "License" }
+    | { readonly __typename?: "LinkedBranch" }
+    | { readonly __typename?: "LockedEvent" }
+    | { readonly __typename?: "Mannequin" }
+    | { readonly __typename?: "MarkedAsDuplicateEvent" }
+    | { readonly __typename?: "MarketplaceCategory" }
+    | { readonly __typename?: "MarketplaceListing" }
+    | { readonly __typename?: "MembersCanDeleteReposClearAuditEntry" }
+    | { readonly __typename?: "MembersCanDeleteReposDisableAuditEntry" }
+    | { readonly __typename?: "MembersCanDeleteReposEnableAuditEntry" }
+    | { readonly __typename?: "MentionedEvent" }
+    | { readonly __typename?: "MergedEvent" }
+    | { readonly __typename?: "MigrationSource" }
+    | { readonly __typename?: "Milestone" }
+    | { readonly __typename?: "MilestonedEvent" }
+    | { readonly __typename?: "MovedColumnsInProjectEvent" }
+    | { readonly __typename?: "OIDCProvider" }
+    | { readonly __typename?: "OauthApplicationCreateAuditEntry" }
+    | { readonly __typename?: "OrgAddBillingManagerAuditEntry" }
+    | { readonly __typename?: "OrgAddMemberAuditEntry" }
+    | { readonly __typename?: "OrgBlockUserAuditEntry" }
+    | { readonly __typename?: "OrgConfigDisableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "OrgConfigEnableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "OrgCreateAuditEntry" }
+    | { readonly __typename?: "OrgDisableOauthAppRestrictionsAuditEntry" }
+    | { readonly __typename?: "OrgDisableSamlAuditEntry" }
+    | { readonly __typename?: "OrgDisableTwoFactorRequirementAuditEntry" }
+    | { readonly __typename?: "OrgEnableOauthAppRestrictionsAuditEntry" }
+    | { readonly __typename?: "OrgEnableSamlAuditEntry" }
+    | { readonly __typename?: "OrgEnableTwoFactorRequirementAuditEntry" }
+    | { readonly __typename?: "OrgInviteMemberAuditEntry" }
+    | { readonly __typename?: "OrgInviteToBusinessAuditEntry" }
+    | { readonly __typename?: "OrgOauthAppAccessApprovedAuditEntry" }
+    | { readonly __typename?: "OrgOauthAppAccessDeniedAuditEntry" }
+    | { readonly __typename?: "OrgOauthAppAccessRequestedAuditEntry" }
+    | { readonly __typename?: "OrgRemoveBillingManagerAuditEntry" }
+    | { readonly __typename?: "OrgRemoveMemberAuditEntry" }
+    | { readonly __typename?: "OrgRemoveOutsideCollaboratorAuditEntry" }
+    | { readonly __typename?: "OrgRestoreMemberAuditEntry" }
+    | { readonly __typename?: "OrgUnblockUserAuditEntry" }
+    | { readonly __typename?: "OrgUpdateDefaultRepositoryPermissionAuditEntry" }
+    | { readonly __typename?: "OrgUpdateMemberAuditEntry" }
     | {
-        readonly __typename: "OrgUpdateMemberRepositoryCreationPermissionAuditEntry";
+        readonly __typename?: "OrgUpdateMemberRepositoryCreationPermissionAuditEntry";
       }
     | {
-        readonly __typename: "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry";
+        readonly __typename?: "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry";
       }
-    | { readonly __typename: "Organization" }
-    | { readonly __typename: "OrganizationIdentityProvider" }
-    | { readonly __typename: "OrganizationInvitation" }
-    | { readonly __typename: "OrganizationMigration" }
-    | { readonly __typename: "Package" }
-    | { readonly __typename: "PackageFile" }
-    | { readonly __typename: "PackageTag" }
-    | { readonly __typename: "PackageVersion" }
-    | { readonly __typename: "PinnedDiscussion" }
-    | { readonly __typename: "PinnedEvent" }
-    | { readonly __typename: "PinnedIssue" }
-    | { readonly __typename: "PrivateRepositoryForkingDisableAuditEntry" }
-    | { readonly __typename: "PrivateRepositoryForkingEnableAuditEntry" }
-    | { readonly __typename: "Project" }
-    | { readonly __typename: "ProjectCard" }
-    | { readonly __typename: "ProjectColumn" }
+    | { readonly __typename?: "Organization" }
+    | { readonly __typename?: "OrganizationIdentityProvider" }
+    | { readonly __typename?: "OrganizationInvitation" }
+    | { readonly __typename?: "OrganizationMigration" }
+    | { readonly __typename?: "Package" }
+    | { readonly __typename?: "PackageFile" }
+    | { readonly __typename?: "PackageTag" }
+    | { readonly __typename?: "PackageVersion" }
+    | { readonly __typename?: "PinnedDiscussion" }
+    | { readonly __typename?: "PinnedEvent" }
+    | { readonly __typename?: "PinnedIssue" }
+    | { readonly __typename?: "PrivateRepositoryForkingDisableAuditEntry" }
+    | { readonly __typename?: "PrivateRepositoryForkingEnableAuditEntry" }
+    | { readonly __typename?: "Project" }
+    | { readonly __typename?: "ProjectCard" }
+    | { readonly __typename?: "ProjectColumn" }
+    | { readonly __typename?: "ProjectV2" }
+    | { readonly __typename?: "ProjectV2Field" }
+    | { readonly __typename?: "ProjectV2Item" }
+    | { readonly __typename?: "ProjectV2ItemFieldDateValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldIterationValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldNumberValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldSingleSelectValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldTextValue" }
+    | { readonly __typename?: "ProjectV2IterationField" }
+    | { readonly __typename?: "ProjectV2SingleSelectField" }
+    | { readonly __typename?: "ProjectV2View" }
+    | { readonly __typename?: "ProjectV2Workflow" }
+    | { readonly __typename?: "PublicKey" }
+    | { readonly __typename?: "PullRequest" }
+    | { readonly __typename?: "PullRequestCommit" }
+    | { readonly __typename?: "PullRequestCommitCommentThread" }
+    | { readonly __typename?: "PullRequestReview" }
+    | { readonly __typename?: "PullRequestReviewComment" }
+    | { readonly __typename?: "PullRequestReviewThread" }
+    | { readonly __typename?: "PullRequestThread" }
+    | { readonly __typename?: "Push" }
+    | { readonly __typename?: "PushAllowance" }
+    | { readonly __typename?: "Reaction" }
+    | { readonly __typename?: "ReadyForReviewEvent" }
+    | { readonly __typename?: "Ref" }
+    | { readonly __typename?: "ReferencedEvent" }
+    | { readonly __typename?: "Release" }
+    | { readonly __typename?: "ReleaseAsset" }
+    | { readonly __typename?: "RemovedFromProjectEvent" }
+    | { readonly __typename?: "RenamedTitleEvent" }
+    | { readonly __typename?: "ReopenedEvent" }
+    | { readonly __typename?: "RepoAccessAuditEntry" }
+    | { readonly __typename?: "RepoAddMemberAuditEntry" }
+    | { readonly __typename?: "RepoAddTopicAuditEntry" }
+    | { readonly __typename?: "RepoArchivedAuditEntry" }
+    | { readonly __typename?: "RepoChangeMergeSettingAuditEntry" }
+    | { readonly __typename?: "RepoConfigDisableAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoConfigDisableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "RepoConfigDisableContributorsOnlyAuditEntry" }
     | {
-        readonly __typename: "ProjectV2";
-        readonly id: string;
-        readonly title: string;
-        readonly shortDescription?: string | null;
-        readonly readme?: string | null;
-        readonly closed: boolean;
+        readonly __typename?: "RepoConfigDisableSockpuppetDisallowedAuditEntry";
       }
-    | { readonly __typename: "ProjectV2Field" }
-    | { readonly __typename: "ProjectV2Item" }
-    | { readonly __typename: "ProjectV2ItemFieldDateValue" }
-    | { readonly __typename: "ProjectV2ItemFieldIterationValue" }
-    | { readonly __typename: "ProjectV2ItemFieldNumberValue" }
-    | { readonly __typename: "ProjectV2ItemFieldSingleSelectValue" }
-    | { readonly __typename: "ProjectV2ItemFieldTextValue" }
-    | { readonly __typename: "ProjectV2IterationField" }
-    | { readonly __typename: "ProjectV2SingleSelectField" }
-    | { readonly __typename: "ProjectV2View" }
-    | { readonly __typename: "ProjectV2Workflow" }
-    | { readonly __typename: "PublicKey" }
-    | { readonly __typename: "PullRequest" }
-    | { readonly __typename: "PullRequestCommit" }
-    | { readonly __typename: "PullRequestCommitCommentThread" }
-    | { readonly __typename: "PullRequestReview" }
-    | { readonly __typename: "PullRequestReviewComment" }
-    | { readonly __typename: "PullRequestReviewThread" }
-    | { readonly __typename: "PullRequestThread" }
-    | { readonly __typename: "Push" }
-    | { readonly __typename: "PushAllowance" }
-    | { readonly __typename: "Reaction" }
-    | { readonly __typename: "ReadyForReviewEvent" }
-    | { readonly __typename: "Ref" }
-    | { readonly __typename: "ReferencedEvent" }
-    | { readonly __typename: "Release" }
-    | { readonly __typename: "ReleaseAsset" }
-    | { readonly __typename: "RemovedFromProjectEvent" }
-    | { readonly __typename: "RenamedTitleEvent" }
-    | { readonly __typename: "ReopenedEvent" }
-    | { readonly __typename: "RepoAccessAuditEntry" }
-    | { readonly __typename: "RepoAddMemberAuditEntry" }
-    | { readonly __typename: "RepoAddTopicAuditEntry" }
-    | { readonly __typename: "RepoArchivedAuditEntry" }
-    | { readonly __typename: "RepoChangeMergeSettingAuditEntry" }
-    | { readonly __typename: "RepoConfigDisableAnonymousGitAccessAuditEntry" }
-    | { readonly __typename: "RepoConfigDisableCollaboratorsOnlyAuditEntry" }
-    | { readonly __typename: "RepoConfigDisableContributorsOnlyAuditEntry" }
-    | { readonly __typename: "RepoConfigDisableSockpuppetDisallowedAuditEntry" }
-    | { readonly __typename: "RepoConfigEnableAnonymousGitAccessAuditEntry" }
-    | { readonly __typename: "RepoConfigEnableCollaboratorsOnlyAuditEntry" }
-    | { readonly __typename: "RepoConfigEnableContributorsOnlyAuditEntry" }
-    | { readonly __typename: "RepoConfigEnableSockpuppetDisallowedAuditEntry" }
-    | { readonly __typename: "RepoConfigLockAnonymousGitAccessAuditEntry" }
-    | { readonly __typename: "RepoConfigUnlockAnonymousGitAccessAuditEntry" }
-    | { readonly __typename: "RepoCreateAuditEntry" }
-    | { readonly __typename: "RepoDestroyAuditEntry" }
-    | { readonly __typename: "RepoRemoveMemberAuditEntry" }
-    | { readonly __typename: "RepoRemoveTopicAuditEntry" }
-    | {
-        readonly __typename: "Repository";
-        readonly id: string;
-        readonly name: string;
-        readonly nameWithOwner: string;
-        readonly description?: string | null;
-        readonly owner:
-          | { readonly __typename?: "Organization"; readonly login: string }
-          | { readonly __typename?: "User"; readonly login: string };
-        readonly projectsV2: {
-          readonly __typename?: "ProjectV2Connection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<{
-            readonly __typename: "ProjectV2";
-            readonly id: string;
-            readonly title: string;
-            readonly shortDescription?: string | null;
-            readonly readme?: string | null;
-            readonly closed: boolean;
-          } | null> | null;
-        };
-      }
-    | { readonly __typename: "RepositoryInvitation" }
-    | { readonly __typename: "RepositoryMigration" }
-    | { readonly __typename: "RepositoryTopic" }
-    | { readonly __typename: "RepositoryVisibilityChangeDisableAuditEntry" }
-    | { readonly __typename: "RepositoryVisibilityChangeEnableAuditEntry" }
-    | { readonly __typename: "RepositoryVulnerabilityAlert" }
-    | { readonly __typename: "ReviewDismissalAllowance" }
-    | { readonly __typename: "ReviewDismissedEvent" }
-    | { readonly __typename: "ReviewRequest" }
-    | { readonly __typename: "ReviewRequestRemovedEvent" }
-    | { readonly __typename: "ReviewRequestedEvent" }
-    | { readonly __typename: "SavedReply" }
-    | { readonly __typename: "SecurityAdvisory" }
-    | { readonly __typename: "SponsorsActivity" }
-    | { readonly __typename: "SponsorsListing" }
-    | { readonly __typename: "SponsorsListingFeaturedItem" }
-    | { readonly __typename: "SponsorsTier" }
-    | { readonly __typename: "Sponsorship" }
-    | { readonly __typename: "SponsorshipNewsletter" }
-    | { readonly __typename: "Status" }
-    | { readonly __typename: "StatusCheckRollup" }
-    | { readonly __typename: "StatusContext" }
-    | { readonly __typename: "SubscribedEvent" }
-    | { readonly __typename: "Tag" }
-    | { readonly __typename: "Team" }
-    | { readonly __typename: "TeamAddMemberAuditEntry" }
-    | { readonly __typename: "TeamAddRepositoryAuditEntry" }
-    | { readonly __typename: "TeamChangeParentTeamAuditEntry" }
-    | { readonly __typename: "TeamDiscussion" }
-    | { readonly __typename: "TeamDiscussionComment" }
-    | { readonly __typename: "TeamRemoveMemberAuditEntry" }
-    | { readonly __typename: "TeamRemoveRepositoryAuditEntry" }
-    | { readonly __typename: "Topic" }
-    | { readonly __typename: "TransferredEvent" }
-    | { readonly __typename: "Tree" }
-    | { readonly __typename: "UnassignedEvent" }
-    | { readonly __typename: "UnlabeledEvent" }
-    | { readonly __typename: "UnlockedEvent" }
-    | { readonly __typename: "UnmarkedAsDuplicateEvent" }
-    | { readonly __typename: "UnpinnedEvent" }
-    | { readonly __typename: "UnsubscribedEvent" }
-    | { readonly __typename: "User" }
-    | { readonly __typename: "UserBlockedEvent" }
-    | { readonly __typename: "UserContentEdit" }
-    | { readonly __typename: "UserStatus" }
-    | { readonly __typename: "VerifiableDomain" }
-    | { readonly __typename: "Workflow" }
-    | { readonly __typename: "WorkflowRun" }
+    | { readonly __typename?: "RepoConfigEnableAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoConfigEnableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "RepoConfigEnableContributorsOnlyAuditEntry" }
+    | { readonly __typename?: "RepoConfigEnableSockpuppetDisallowedAuditEntry" }
+    | { readonly __typename?: "RepoConfigLockAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoConfigUnlockAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoCreateAuditEntry" }
+    | { readonly __typename?: "RepoDestroyAuditEntry" }
+    | { readonly __typename?: "RepoRemoveMemberAuditEntry" }
+    | { readonly __typename?: "RepoRemoveTopicAuditEntry" }
+    | { readonly __typename?: "Repository" }
+    | { readonly __typename?: "RepositoryInvitation" }
+    | { readonly __typename?: "RepositoryMigration" }
+    | { readonly __typename?: "RepositoryTopic" }
+    | { readonly __typename?: "RepositoryVisibilityChangeDisableAuditEntry" }
+    | { readonly __typename?: "RepositoryVisibilityChangeEnableAuditEntry" }
+    | { readonly __typename?: "RepositoryVulnerabilityAlert" }
+    | { readonly __typename?: "ReviewDismissalAllowance" }
+    | { readonly __typename?: "ReviewDismissedEvent" }
+    | { readonly __typename?: "ReviewRequest" }
+    | { readonly __typename?: "ReviewRequestRemovedEvent" }
+    | { readonly __typename?: "ReviewRequestedEvent" }
+    | { readonly __typename?: "SavedReply" }
+    | { readonly __typename?: "SecurityAdvisory" }
+    | { readonly __typename?: "SponsorsActivity" }
+    | { readonly __typename?: "SponsorsListing" }
+    | { readonly __typename?: "SponsorsListingFeaturedItem" }
+    | { readonly __typename?: "SponsorsTier" }
+    | { readonly __typename?: "Sponsorship" }
+    | { readonly __typename?: "SponsorshipNewsletter" }
+    | { readonly __typename?: "Status" }
+    | { readonly __typename?: "StatusCheckRollup" }
+    | { readonly __typename?: "StatusContext" }
+    | { readonly __typename?: "SubscribedEvent" }
+    | { readonly __typename?: "Tag" }
+    | { readonly __typename?: "Team" }
+    | { readonly __typename?: "TeamAddMemberAuditEntry" }
+    | { readonly __typename?: "TeamAddRepositoryAuditEntry" }
+    | { readonly __typename?: "TeamChangeParentTeamAuditEntry" }
+    | { readonly __typename?: "TeamDiscussion" }
+    | { readonly __typename?: "TeamDiscussionComment" }
+    | { readonly __typename?: "TeamRemoveMemberAuditEntry" }
+    | { readonly __typename?: "TeamRemoveRepositoryAuditEntry" }
+    | { readonly __typename?: "Topic" }
+    | { readonly __typename?: "TransferredEvent" }
+    | { readonly __typename?: "Tree" }
+    | { readonly __typename?: "UnassignedEvent" }
+    | { readonly __typename?: "UnlabeledEvent" }
+    | { readonly __typename?: "UnlockedEvent" }
+    | { readonly __typename?: "UnmarkedAsDuplicateEvent" }
+    | { readonly __typename?: "UnpinnedEvent" }
+    | { readonly __typename?: "UnsubscribedEvent" }
+    | { readonly __typename?: "User" }
+    | { readonly __typename?: "UserBlockedEvent" }
+    | { readonly __typename?: "UserContentEdit" }
+    | { readonly __typename?: "UserStatus" }
+    | { readonly __typename?: "VerifiableDomain" }
+    | { readonly __typename?: "Workflow" }
+    | { readonly __typename?: "WorkflowRun" }
     | null;
 };
 
-export type QueryProjectFieldsQueryVariables = Exact<{
-  owner: Scalars["String"];
-  number: Scalars["Int"];
-}>;
-
-export type QueryProjectFieldsQuery = {
-  readonly __typename?: "Query";
-  readonly user?: {
-    readonly __typename?: "User";
-    readonly projectV2?: {
-      readonly __typename?: "ProjectV2";
-      readonly id: string;
-      readonly title: string;
-      readonly fields: {
-        readonly __typename?: "ProjectV2FieldConfigurationConnection";
-        readonly totalCount: number;
-        readonly nodes?: ReadonlyArray<
-          | {
-              readonly __typename?: "ProjectV2Field";
-              readonly id: string;
-              readonly name: string;
-              readonly dataType: ProjectV2FieldType;
-            }
-          | {
-              readonly __typename?: "ProjectV2IterationField";
-              readonly id: string;
-              readonly name: string;
-              readonly dataType: ProjectV2FieldType;
-              readonly configuration: {
-                readonly __typename?: "ProjectV2IterationFieldConfiguration";
-                readonly startDay: number;
-                readonly duration: number;
-              };
-            }
-          | {
-              readonly __typename?: "ProjectV2SingleSelectField";
-              readonly id: string;
-              readonly name: string;
-              readonly dataType: ProjectV2FieldType;
-              readonly options: ReadonlyArray<{
-                readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                readonly id: string;
-                readonly name: string;
-              }>;
-            }
-          | null
-        > | null;
-      };
-    } | null;
-  } | null;
-};
-
-export const RepositoryPropsFragmentDoc = `
-    fragment RepositoryProps on Repository {
-  __typename
-  id
-  name
-  nameWithOwner
-  description
-  owner {
-    login
-  }
-  projectsV2(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-    totalCount
-    nodes {
-      __typename
-      id
-      title
-      shortDescription
-      readme
-      closed
-    }
-  }
-}
-    `;
 export const IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
   id
   title
   body
-  issueState: state
-  createdAt
-  updatedAt
-  closedAt
-  trackedInIssues(first: 1) {
-    totalCount
-  }
-  milestone {
-    __typename
-    id
-    title
-    description
-    milestoneState: state
-    dueOn
-    createdAt
-    updatedAt
-    closedAt
-  }
+  state
 }
     `;
 export const IssuePropsWithTrackedInIssuesFragmentDoc = `
     fragment IssuePropsWithTrackedInIssues on Issue {
-  __typename
-  id
-  title
-  body
-  issueState: state
-  createdAt
-  updatedAt
-  closedAt
+  ...IssueProps
   trackedInIssues(first: 100) {
     totalCount
     nodes {
-      __typename
-      id
-      title
-      body
-      issueState: state
-      createdAt
-      updatedAt
-      closedAt
-      trackedInIssues(first: 1) {
-        totalCount
-      }
-      milestone {
-        __typename
-        id
-        title
-        description
-        milestoneState: state
-        dueOn
-        createdAt
-        updatedAt
-        closedAt
-      }
-    }
-  }
-  milestone {
-    __typename
-    id
-    title
-    description
-    milestoneState: state
-    dueOn
-    createdAt
-    updatedAt
-    closedAt
-  }
-}
-    `;
-export const IssuePropsWithItemsFragmentDoc = `
-    fragment IssuePropsWithItems on Issue {
-  __typename
-  id
-  title
-  body
-  issueState: state
-  createdAt
-  updatedAt
-  closedAt
-  trackedInIssues(first: 1) {
-    totalCount
-  }
-  milestone {
-    __typename
-    id
-    title
-    description
-    milestoneState: state
-    dueOn
-    createdAt
-    updatedAt
-    closedAt
-  }
-  projectItems(first: 100) {
-    totalCount
-    nodes {
-      __typename
-      id
-      type
-      isArchived
-      project {
-        __typename
-        id
-        title
-        shortDescription
-        readme
-        closed
-        fields(first: 100, orderBy: {field: POSITION, direction: ASC}) {
-          totalCount
-          nodes {
-            __typename
-            ... on ProjectV2Field {
-              id
-              name
-              dataType
-            }
-            ... on ProjectV2SingleSelectField {
-              id
-              name
-              options {
-                id
-                name
-              }
-            }
-          }
-        }
-      }
-      fieldValues(first: 100, orderBy: {field: POSITION, direction: ASC}) {
-        totalCount
-        nodes {
-          __typename
-          ... on ProjectV2ItemFieldRepositoryValue {
-            repository {
-              __typename
-              id
-              name
-              nameWithOwner
-              description
-            }
-            field {
-              __typename
-              ... on ProjectV2Field {
-                name
-                dataType
-              }
-            }
-          }
-          ... on ProjectV2ItemFieldMilestoneValue {
-            milestone {
-              __typename
-              id
-              title
-              description
-              milestoneState: state
-              dueOn
-              createdAt
-              updatedAt
-              closedAt
-            }
-            field {
-              __typename
-              ... on ProjectV2Field {
-                name
-                dataType
-              }
-            }
-          }
-          ... on ProjectV2ItemFieldTextValue {
-            id
-            text
-            field {
-              __typename
-              ... on ProjectV2Field {
-                name
-                dataType
-              }
-            }
-          }
-          ... on ProjectV2ItemFieldNumberValue {
-            id
-            number
-            field {
-              __typename
-              ... on ProjectV2Field {
-                name
-                dataType
-              }
-            }
-          }
-          ... on ProjectV2ItemFieldDateValue {
-            id
-            date
-            field {
-              __typename
-              ... on ProjectV2Field {
-                name
-                dataType
-              }
-            }
-          }
-          ... on ProjectV2ItemFieldSingleSelectValue {
-            id
-            name
-            optionId
-            field {
-              __typename
-              ... on ProjectV2SingleSelectField {
-                name
-                options {
-                  id
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `;
-export const MilestonePropsFragmentDoc = `
-    fragment MilestoneProps on Milestone {
-  __typename
-  id
-  title
-  description
-  milestoneState: state
-  dueOn
-  createdAt
-  updatedAt
-  closedAt
-}
-    `;
-export const MilestonePropsWithRepositoryAndIssuesFragmentDoc = `
-    fragment MilestonePropsWithRepositoryAndIssues on Milestone {
-  __typename
-  id
-  title
-  description
-  milestoneState: state
-  dueOn
-  createdAt
-  updatedAt
-  closedAt
-  repository {
-    __typename
-    id
-    name
-    nameWithOwner
-    description
-    owner {
-      login
-    }
-  }
-  issues(first: 100, orderBy: {field: CREATED_AT, direction: ASC}) {
-    totalCount
-    nodes {
-      __typename
-      id
-      title
-      body
-      issueState: state
-      createdAt
-      updatedAt
-      closedAt
-      trackedInIssues(first: 1) {
-        totalCount
-      }
-    }
-  }
-}
-    `;
-export const ProjectV2PropsFragmentDoc = `
-    fragment ProjectV2Props on ProjectV2 {
-  __typename
-  id
-  title
-  shortDescription
-  readme
-  closed
-}
-    `;
-export const ProjectV2ItemPropsFragmentDoc = `
-    fragment ProjectV2ItemProps on ProjectV2Item {
-  __typename
-  id
-  type
-  isArchived
-  project {
-    __typename
-    id
-    title
-    shortDescription
-    readme
-    closed
-    fields(first: 100, orderBy: {field: POSITION, direction: ASC}) {
-      totalCount
-      nodes {
-        __typename
-        ... on ProjectV2Field {
-          id
-          name
-          dataType
-        }
-        ... on ProjectV2SingleSelectField {
-          id
-          name
-          options {
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-  fieldValues(first: 100, orderBy: {field: POSITION, direction: ASC}) {
-    totalCount
-    nodes {
-      __typename
-      ... on ProjectV2ItemFieldRepositoryValue {
-        repository {
-          __typename
-          id
-          name
-          nameWithOwner
-          description
-        }
-        field {
-          __typename
-          ... on ProjectV2Field {
-            name
-            dataType
-          }
-        }
-      }
-      ... on ProjectV2ItemFieldMilestoneValue {
-        milestone {
-          __typename
-          id
-          title
-          description
-          milestoneState: state
-          dueOn
-          createdAt
-          updatedAt
-          closedAt
-        }
-        field {
-          __typename
-          ... on ProjectV2Field {
-            name
-            dataType
-          }
-        }
-      }
-      ... on ProjectV2ItemFieldTextValue {
-        id
-        text
-        field {
-          __typename
-          ... on ProjectV2Field {
-            name
-            dataType
-          }
-        }
-      }
-      ... on ProjectV2ItemFieldNumberValue {
-        id
-        number
-        field {
-          __typename
-          ... on ProjectV2Field {
-            name
-            dataType
-          }
-        }
-      }
-      ... on ProjectV2ItemFieldDateValue {
-        id
-        date
-        field {
-          __typename
-          ... on ProjectV2Field {
-            name
-            dataType
-          }
-        }
-      }
-      ... on ProjectV2ItemFieldSingleSelectValue {
-        id
-        name
-        optionId
-        field {
-          __typename
-          ... on ProjectV2SingleSelectField {
-            name
-            options {
-              id
-              name
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `;
-export const AddProjectItemDocument = `
-    mutation addProjectItem($project: ID!, $item: ID!) {
-  addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
-    item {
-      ...ProjectV2ItemProps
-    }
-  }
-}
-    ${ProjectV2ItemPropsFragmentDoc}`;
-export const CreateIssueWithMilestoneDocument = `
-    mutation createIssueWithMilestone($repository: ID!, $title: String!, $body: String, $milestone: ID!) {
-  createIssue(
-    input: {title: $title, body: $body, repositoryId: $repository, milestoneId: $milestone}
-  ) {
-    issue {
       ...IssueProps
     }
   }
 }
-    ${IssuePropsFragmentDoc}`;
-export const UpdateIssueDocument = `
-    mutation updateIssue($issue: ID!, $title: String!, $state: IssueState!) {
-  updateIssue(input: {id: $issue, title: $title, state: $state}) {
-    issue {
-      ...IssuePropsWithItems
-    }
-  }
-}
-    ${IssuePropsWithItemsFragmentDoc}`;
-export const UpdateProjectItemFieldByDateDocument = `
-    mutation updateProjectItemFieldByDate($project: ID!, $item: ID!, $field: ID!, $date: Date!) {
-  updateProjectV2ItemFieldValue(
-    input: {projectId: $project, itemId: $item, fieldId: $field, value: {date: $date}}
-  ) {
-    projectV2Item {
-      ...ProjectV2ItemProps
-    }
-  }
-}
-    ${ProjectV2ItemPropsFragmentDoc}`;
-export const UpdateProjectItemFieldBySingleSelectValueDocument = `
-    mutation updateProjectItemFieldBySingleSelectValue($project: ID!, $item: ID!, $field: ID!, $option: String!) {
-  updateProjectV2ItemFieldValue(
-    input: {projectId: $project, itemId: $item, fieldId: $field, value: {singleSelectOptionId: $option}}
-  ) {
-    projectV2Item {
-      ...ProjectV2ItemProps
-    }
-  }
-}
-    ${ProjectV2ItemPropsFragmentDoc}`;
-export const QueryNodeDocument = `
-    query queryNode($id: ID!) {
+    `;
+export const QueryIssueWithTrackedInIssuesDocument = `
+    query queryIssueWithTrackedInIssues($id: ID!) {
   node(id: $id) {
-    __typename
-    ...RepositoryProps
-    ...MilestonePropsWithRepositoryAndIssues
-    ...ProjectV2Props
     ...IssuePropsWithTrackedInIssues
   }
 }
-    ${RepositoryPropsFragmentDoc}
-${MilestonePropsWithRepositoryAndIssuesFragmentDoc}
-${ProjectV2PropsFragmentDoc}
-${IssuePropsWithTrackedInIssuesFragmentDoc}`;
-export const QueryProjectFieldsDocument = `
-    query queryProjectFields($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    projectV2(number: $number) {
-      id
-      title
-      fields(first: 100) {
-        totalCount
-        nodes {
-          ... on ProjectV2FieldCommon {
-            id
-            name
-            dataType
-          }
-          ... on ProjectV2IterationField {
-            configuration {
-              startDay
-              duration
-            }
-          }
-          ... on ProjectV2SingleSelectField {
-            options {
-              id
-              name
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `;
+    ${IssuePropsWithTrackedInIssuesFragmentDoc}
+${IssuePropsFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,
   vars?: V,
@@ -30071,87 +28248,18 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
-    addProjectItem(
-      variables: AddProjectItemMutationVariables,
+    queryIssueWithTrackedInIssues(
+      variables: QueryIssueWithTrackedInIssuesQueryVariables,
       options?: C
-    ): Promise<AddProjectItemMutation> {
-      return requester<AddProjectItemMutation, AddProjectItemMutationVariables>(
-        AddProjectItemDocument,
-        variables,
-        options
-      ) as Promise<AddProjectItemMutation>;
-    },
-    createIssueWithMilestone(
-      variables: CreateIssueWithMilestoneMutationVariables,
-      options?: C
-    ): Promise<CreateIssueWithMilestoneMutation> {
+    ): Promise<QueryIssueWithTrackedInIssuesQuery> {
       return requester<
-        CreateIssueWithMilestoneMutation,
-        CreateIssueWithMilestoneMutationVariables
+        QueryIssueWithTrackedInIssuesQuery,
+        QueryIssueWithTrackedInIssuesQueryVariables
       >(
-        CreateIssueWithMilestoneDocument,
+        QueryIssueWithTrackedInIssuesDocument,
         variables,
         options
-      ) as Promise<CreateIssueWithMilestoneMutation>;
-    },
-    updateIssue(
-      variables: UpdateIssueMutationVariables,
-      options?: C
-    ): Promise<UpdateIssueMutation> {
-      return requester<UpdateIssueMutation, UpdateIssueMutationVariables>(
-        UpdateIssueDocument,
-        variables,
-        options
-      ) as Promise<UpdateIssueMutation>;
-    },
-    updateProjectItemFieldByDate(
-      variables: UpdateProjectItemFieldByDateMutationVariables,
-      options?: C
-    ): Promise<UpdateProjectItemFieldByDateMutation> {
-      return requester<
-        UpdateProjectItemFieldByDateMutation,
-        UpdateProjectItemFieldByDateMutationVariables
-      >(
-        UpdateProjectItemFieldByDateDocument,
-        variables,
-        options
-      ) as Promise<UpdateProjectItemFieldByDateMutation>;
-    },
-    updateProjectItemFieldBySingleSelectValue(
-      variables: UpdateProjectItemFieldBySingleSelectValueMutationVariables,
-      options?: C
-    ): Promise<UpdateProjectItemFieldBySingleSelectValueMutation> {
-      return requester<
-        UpdateProjectItemFieldBySingleSelectValueMutation,
-        UpdateProjectItemFieldBySingleSelectValueMutationVariables
-      >(
-        UpdateProjectItemFieldBySingleSelectValueDocument,
-        variables,
-        options
-      ) as Promise<UpdateProjectItemFieldBySingleSelectValueMutation>;
-    },
-    queryNode(
-      variables: QueryNodeQueryVariables,
-      options?: C
-    ): Promise<QueryNodeQuery> {
-      return requester<QueryNodeQuery, QueryNodeQueryVariables>(
-        QueryNodeDocument,
-        variables,
-        options
-      ) as Promise<QueryNodeQuery>;
-    },
-    queryProjectFields(
-      variables: QueryProjectFieldsQueryVariables,
-      options?: C
-    ): Promise<QueryProjectFieldsQuery> {
-      return requester<
-        QueryProjectFieldsQuery,
-        QueryProjectFieldsQueryVariables
-      >(
-        QueryProjectFieldsDocument,
-        variables,
-        options
-      ) as Promise<QueryProjectFieldsQuery>;
+      ) as Promise<QueryIssueWithTrackedInIssuesQuery>;
     },
   };
 }

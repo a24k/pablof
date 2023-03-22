@@ -1,0 +1,12 @@
+fragment IssueProps on Issue {
+  __typename
+  id title body state
+}
+
+fragment IssuePropsWithTrackedInIssues on Issue {
+  ...IssueProps
+  trackedInIssues(first: 100) {
+    totalCount
+    nodes { ...IssueProps }
+  }
+}

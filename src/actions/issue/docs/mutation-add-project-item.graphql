@@ -1,7 +1,0 @@
-mutation addProjectItem($project: ID!, $item: ID!) {
-  addProjectV2ItemById(input: { projectId: $project, contentId: $item }) {
-    item {
-      ...ProjectV2ItemProps
-    }
-  }
-}

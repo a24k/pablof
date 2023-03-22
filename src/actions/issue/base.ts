@@ -15,8 +15,8 @@ export abstract class IssueAction extends Action {
   protected async queryIssueById(
     issue: ID
   ): Promise<Result<IssuePropsWithTrackedInIssuesFragment, string>> {
-    const node = (await gql.queryNode({ id: issue })).node;
-    this.dump(node, "queryNode");
+    const node = (await gql.queryIssueWithTrackedInIssues({ id: issue })).node;
+    this.dump(node, "queryIssueWithTrackedInIssues");
 
     if (node == undefined || node.__typename !== "Issue") {
       return err("No milestone found.");

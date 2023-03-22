@@ -1,0 +1,3 @@
+query queryIssueWithTrackedInIssues($id: ID!) { 
+  node(id: $id) { ...IssuePropsWithTrackedInIssues }
+}
