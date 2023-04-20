@@ -1,6 +1,6 @@
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
-import { actionErr } from "../";
+import { actionErr, actionSkip } from "../";
 import type { ActionResult, Context } from "../";
 
 import { IssueAction } from "./base";
@@ -21,6 +21,10 @@ export class DeriveIssue extends IssueAction {
     const issue = await this.queryIssueById(payload.issue.node_id);
     if (issue.isErr()) {
       return actionErr(issue.error);
+    }
+
+    if (issue.value.trackedInIssues.totalCount !== 1) {
+      return actionSkip();
     }
 
     return actionErr("Not implemented.");
