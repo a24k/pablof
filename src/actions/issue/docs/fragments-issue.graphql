@@ -1,6 +1,6 @@
 fragment IssueProps on Issue {
   __typename
-  id title body state
+  id number title body state
 }
 
 fragment IssuePropsWithTrackedInIssues on Issue {

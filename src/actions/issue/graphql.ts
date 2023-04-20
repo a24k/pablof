@@ -29037,6 +29037,7 @@ export enum WorkflowState {
 export type IssuePropsFragment = {
   readonly __typename: "Issue";
   readonly id: string;
+  readonly number: number;
   readonly title: string;
   readonly body: string;
   readonly state: IssueState;
@@ -29045,6 +29046,7 @@ export type IssuePropsFragment = {
 export type IssuePropsWithTrackedInIssuesFragment = {
   readonly __typename: "Issue";
   readonly id: string;
+  readonly number: number;
   readonly title: string;
   readonly body: string;
   readonly state: IssueState;
@@ -29054,6 +29056,7 @@ export type IssuePropsWithTrackedInIssuesFragment = {
     readonly nodes?: ReadonlyArray<{
       readonly __typename: "Issue";
       readonly id: string;
+      readonly number: number;
       readonly title: string;
       readonly body: string;
       readonly state: IssueState;
@@ -29136,6 +29139,7 @@ export type QueryIssueWithTrackedInIssuesQuery = {
     | {
         readonly __typename: "Issue";
         readonly id: string;
+        readonly number: number;
         readonly title: string;
         readonly body: string;
         readonly state: IssueState;
@@ -29145,6 +29149,7 @@ export type QueryIssueWithTrackedInIssuesQuery = {
           readonly nodes?: ReadonlyArray<{
             readonly __typename: "Issue";
             readonly id: string;
+            readonly number: number;
             readonly title: string;
             readonly body: string;
             readonly state: IssueState;
@@ -29333,6 +29338,7 @@ export const IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
   id
+  number
   title
   body
   state
