@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -76,7 +78,9 @@ export abstract class TriggerHandler {
               break;
             case "Skip":
             default:
-              this.debug("Skipped");
+              this.debug(
+                r.message == undefined ? "Skipped" : `Skipped: ${r.message}`
+              );
               break;
           }
         },

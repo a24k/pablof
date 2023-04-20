@@ -24,7 +24,7 @@ export class DeriveIssue extends IssueAction {
     }
 
     if (issue.value.trackedInIssues.totalCount !== 1) {
-      return actionSkip();
+      return actionSkip("Issue is not derived.");
     }
 
     return actionErr("Not implemented.");

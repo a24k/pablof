@@ -12,6 +12,7 @@ type ActionSuccess = {
 
 type ActionSkip = {
   type: "Skip";
+  message?: string;
 };
 
 type ActionFailure = {
@@ -32,8 +33,8 @@ function actionOk(message: string): ActionResult {
   return ok({ type: "Success", message });
 }
 
-function actionSkip(): ActionResult {
-  return ok({ type: "Skip" });
+function actionSkip(message?: string): ActionResult {
+  return ok({ type: "Skip", message });
 }
 
 function actionErr(message: string): ActionResult {
