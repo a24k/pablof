@@ -29598,7 +29598,7 @@ export const ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc = `
 export const IssuePropsWithTrackedInIssuesFragmentDoc = `
     fragment IssuePropsWithTrackedInIssues on Issue {
   ...IssueProps
-  trackedInIssues(first: 100) {
+  trackedInIssues(first: 1) {
     totalCount
     nodes {
       ...IssueProps
