@@ -1,0 +1,20 @@
+fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id title closed
+}
+
+fragment ProjectV2ItemProps on ProjectV2Item {
+  __typename
+  id type isArchived
+}
+
+fragment ProjectV2ItemPropsWithProjectAndFields on ProjectV2Item {
+  ...ProjectV2ItemProps
+  project {
+    ...ProjectV2Props
+    fields(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+      totalCount
+      nodes { ...ProjectV2FieldConfigurationProps }
+    }
+  }
+}

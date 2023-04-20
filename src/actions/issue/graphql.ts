@@ -29064,6 +29064,160 @@ export type IssuePropsWithTrackedInIssuesFragment = {
   };
 };
 
+export type IssuePropsWithItemsFragment = {
+  readonly __typename: "Issue";
+  readonly id: string;
+  readonly number: number;
+  readonly title: string;
+  readonly body: string;
+  readonly state: IssueState;
+  readonly milestone?: {
+    readonly __typename: "Milestone";
+    readonly id: string;
+  } | null;
+  readonly projectItems: {
+    readonly __typename?: "ProjectV2ItemConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
+      };
+    } | null> | null;
+  };
+};
+
+export type MilestonePropsFragment = {
+  readonly __typename: "Milestone";
+  readonly id: string;
+};
+
+export type ProjectV2FieldPropsFragment = {
+  readonly __typename: "ProjectV2Field";
+  readonly id: string;
+  readonly name: string;
+  readonly dataType: ProjectV2FieldType;
+};
+
+export type ProjectV2SingleSelectFieldPropsFragment = {
+  readonly __typename: "ProjectV2SingleSelectField";
+  readonly id: string;
+  readonly name: string;
+  readonly options: ReadonlyArray<{
+    readonly __typename?: "ProjectV2SingleSelectFieldOption";
+    readonly id: string;
+    readonly name: string;
+  }>;
+};
+
+type ProjectV2FieldConfigurationProps_ProjectV2Field_Fragment = {
+  readonly __typename: "ProjectV2Field";
+  readonly id: string;
+  readonly name: string;
+  readonly dataType: ProjectV2FieldType;
+};
+
+type ProjectV2FieldConfigurationProps_ProjectV2IterationField_Fragment = {
+  readonly __typename: "ProjectV2IterationField";
+};
+
+type ProjectV2FieldConfigurationProps_ProjectV2SingleSelectField_Fragment = {
+  readonly __typename: "ProjectV2SingleSelectField";
+  readonly id: string;
+  readonly name: string;
+  readonly options: ReadonlyArray<{
+    readonly __typename?: "ProjectV2SingleSelectFieldOption";
+    readonly id: string;
+    readonly name: string;
+  }>;
+};
+
+export type ProjectV2FieldConfigurationPropsFragment =
+  | ProjectV2FieldConfigurationProps_ProjectV2Field_Fragment
+  | ProjectV2FieldConfigurationProps_ProjectV2IterationField_Fragment
+  | ProjectV2FieldConfigurationProps_ProjectV2SingleSelectField_Fragment;
+
+export type ProjectV2PropsFragment = {
+  readonly __typename: "ProjectV2";
+  readonly id: string;
+  readonly title: string;
+  readonly closed: boolean;
+};
+
+export type ProjectV2ItemPropsFragment = {
+  readonly __typename: "ProjectV2Item";
+  readonly id: string;
+  readonly type: ProjectV2ItemType;
+  readonly isArchived: boolean;
+};
+
+export type ProjectV2ItemPropsWithProjectAndFieldsFragment = {
+  readonly __typename: "ProjectV2Item";
+  readonly id: string;
+  readonly type: ProjectV2ItemType;
+  readonly isArchived: boolean;
+  readonly project: {
+    readonly __typename: "ProjectV2";
+    readonly id: string;
+    readonly title: string;
+    readonly closed: boolean;
+    readonly fields: {
+      readonly __typename?: "ProjectV2FieldConfigurationConnection";
+      readonly totalCount: number;
+      readonly nodes?: ReadonlyArray<
+        | {
+            readonly __typename: "ProjectV2Field";
+            readonly id: string;
+            readonly name: string;
+            readonly dataType: ProjectV2FieldType;
+          }
+        | { readonly __typename: "ProjectV2IterationField" }
+        | {
+            readonly __typename: "ProjectV2SingleSelectField";
+            readonly id: string;
+            readonly name: string;
+            readonly options: ReadonlyArray<{
+              readonly __typename?: "ProjectV2SingleSelectFieldOption";
+              readonly id: string;
+              readonly name: string;
+            }>;
+          }
+        | null
+      > | null;
+    };
+  };
+};
+
 export type QueryIssueWithTrackedInIssuesQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
@@ -29334,6 +29488,308 @@ export type QueryIssueWithTrackedInIssuesQuery = {
     | null;
 };
 
+export type QueryIssueWithItemsQueryVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type QueryIssueWithItemsQuery = {
+  readonly __typename?: "Query";
+  readonly node?:
+    | { readonly __typename?: "AddedToMergeQueueEvent" }
+    | { readonly __typename?: "AddedToProjectEvent" }
+    | { readonly __typename?: "App" }
+    | { readonly __typename?: "AssignedEvent" }
+    | { readonly __typename?: "AutoMergeDisabledEvent" }
+    | { readonly __typename?: "AutoMergeEnabledEvent" }
+    | { readonly __typename?: "AutoRebaseEnabledEvent" }
+    | { readonly __typename?: "AutoSquashEnabledEvent" }
+    | { readonly __typename?: "AutomaticBaseChangeFailedEvent" }
+    | { readonly __typename?: "AutomaticBaseChangeSucceededEvent" }
+    | { readonly __typename?: "BaseRefChangedEvent" }
+    | { readonly __typename?: "BaseRefDeletedEvent" }
+    | { readonly __typename?: "BaseRefForcePushedEvent" }
+    | { readonly __typename?: "Blob" }
+    | { readonly __typename?: "Bot" }
+    | { readonly __typename?: "BranchProtectionRule" }
+    | { readonly __typename?: "BypassForcePushAllowance" }
+    | { readonly __typename?: "BypassPullRequestAllowance" }
+    | { readonly __typename?: "CWE" }
+    | { readonly __typename?: "CheckRun" }
+    | { readonly __typename?: "CheckSuite" }
+    | { readonly __typename?: "ClosedEvent" }
+    | { readonly __typename?: "CodeOfConduct" }
+    | { readonly __typename?: "CommentDeletedEvent" }
+    | { readonly __typename?: "Commit" }
+    | { readonly __typename?: "CommitComment" }
+    | { readonly __typename?: "CommitCommentThread" }
+    | { readonly __typename?: "Comparison" }
+    | { readonly __typename?: "ConnectedEvent" }
+    | { readonly __typename?: "ConvertToDraftEvent" }
+    | { readonly __typename?: "ConvertedNoteToIssueEvent" }
+    | { readonly __typename?: "ConvertedToDiscussionEvent" }
+    | { readonly __typename?: "CrossReferencedEvent" }
+    | { readonly __typename?: "DemilestonedEvent" }
+    | { readonly __typename?: "DependencyGraphManifest" }
+    | { readonly __typename?: "DeployKey" }
+    | { readonly __typename?: "DeployedEvent" }
+    | { readonly __typename?: "Deployment" }
+    | { readonly __typename?: "DeploymentEnvironmentChangedEvent" }
+    | { readonly __typename?: "DeploymentReview" }
+    | { readonly __typename?: "DeploymentStatus" }
+    | { readonly __typename?: "DisconnectedEvent" }
+    | { readonly __typename?: "Discussion" }
+    | { readonly __typename?: "DiscussionCategory" }
+    | { readonly __typename?: "DiscussionComment" }
+    | { readonly __typename?: "DiscussionPoll" }
+    | { readonly __typename?: "DiscussionPollOption" }
+    | { readonly __typename?: "DraftIssue" }
+    | { readonly __typename?: "Enterprise" }
+    | { readonly __typename?: "EnterpriseAdministratorInvitation" }
+    | { readonly __typename?: "EnterpriseIdentityProvider" }
+    | { readonly __typename?: "EnterpriseRepositoryInfo" }
+    | { readonly __typename?: "EnterpriseServerInstallation" }
+    | { readonly __typename?: "EnterpriseServerUserAccount" }
+    | { readonly __typename?: "EnterpriseServerUserAccountEmail" }
+    | { readonly __typename?: "EnterpriseServerUserAccountsUpload" }
+    | { readonly __typename?: "EnterpriseUserAccount" }
+    | { readonly __typename?: "Environment" }
+    | { readonly __typename?: "ExternalIdentity" }
+    | { readonly __typename?: "Gist" }
+    | { readonly __typename?: "GistComment" }
+    | { readonly __typename?: "HeadRefDeletedEvent" }
+    | { readonly __typename?: "HeadRefForcePushedEvent" }
+    | { readonly __typename?: "HeadRefRestoredEvent" }
+    | { readonly __typename?: "IpAllowListEntry" }
+    | {
+        readonly __typename: "Issue";
+        readonly id: string;
+        readonly number: number;
+        readonly title: string;
+        readonly body: string;
+        readonly state: IssueState;
+        readonly milestone?: {
+          readonly __typename: "Milestone";
+          readonly id: string;
+        } | null;
+        readonly projectItems: {
+          readonly __typename?: "ProjectV2ItemConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<{
+            readonly __typename: "ProjectV2Item";
+            readonly id: string;
+            readonly type: ProjectV2ItemType;
+            readonly isArchived: boolean;
+            readonly project: {
+              readonly __typename: "ProjectV2";
+              readonly id: string;
+              readonly title: string;
+              readonly closed: boolean;
+              readonly fields: {
+                readonly __typename?: "ProjectV2FieldConfigurationConnection";
+                readonly totalCount: number;
+                readonly nodes?: ReadonlyArray<
+                  | {
+                      readonly __typename: "ProjectV2Field";
+                      readonly id: string;
+                      readonly name: string;
+                      readonly dataType: ProjectV2FieldType;
+                    }
+                  | { readonly __typename: "ProjectV2IterationField" }
+                  | {
+                      readonly __typename: "ProjectV2SingleSelectField";
+                      readonly id: string;
+                      readonly name: string;
+                      readonly options: ReadonlyArray<{
+                        readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                        readonly id: string;
+                        readonly name: string;
+                      }>;
+                    }
+                  | null
+                > | null;
+              };
+            };
+          } | null> | null;
+        };
+      }
+    | { readonly __typename?: "IssueComment" }
+    | { readonly __typename?: "Label" }
+    | { readonly __typename?: "LabeledEvent" }
+    | { readonly __typename?: "Language" }
+    | { readonly __typename?: "License" }
+    | { readonly __typename?: "LinkedBranch" }
+    | { readonly __typename?: "LockedEvent" }
+    | { readonly __typename?: "Mannequin" }
+    | { readonly __typename?: "MarkedAsDuplicateEvent" }
+    | { readonly __typename?: "MarketplaceCategory" }
+    | { readonly __typename?: "MarketplaceListing" }
+    | { readonly __typename?: "MembersCanDeleteReposClearAuditEntry" }
+    | { readonly __typename?: "MembersCanDeleteReposDisableAuditEntry" }
+    | { readonly __typename?: "MembersCanDeleteReposEnableAuditEntry" }
+    | { readonly __typename?: "MentionedEvent" }
+    | { readonly __typename?: "MergeQueue" }
+    | { readonly __typename?: "MergeQueueEntry" }
+    | { readonly __typename?: "MergedEvent" }
+    | { readonly __typename?: "MigrationSource" }
+    | { readonly __typename?: "Milestone" }
+    | { readonly __typename?: "MilestonedEvent" }
+    | { readonly __typename?: "MovedColumnsInProjectEvent" }
+    | { readonly __typename?: "OIDCProvider" }
+    | { readonly __typename?: "OauthApplicationCreateAuditEntry" }
+    | { readonly __typename?: "OrgAddBillingManagerAuditEntry" }
+    | { readonly __typename?: "OrgAddMemberAuditEntry" }
+    | { readonly __typename?: "OrgBlockUserAuditEntry" }
+    | { readonly __typename?: "OrgConfigDisableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "OrgConfigEnableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "OrgCreateAuditEntry" }
+    | { readonly __typename?: "OrgDisableOauthAppRestrictionsAuditEntry" }
+    | { readonly __typename?: "OrgDisableSamlAuditEntry" }
+    | { readonly __typename?: "OrgDisableTwoFactorRequirementAuditEntry" }
+    | { readonly __typename?: "OrgEnableOauthAppRestrictionsAuditEntry" }
+    | { readonly __typename?: "OrgEnableSamlAuditEntry" }
+    | { readonly __typename?: "OrgEnableTwoFactorRequirementAuditEntry" }
+    | { readonly __typename?: "OrgInviteMemberAuditEntry" }
+    | { readonly __typename?: "OrgInviteToBusinessAuditEntry" }
+    | { readonly __typename?: "OrgOauthAppAccessApprovedAuditEntry" }
+    | { readonly __typename?: "OrgOauthAppAccessDeniedAuditEntry" }
+    | { readonly __typename?: "OrgOauthAppAccessRequestedAuditEntry" }
+    | { readonly __typename?: "OrgRemoveBillingManagerAuditEntry" }
+    | { readonly __typename?: "OrgRemoveMemberAuditEntry" }
+    | { readonly __typename?: "OrgRemoveOutsideCollaboratorAuditEntry" }
+    | { readonly __typename?: "OrgRestoreMemberAuditEntry" }
+    | { readonly __typename?: "OrgUnblockUserAuditEntry" }
+    | { readonly __typename?: "OrgUpdateDefaultRepositoryPermissionAuditEntry" }
+    | { readonly __typename?: "OrgUpdateMemberAuditEntry" }
+    | {
+        readonly __typename?: "OrgUpdateMemberRepositoryCreationPermissionAuditEntry";
+      }
+    | {
+        readonly __typename?: "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry";
+      }
+    | { readonly __typename?: "Organization" }
+    | { readonly __typename?: "OrganizationIdentityProvider" }
+    | { readonly __typename?: "OrganizationInvitation" }
+    | { readonly __typename?: "OrganizationMigration" }
+    | { readonly __typename?: "Package" }
+    | { readonly __typename?: "PackageFile" }
+    | { readonly __typename?: "PackageTag" }
+    | { readonly __typename?: "PackageVersion" }
+    | { readonly __typename?: "PinnedDiscussion" }
+    | { readonly __typename?: "PinnedEvent" }
+    | { readonly __typename?: "PinnedIssue" }
+    | { readonly __typename?: "PrivateRepositoryForkingDisableAuditEntry" }
+    | { readonly __typename?: "PrivateRepositoryForkingEnableAuditEntry" }
+    | { readonly __typename?: "Project" }
+    | { readonly __typename?: "ProjectCard" }
+    | { readonly __typename?: "ProjectColumn" }
+    | { readonly __typename?: "ProjectV2" }
+    | { readonly __typename?: "ProjectV2Field" }
+    | { readonly __typename?: "ProjectV2Item" }
+    | { readonly __typename?: "ProjectV2ItemFieldDateValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldIterationValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldNumberValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldSingleSelectValue" }
+    | { readonly __typename?: "ProjectV2ItemFieldTextValue" }
+    | { readonly __typename?: "ProjectV2IterationField" }
+    | { readonly __typename?: "ProjectV2SingleSelectField" }
+    | { readonly __typename?: "ProjectV2View" }
+    | { readonly __typename?: "ProjectV2Workflow" }
+    | { readonly __typename?: "PublicKey" }
+    | { readonly __typename?: "PullRequest" }
+    | { readonly __typename?: "PullRequestCommit" }
+    | { readonly __typename?: "PullRequestCommitCommentThread" }
+    | { readonly __typename?: "PullRequestReview" }
+    | { readonly __typename?: "PullRequestReviewComment" }
+    | { readonly __typename?: "PullRequestReviewThread" }
+    | { readonly __typename?: "PullRequestThread" }
+    | { readonly __typename?: "Push" }
+    | { readonly __typename?: "PushAllowance" }
+    | { readonly __typename?: "Reaction" }
+    | { readonly __typename?: "ReadyForReviewEvent" }
+    | { readonly __typename?: "Ref" }
+    | { readonly __typename?: "ReferencedEvent" }
+    | { readonly __typename?: "Release" }
+    | { readonly __typename?: "ReleaseAsset" }
+    | { readonly __typename?: "RemovedFromMergeQueueEvent" }
+    | { readonly __typename?: "RemovedFromProjectEvent" }
+    | { readonly __typename?: "RenamedTitleEvent" }
+    | { readonly __typename?: "ReopenedEvent" }
+    | { readonly __typename?: "RepoAccessAuditEntry" }
+    | { readonly __typename?: "RepoAddMemberAuditEntry" }
+    | { readonly __typename?: "RepoAddTopicAuditEntry" }
+    | { readonly __typename?: "RepoArchivedAuditEntry" }
+    | { readonly __typename?: "RepoChangeMergeSettingAuditEntry" }
+    | { readonly __typename?: "RepoConfigDisableAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoConfigDisableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "RepoConfigDisableContributorsOnlyAuditEntry" }
+    | {
+        readonly __typename?: "RepoConfigDisableSockpuppetDisallowedAuditEntry";
+      }
+    | { readonly __typename?: "RepoConfigEnableAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoConfigEnableCollaboratorsOnlyAuditEntry" }
+    | { readonly __typename?: "RepoConfigEnableContributorsOnlyAuditEntry" }
+    | { readonly __typename?: "RepoConfigEnableSockpuppetDisallowedAuditEntry" }
+    | { readonly __typename?: "RepoConfigLockAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoConfigUnlockAnonymousGitAccessAuditEntry" }
+    | { readonly __typename?: "RepoCreateAuditEntry" }
+    | { readonly __typename?: "RepoDestroyAuditEntry" }
+    | { readonly __typename?: "RepoRemoveMemberAuditEntry" }
+    | { readonly __typename?: "RepoRemoveTopicAuditEntry" }
+    | { readonly __typename?: "Repository" }
+    | { readonly __typename?: "RepositoryInvitation" }
+    | { readonly __typename?: "RepositoryMigration" }
+    | { readonly __typename?: "RepositoryRule" }
+    | { readonly __typename?: "RepositoryRuleset" }
+    | { readonly __typename?: "RepositoryRulesetBypassActor" }
+    | { readonly __typename?: "RepositoryTopic" }
+    | { readonly __typename?: "RepositoryVisibilityChangeDisableAuditEntry" }
+    | { readonly __typename?: "RepositoryVisibilityChangeEnableAuditEntry" }
+    | { readonly __typename?: "RepositoryVulnerabilityAlert" }
+    | { readonly __typename?: "ReviewDismissalAllowance" }
+    | { readonly __typename?: "ReviewDismissedEvent" }
+    | { readonly __typename?: "ReviewRequest" }
+    | { readonly __typename?: "ReviewRequestRemovedEvent" }
+    | { readonly __typename?: "ReviewRequestedEvent" }
+    | { readonly __typename?: "SavedReply" }
+    | { readonly __typename?: "SecurityAdvisory" }
+    | { readonly __typename?: "SponsorsActivity" }
+    | { readonly __typename?: "SponsorsListing" }
+    | { readonly __typename?: "SponsorsListingFeaturedItem" }
+    | { readonly __typename?: "SponsorsTier" }
+    | { readonly __typename?: "Sponsorship" }
+    | { readonly __typename?: "SponsorshipNewsletter" }
+    | { readonly __typename?: "Status" }
+    | { readonly __typename?: "StatusCheckRollup" }
+    | { readonly __typename?: "StatusContext" }
+    | { readonly __typename?: "SubscribedEvent" }
+    | { readonly __typename?: "Tag" }
+    | { readonly __typename?: "Team" }
+    | { readonly __typename?: "TeamAddMemberAuditEntry" }
+    | { readonly __typename?: "TeamAddRepositoryAuditEntry" }
+    | { readonly __typename?: "TeamChangeParentTeamAuditEntry" }
+    | { readonly __typename?: "TeamDiscussion" }
+    | { readonly __typename?: "TeamDiscussionComment" }
+    | { readonly __typename?: "TeamRemoveMemberAuditEntry" }
+    | { readonly __typename?: "TeamRemoveRepositoryAuditEntry" }
+    | { readonly __typename?: "Topic" }
+    | { readonly __typename?: "TransferredEvent" }
+    | { readonly __typename?: "Tree" }
+    | { readonly __typename?: "UnassignedEvent" }
+    | { readonly __typename?: "UnlabeledEvent" }
+    | { readonly __typename?: "UnlockedEvent" }
+    | { readonly __typename?: "UnmarkedAsDuplicateEvent" }
+    | { readonly __typename?: "UnpinnedEvent" }
+    | { readonly __typename?: "UnsubscribedEvent" }
+    | { readonly __typename?: "User" }
+    | { readonly __typename?: "UserBlockedEvent" }
+    | { readonly __typename?: "UserContentEdit" }
+    | { readonly __typename?: "UserStatus" }
+    | { readonly __typename?: "VerifiableDomain" }
+    | { readonly __typename?: "Workflow" }
+    | { readonly __typename?: "WorkflowRun" }
+    | null;
+};
+
 export const IssuePropsFragmentDoc = `
     fragment IssueProps on Issue {
   __typename
@@ -29355,6 +29811,82 @@ export const IssuePropsWithTrackedInIssuesFragmentDoc = `
   }
 }
     `;
+export const MilestonePropsFragmentDoc = `
+    fragment MilestoneProps on Milestone {
+  __typename
+  id
+}
+    `;
+export const ProjectV2ItemPropsFragmentDoc = `
+    fragment ProjectV2ItemProps on ProjectV2Item {
+  __typename
+  id
+  type
+  isArchived
+}
+    `;
+export const ProjectV2PropsFragmentDoc = `
+    fragment ProjectV2Props on ProjectV2 {
+  __typename
+  id
+  title
+  closed
+}
+    `;
+export const ProjectV2FieldPropsFragmentDoc = `
+    fragment ProjectV2FieldProps on ProjectV2Field {
+  __typename
+  id
+  name
+  dataType
+}
+    `;
+export const ProjectV2SingleSelectFieldPropsFragmentDoc = `
+    fragment ProjectV2SingleSelectFieldProps on ProjectV2SingleSelectField {
+  __typename
+  id
+  name
+  options {
+    id
+    name
+  }
+}
+    `;
+export const ProjectV2FieldConfigurationPropsFragmentDoc = `
+    fragment ProjectV2FieldConfigurationProps on ProjectV2FieldConfiguration {
+  __typename
+  ...ProjectV2FieldProps
+  ...ProjectV2SingleSelectFieldProps
+}
+    `;
+export const ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc = `
+    fragment ProjectV2ItemPropsWithProjectAndFields on ProjectV2Item {
+  ...ProjectV2ItemProps
+  project {
+    ...ProjectV2Props
+    fields(first: 100, orderBy: {field: POSITION, direction: ASC}) {
+      totalCount
+      nodes {
+        ...ProjectV2FieldConfigurationProps
+      }
+    }
+  }
+}
+    `;
+export const IssuePropsWithItemsFragmentDoc = `
+    fragment IssuePropsWithItems on Issue {
+  ...IssueProps
+  milestone {
+    ...MilestoneProps
+  }
+  projectItems(first: 100) {
+    totalCount
+    nodes {
+      ...ProjectV2ItemPropsWithProjectAndFields
+    }
+  }
+}
+    `;
 export const QueryIssueWithTrackedInIssuesDocument = `
     query queryIssueWithTrackedInIssues($id: ID!) {
   node(id: $id) {
@@ -29363,6 +29895,21 @@ export const QueryIssueWithTrackedInIssuesDocument = `
 }
     ${IssuePropsWithTrackedInIssuesFragmentDoc}
 ${IssuePropsFragmentDoc}`;
+export const QueryIssueWithItemsDocument = `
+    query queryIssueWithItems($id: ID!) {
+  node(id: $id) {
+    ...IssuePropsWithItems
+  }
+}
+    ${IssuePropsWithItemsFragmentDoc}
+${IssuePropsFragmentDoc}
+${MilestonePropsFragmentDoc}
+${ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc}
+${ProjectV2ItemPropsFragmentDoc}
+${ProjectV2PropsFragmentDoc}
+${ProjectV2FieldConfigurationPropsFragmentDoc}
+${ProjectV2FieldPropsFragmentDoc}
+${ProjectV2SingleSelectFieldPropsFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: string,
   vars?: V,
@@ -29382,6 +29929,19 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<QueryIssueWithTrackedInIssuesQuery>;
+    },
+    queryIssueWithItems(
+      variables: QueryIssueWithItemsQueryVariables,
+      options?: C
+    ): Promise<QueryIssueWithItemsQuery> {
+      return requester<
+        QueryIssueWithItemsQuery,
+        QueryIssueWithItemsQueryVariables
+      >(
+        QueryIssueWithItemsDocument,
+        variables,
+        options
+      ) as Promise<QueryIssueWithItemsQuery>;
     },
   };
 }

@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
 import { actionErr, actionSkip } from "../";
@@ -18,7 +20,9 @@ export class DeriveIssue extends IssueAction {
     const payload = context.payload as IssuesEvent;
     this.dump(payload, "payload");
 
-    const issue = await this.queryIssueById(payload.issue.node_id);
+    const issue = await this.queryIssueWithTrackedInIssues(
+      payload.issue.node_id
+    );
     if (issue.isErr()) {
       return actionErr(issue.error);
     }
@@ -26,6 +30,20 @@ export class DeriveIssue extends IssueAction {
     if (issue.value.trackedInIssues.totalCount !== 1) {
       return actionSkip("Issue is not derived.");
     }
+
+    const parents = issue.value.trackedInIssues.nodes?.flatMap(iss =>
+      iss === null ? [] : iss
+    );
+    if (parents == undefined || parents.length === 0) {
+      return actionErr("No parent issue found.");
+    }
+
+    const parent = await this.queryIssueWithItems(parents[0].id);
+    if (parent.isErr()) {
+      return actionErr(parent.error);
+    }
+
+    this.dump(parent.value, "foundParentIssue");
 
     return actionErr("Not implemented.");
   }

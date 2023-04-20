@@ -1,0 +1,4 @@
+fragment MilestoneProps on Milestone {
+  __typename
+  id
+}
