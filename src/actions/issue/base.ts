@@ -5,10 +5,7 @@ import { Result, ok, err } from "neverthrow";
 import { Action } from "../base";
 import type { ID } from "../";
 
-import type {
-  IssuePropsWithTrackedInIssuesFragment,
-  IssuePropsWithItemsFragment,
-} from "./graphql";
+import type { IssuePropsWithTrackedInIssuesFragment } from "./graphql";
 
 import { graphql } from "../";
 import { getSdk } from "./graphql";
@@ -20,19 +17,6 @@ export abstract class IssueAction extends Action {
   ): Promise<Result<IssuePropsWithTrackedInIssuesFragment, string>> {
     const node = (await gql.queryIssueWithTrackedInIssues({ id: issue })).node;
     this.dump(node, "queryIssueWithTrackedInIssues");
-
-    if (node == undefined || node.__typename !== "Issue") {
-      return err("No issue found.");
-    }
-
-    return ok(node);
-  }
-
-  protected async queryIssueWithItems(
-    issue: ID
-  ): Promise<Result<IssuePropsWithItemsFragment, string>> {
-    const node = (await gql.queryIssueWithItems({ id: issue })).node;
-    this.dump(node, "queryIssueWithItems");
 
     if (node == undefined || node.__typename !== "Issue") {
       return err("No issue found.");

@@ -38,12 +38,8 @@ export class DeriveIssue extends IssueAction {
       return actionErr("No parent issue found.");
     }
 
-    const parent = await this.queryIssueWithItems(parents[0].id);
-    if (parent.isErr()) {
-      return actionErr(parent.error);
-    }
-
-    this.dump(parent.value, "foundParentIssue");
+    const parent = parents[0];
+    this.dump(parent, "foundParentIssue");
 
     return actionErr("Not implemented.");
   }

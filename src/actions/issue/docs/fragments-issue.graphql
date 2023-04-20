@@ -7,15 +7,13 @@ fragment IssuePropsWithTrackedInIssues on Issue {
   ...IssueProps
   trackedInIssues(first: 100) {
     totalCount
-    nodes { ...IssueProps }
-  }
-}
-
-fragment IssuePropsWithItems on Issue {
-  ...IssueProps
-  milestone { ...MilestoneProps }
-  projectItems(first: 100) {
-    totalCount
-    nodes { ...ProjectV2ItemPropsWithProjectAndFields }
+    nodes { 
+      ...IssueProps
+      milestone { ...MilestoneProps }
+      projectItems(first: 100) {
+        totalCount
+        nodes { ...ProjectV2ItemPropsWithProjectAndFields }
+      }
+    }
   }
 }
