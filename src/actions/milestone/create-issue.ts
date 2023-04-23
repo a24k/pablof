@@ -30,19 +30,19 @@ export class CreateMilestoneIssue extends MilestoneAction {
   protected async createIssueWithMilestone(
     milestone: MilestonePropsWithRepositoryFragment
   ): Promise<Result<IssuePropsFragment, string>> {
-    const issue = await gql.createIssueWithMilestone({
+    const result = await gql.createIssueWithMilestone({
       repository: milestone.repository.id,
       title: milestone.title,
       body: milestone.description,
       milestone: milestone.id,
     });
-    this.dump(issue, "createIssueWithMilestone");
+    this.dump(result, "createIssueWithMilestone");
 
-    if (issue.createIssue?.issue?.id == undefined) {
+    if (result.createIssue?.issue?.id == undefined) {
       return err("Fail to create issue.");
     }
 
-    return ok(issue.createIssue.issue);
+    return ok(result.createIssue.issue);
   }
 
   protected async updateStatusField(

@@ -29173,6 +29173,11 @@ export type IssuePropsFragment = {
   readonly state: IssueState;
 };
 
+export type LabelPropsFragment = {
+  readonly __typename: "Label";
+  readonly id: string;
+};
+
 export type IssuePropsWithTrackedInIssuesFragment = {
   readonly __typename: "Issue";
   readonly id: string;
@@ -29193,6 +29198,14 @@ export type IssuePropsWithTrackedInIssuesFragment = {
       readonly milestone?: {
         readonly __typename: "Milestone";
         readonly id: string;
+      } | null;
+      readonly labels?: {
+        readonly __typename?: "LabelConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<{
+          readonly __typename: "Label";
+          readonly id: string;
+        } | null> | null;
       } | null;
       readonly projectItems: {
         readonly __typename?: "ProjectV2ItemConnection";
@@ -29233,6 +29246,67 @@ export type IssuePropsWithTrackedInIssuesFragment = {
             };
           };
         } | null> | null;
+      };
+    } | null> | null;
+  };
+};
+
+export type IssuePropsWithProjectItemsFragment = {
+  readonly __typename: "Issue";
+  readonly id: string;
+  readonly number: number;
+  readonly title: string;
+  readonly body: string;
+  readonly state: IssueState;
+  readonly milestone?: {
+    readonly __typename: "Milestone";
+    readonly id: string;
+  } | null;
+  readonly labels?: {
+    readonly __typename?: "LabelConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "Label";
+      readonly id: string;
+    } | null> | null;
+  } | null;
+  readonly projectItems: {
+    readonly __typename?: "ProjectV2ItemConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<{
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+      readonly project: {
+        readonly __typename: "ProjectV2";
+        readonly id: string;
+        readonly title: string;
+        readonly closed: boolean;
+        readonly fields: {
+          readonly __typename?: "ProjectV2FieldConfigurationConnection";
+          readonly totalCount: number;
+          readonly nodes?: ReadonlyArray<
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              }
+            | null
+          > | null;
+        };
       };
     } | null> | null;
   };
@@ -29339,6 +29413,27 @@ export type ProjectV2ItemPropsWithProjectAndFieldsFragment = {
   };
 };
 
+export type UpdateIssueMutationVariables = Exact<{
+  issue: Scalars["ID"];
+  milestone?: InputMaybe<Scalars["ID"]>;
+  labels?: InputMaybe<ReadonlyArray<Scalars["ID"]> | Scalars["ID"]>;
+}>;
+
+export type UpdateIssueMutation = {
+  readonly __typename?: "Mutation";
+  readonly updateIssue?: {
+    readonly __typename?: "UpdateIssuePayload";
+    readonly issue?: {
+      readonly __typename: "Issue";
+      readonly id: string;
+      readonly number: number;
+      readonly title: string;
+      readonly body: string;
+      readonly state: IssueState;
+    } | null;
+  } | null;
+};
+
 export type QueryIssueWithTrackedInIssuesQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
@@ -29431,6 +29526,14 @@ export type QueryIssueWithTrackedInIssuesQuery = {
             readonly milestone?: {
               readonly __typename: "Milestone";
               readonly id: string;
+            } | null;
+            readonly labels?: {
+              readonly __typename?: "LabelConnection";
+              readonly totalCount: number;
+              readonly nodes?: ReadonlyArray<{
+                readonly __typename: "Label";
+                readonly id: string;
+              } | null> | null;
             } | null;
             readonly projectItems: {
               readonly __typename?: "ProjectV2ItemConnection";
@@ -29669,6 +29772,12 @@ export const MilestonePropsFragmentDoc = `
   id
 }
     `;
+export const LabelPropsFragmentDoc = `
+    fragment LabelProps on Label {
+  __typename
+  id
+}
+    `;
 export const ProjectV2ItemPropsFragmentDoc = `
     fragment ProjectV2ItemProps on ProjectV2Item {
   __typename
@@ -29725,26 +29834,46 @@ export const ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc = `
   }
 }
     `;
+export const IssuePropsWithProjectItemsFragmentDoc = `
+    fragment IssuePropsWithProjectItems on Issue {
+  ...IssueProps
+  milestone {
+    ...MilestoneProps
+  }
+  labels(first: 100) {
+    totalCount
+    nodes {
+      ...LabelProps
+    }
+  }
+  projectItems(first: 100) {
+    totalCount
+    nodes {
+      ...ProjectV2ItemPropsWithProjectAndFields
+    }
+  }
+}
+    `;
 export const IssuePropsWithTrackedInIssuesFragmentDoc = `
     fragment IssuePropsWithTrackedInIssues on Issue {
   ...IssueProps
   trackedInIssues(first: 1) {
     totalCount
     nodes {
-      ...IssueProps
-      milestone {
-        ...MilestoneProps
-      }
-      projectItems(first: 100) {
-        totalCount
-        nodes {
-          ...ProjectV2ItemPropsWithProjectAndFields
-        }
-      }
+      ...IssuePropsWithProjectItems
     }
   }
 }
     `;
+export const UpdateIssueDocument = `
+    mutation updateIssue($issue: ID!, $milestone: ID, $labels: [ID!]) {
+  updateIssue(input: {id: $issue, milestoneId: $milestone, labelIds: $labels}) {
+    issue {
+      ...IssueProps
+    }
+  }
+}
+    ${IssuePropsFragmentDoc}`;
 export const QueryIssueWithTrackedInIssuesDocument = `
     query queryIssueWithTrackedInIssues($id: ID!) {
   node(id: $id) {
@@ -29753,7 +29882,9 @@ export const QueryIssueWithTrackedInIssuesDocument = `
 }
     ${IssuePropsWithTrackedInIssuesFragmentDoc}
 ${IssuePropsFragmentDoc}
+${IssuePropsWithProjectItemsFragmentDoc}
 ${MilestonePropsFragmentDoc}
+${LabelPropsFragmentDoc}
 ${ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc}
 ${ProjectV2ItemPropsFragmentDoc}
 ${ProjectV2PropsFragmentDoc}
@@ -29767,6 +29898,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
+    updateIssue(
+      variables: UpdateIssueMutationVariables,
+      options?: C
+    ): Promise<UpdateIssueMutation> {
+      return requester<UpdateIssueMutation, UpdateIssueMutationVariables>(
+        UpdateIssueDocument,
+        variables,
+        options
+      ) as Promise<UpdateIssueMutation>;
+    },
     queryIssueWithTrackedInIssues(
       variables: QueryIssueWithTrackedInIssuesQueryVariables,
       options?: C

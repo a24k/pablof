@@ -9,7 +9,7 @@ import type { IssuePropsWithTrackedInIssuesFragment } from "./graphql";
 
 import { graphql } from "../";
 import { getSdk } from "./graphql";
-const gql = getSdk(graphql);
+export const gql = getSdk(graphql);
 
 export abstract class IssueAction extends Action {
   protected async queryIssueWithTrackedInIssues(

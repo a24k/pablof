@@ -1,11 +1,19 @@
 /* eslint-disable eqeqeq */
 
+import { Result, ok, err } from "neverthrow";
+
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
 import { actionErr, actionSkip } from "../";
 import type { ActionResult, Context } from "../";
 
-import { IssueAction } from "./base";
+import type {
+  IssuePropsFragment,
+  IssuePropsWithTrackedInIssuesFragment,
+  IssuePropsWithProjectItemsFragment,
+} from "./graphql";
+
+import { gql, IssueAction } from "./base";
 
 export class DeriveIssue extends IssueAction {
   constructor() {
@@ -14,6 +22,46 @@ export class DeriveIssue extends IssueAction {
 
   description(): string {
     return `DeriveIssue for ${super.description()}`;
+  }
+
+  protected async findParentIssue(
+    issue: IssuePropsWithTrackedInIssuesFragment
+  ): Promise<Result<IssuePropsWithProjectItemsFragment, string>> {
+    const parents = issue.trackedInIssues.nodes?.flatMap(iss =>
+      iss === null ? [] : iss
+    );
+    if (parents == undefined || parents.length === 0) {
+      return err("No parent issue found.");
+    }
+
+    const parent = parents[0];
+    this.dump(parent, "foundParentIssue");
+
+    return ok(parent);
+  }
+
+  protected async updateIssueWithParent(
+    issue: IssuePropsFragment,
+    parent: IssuePropsWithProjectItemsFragment
+  ): Promise<Result<IssuePropsFragment, string>> {
+    const milestone = parent.milestone?.id;
+
+    const labels = parent.labels?.nodes?.flatMap(label =>
+      label === null ? [] : label.id
+    );
+
+    const result = await gql.updateIssue({
+      issue: issue.id,
+      milestone,
+      labels,
+    });
+    this.dump(result, "updateIssue");
+
+    if (result.updateIssue?.issue?.id == undefined) {
+      return err("Fail to update issue.");
+    }
+
+    return ok(result.updateIssue.issue);
   }
 
   protected async handle(context: Context): Promise<ActionResult> {
@@ -31,15 +79,20 @@ export class DeriveIssue extends IssueAction {
       return actionSkip("Issue is not derived.");
     }
 
-    const parents = issue.value.trackedInIssues.nodes?.flatMap(iss =>
-      iss === null ? [] : iss
-    );
-    if (parents == undefined || parents.length === 0) {
-      return actionErr("No parent issue found.");
+    const parent = await this.findParentIssue(issue.value);
+    if (parent.isErr()) {
+      return actionErr(parent.error);
     }
 
-    const parent = parents[0];
-    this.dump(parent, "foundParentIssue");
+    {
+      const result = await this.updateIssueWithParent(
+        issue.value,
+        parent.value
+      );
+      if (result.isErr()) {
+        return actionErr(result.error);
+      }
+    }
 
     return actionErr("Not implemented.");
   }
