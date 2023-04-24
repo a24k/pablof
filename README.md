@@ -14,10 +14,12 @@ This is a custom action for GitHub Actions to help you work with GitHub Issues a
 - [Feature - Milestone Issue](#feature---milestone-issue)
     - [Action - Create Milestone Issue](#action---create-milestone-issue)
     - [Action - Sync Milestone Issue](#action---sync-milestone-issue)
+- [Feature - Derived Issue](#feature---derived-issue)
+    - [Action - Derive Issue](#action---derive-issue)
 
 # Usage
 
-## Beta - Milestone Issue
+## Beta
 
 ### Workflow Example
 
@@ -25,7 +27,10 @@ This is a custom action for GitHub Actions to help you work with GitHub Issues a
 name: pablof
 
 on:
+  issues:
+    types: [opened]
   milestone:
+    types: [created, opened, edited, closed, deleted]
 
 jobs:
   pablof:
@@ -110,7 +115,7 @@ The created Milestone Issue will inherit the `title` and `body` of the Milestone
 | ---         | ---       |
 | `milestone` | `created` |
 
-### Workins with Projects (V2)
+### Works with Projects (V2)
 
 If you have linked Projects on the Repository,
 this action will add the Milestone Issue to every linked Projects.
@@ -147,7 +152,7 @@ The updated Milestone Issue will have the same `title` and `state` as the Milest
 | ---         | ---       |
 | `milestone` | `edited` `closed` `opened` |
 
-### Workins with Projects (V2)
+### Works with Projects (V2)
 
 If you have linked Items on the Milestone Issue,
 this action will update Items linked with Projects.
@@ -157,3 +162,52 @@ this action will update Items linked with Projects.
 If the Project has a Field name matched with `/^(Due|End|Finish|Target) [dD]ate$/`,
 this action will set the field value to `dueOn` of Milestone.
 Only affects for the first Field matched.
+
+# Feature - Derived Issue
+
+When we are trying to achieve something, it is very important to break down the task.
+
+## Concept
+
+If a newly opened Issue `Sub Issue a`
+is tracked 1:1 from the another Issue `Task Issue 1`,
+we consider it is derived from `Task Issue 1`.
+Typically,
+this situation occurs when a new Issue is created
+by clicking ["Convert to issue"](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-tasklists#converting-draft-issues-to-issues-in-a-tasklist)
+at the end of each items on the Tasklist.
+
+```mermaid
+flowchart LR
+  ti1[Task Issue 1]
+  sia[Sub Issue a]
+  sib[Sub Issue b]
+
+  ti1 -- track --> sia
+  ti1 -- track --> sib
+```
+
+## Action - Derive Issue
+
+When a new Issue derived from another Issue,
+this action copies the Parent Issue's attributes about Labels, Milestone and Projects.
+
+### Supported Triggers
+
+| Name     | Action   |
+| ---      | ---      |
+| `issues` | `opened` |
+
+### Works with Projects (V2)
+
+If the Parent Issue linked with Projects,
+this action will add the Derived Issue to every linked Projects
+and copy Field Values of Parent Project Items.
+
+#### Status Field
+
+If the Parent Project Item has a Field named `Status`,
+this action will set the value of `Status` according to following rules in the order written.
+
+1. Set `Status` to first (most left) one except named `Milestone` or `Project`.
+1. Otherwise, set the same `Status` as the Parent Project Item.
