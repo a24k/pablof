@@ -100,7 +100,18 @@ export class DeriveIssue extends IssueAction {
     item: ProjectV2ItemPropsWithProjectAndFieldsFragment
   ): ProjectV2ItemFieldValuePropsFragment[] {
     const fields = item.fieldValues?.nodes?.flatMap(field =>
-      field === null || !("id" in field) ? [] : field
+      field === null ||
+      !("id" in field) ||
+      !("dataType" in field.field) ||
+      !(
+        field.field.dataType === "DATE" ||
+        field.field.dataType === "ITERATION" ||
+        field.field.dataType === "NUMBER" ||
+        field.field.dataType === "SINGLE_SELECT" ||
+        field.field.dataType === "TEXT"
+      )
+        ? []
+        : field
     );
 
     this.dump(fields, "foundProjectItemFieldValues");
