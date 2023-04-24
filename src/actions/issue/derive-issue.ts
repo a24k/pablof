@@ -13,6 +13,7 @@ import type {
   IssuePropsWithProjectItemsFragment,
   ProjectV2ItemPropsFragment,
   ProjectV2ItemPropsWithProjectAndFieldsFragment,
+  ProjectV2ItemFieldValuePropsFragment,
 } from "./graphql";
 
 import { gql, IssueAction } from "./base";
@@ -72,6 +73,9 @@ export class DeriveIssue extends IssueAction {
     const items = issue.projectItems.nodes?.flatMap(item =>
       item === null || item.project.closed ? [] : item
     );
+
+    this.dump(items, "foundProjectItems");
+
     return items == undefined ? [] : items;
   }
 
@@ -90,6 +94,18 @@ export class DeriveIssue extends IssueAction {
     }
 
     return ok(result.addProjectV2ItemById.item);
+  }
+
+  protected findProjectItemFieldValues(
+    item: ProjectV2ItemPropsWithProjectAndFieldsFragment
+  ): ProjectV2ItemFieldValuePropsFragment[] {
+    const fields = item.fieldValues?.nodes?.flatMap(field =>
+      field === null || !("id" in field) ? [] : field
+    );
+
+    this.dump(fields, "foundProjectItemFieldValues");
+
+    return fields == undefined ? [] : fields;
   }
 
   protected async handle(context: Context): Promise<ActionResult> {
@@ -126,6 +142,10 @@ export class DeriveIssue extends IssueAction {
       const item = await this.addProjectItem(pitem.project.id, issue.value.id);
       if (item.isErr()) {
         return actionErr(item.error);
+      }
+
+      for (const field of this.findProjectItemFieldValues(pitem)) {
+        this.dump(field, "field");
       }
     }
 
