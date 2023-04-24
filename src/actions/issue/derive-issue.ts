@@ -4,7 +4,7 @@ import { Result, ok, err } from "neverthrow";
 
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
-import { actionErr, actionSkip } from "../";
+import { actionOk, actionErr, actionSkip } from "../";
 import type { ID, ActionResult, Context } from "../";
 
 import type {
@@ -14,6 +14,7 @@ import type {
   ProjectV2ItemPropsFragment,
   ProjectV2ItemPropsWithProjectAndFieldsFragment,
   ProjectV2ItemFieldValuePropsFragment,
+  ProjectV2FieldValue,
 } from "./graphql";
 
 import { gql, IssueAction } from "./base";
@@ -100,23 +101,70 @@ export class DeriveIssue extends IssueAction {
     item: ProjectV2ItemPropsWithProjectAndFieldsFragment
   ): ProjectV2ItemFieldValuePropsFragment[] {
     const fields = item.fieldValues?.nodes?.flatMap(field =>
-      field === null ||
-      !("id" in field) ||
-      !("dataType" in field.field) ||
-      !(
-        field.field.dataType === "DATE" ||
-        field.field.dataType === "ITERATION" ||
-        field.field.dataType === "NUMBER" ||
-        field.field.dataType === "SINGLE_SELECT" ||
-        field.field.dataType === "TEXT"
-      )
-        ? []
-        : field
+      field === null ? [] : field
     );
 
     this.dump(fields, "foundProjectItemFieldValues");
 
     return fields == undefined ? [] : fields;
+  }
+
+  protected imitateFieldValue(
+    field: ProjectV2ItemFieldValuePropsFragment
+  ): ProjectV2FieldValue | null {
+    switch (field.__typename) {
+      case "ProjectV2ItemFieldTextValue":
+        if (
+          field.field.__typename === "ProjectV2Field" &&
+          field.field.dataType === "TEXT"
+        ) {
+          return { text: field.text };
+        } else {
+          return null;
+        }
+      case "ProjectV2ItemFieldNumberValue":
+        return { number: field.number };
+      case "ProjectV2ItemFieldDateValue":
+        return { date: field.date };
+      case "ProjectV2ItemFieldSingleSelectValue":
+        if (
+          field.field.__typename === "ProjectV2SingleSelectField" &&
+          field.field.name === "Status"
+        ) {
+          const option = field.field.options.find(
+            opt => !(opt.name === "Milestone" || opt.name === "Project")
+          );
+          const optionId = option?.id || field.optionId;
+          return { singleSelectOptionId: optionId };
+        } else {
+          return { singleSelectOptionId: field.optionId };
+        }
+      case "ProjectV2ItemFieldIterationValue":
+        return { iterationId: field.iterationId };
+      default:
+        return null;
+    }
+  }
+
+  protected async updateProjectItemFieldValue(
+    project: ID,
+    item: ID,
+    field: ID,
+    value: ProjectV2FieldValue
+  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    const result = await gql.updateProjectItemFieldValue({
+      project,
+      item,
+      field,
+      value,
+    });
+    this.dump(result, "updateProjectItemFieldValue");
+
+    if (result.updateProjectV2ItemFieldValue?.projectV2Item?.id == undefined) {
+      return err("Fail to update project item field value.");
+    }
+
+    return ok(result.updateProjectV2ItemFieldValue.projectV2Item);
   }
 
   protected async handle(context: Context): Promise<ActionResult> {
@@ -156,10 +204,22 @@ export class DeriveIssue extends IssueAction {
       }
 
       for (const field of this.findProjectItemFieldValues(pitem)) {
-        this.dump(field, "field");
+        if (!("id" in field)) continue;
+
+        const value = this.imitateFieldValue(field);
+        if (value === null) continue;
+
+        await this.updateProjectItemFieldValue(
+          pitem.project.id,
+          item.value.id,
+          field.id,
+          value
+        );
       }
     }
 
-    return actionErr("Not implemented.");
+    return actionOk(
+      `Issue derived {id: ${issue.value.id}, title: ${issue.value.title}}`
+    );
   }
 }

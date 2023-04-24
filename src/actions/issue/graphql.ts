@@ -29739,6 +29739,26 @@ export type UpdateIssueMutation = {
   } | null;
 };
 
+export type UpdateProjectItemFieldValueMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+  field: Scalars["ID"];
+  value: ProjectV2FieldValue;
+}>;
+
+export type UpdateProjectItemFieldValueMutation = {
+  readonly __typename?: "Mutation";
+  readonly updateProjectV2ItemFieldValue?: {
+    readonly __typename?: "UpdateProjectV2ItemFieldValuePayload";
+    readonly projectV2Item?: {
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+    } | null;
+  } | null;
+};
+
 export type QueryIssueWithTrackedInIssuesQueryVariables = Exact<{
   id: Scalars["ID"];
 }>;
@@ -30302,6 +30322,17 @@ export const UpdateIssueDocument = `
   }
 }
     ${IssuePropsFragmentDoc}`;
+export const UpdateProjectItemFieldValueDocument = `
+    mutation updateProjectItemFieldValue($project: ID!, $item: ID!, $field: ID!, $value: ProjectV2FieldValue!) {
+  updateProjectV2ItemFieldValue(
+    input: {projectId: $project, itemId: $item, fieldId: $field, value: $value}
+  ) {
+    projectV2Item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${ProjectV2ItemPropsFragmentDoc}`;
 export const QueryIssueWithTrackedInIssuesDocument = `
     query queryIssueWithTrackedInIssues($id: ID!) {
   node(id: $id) {
@@ -30345,6 +30376,19 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<UpdateIssueMutation>;
+    },
+    updateProjectItemFieldValue(
+      variables: UpdateProjectItemFieldValueMutationVariables,
+      options?: C
+    ): Promise<UpdateProjectItemFieldValueMutation> {
+      return requester<
+        UpdateProjectItemFieldValueMutation,
+        UpdateProjectItemFieldValueMutationVariables
+      >(
+        UpdateProjectItemFieldValueDocument,
+        variables,
+        options
+      ) as Promise<UpdateProjectItemFieldValueMutation>;
     },
     queryIssueWithTrackedInIssues(
       variables: QueryIssueWithTrackedInIssuesQueryVariables,
