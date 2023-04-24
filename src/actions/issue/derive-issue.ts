@@ -204,7 +204,7 @@ export class DeriveIssue extends IssueAction {
       }
 
       for (const field of this.findProjectItemFieldValues(pitem)) {
-        if (!("id" in field)) continue;
+        if (!("field" in field) || !("id" in field.field)) continue;
 
         const value = this.imitateFieldValue(field);
         if (value === null) continue;
@@ -212,7 +212,7 @@ export class DeriveIssue extends IssueAction {
         await this.updateProjectItemFieldValue(
           pitem.project.id,
           item.value.id,
-          field.id,
+          field.field.id,
           value
         );
       }
