@@ -152,6 +152,11 @@ export class DeriveIssue extends IssueAction {
     field: ID,
     value: ProjectV2FieldValue
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    this.dump(
+      value,
+      `updateProjectItemFieldValue(project: ${project}, item: ${item}, field: ${field})`
+    );
+
     const result = await gql.updateProjectItemFieldValue({
       project,
       item,
