@@ -29700,6 +29700,24 @@ export type ProjectV2ItemPropsWithProjectAndFieldsFragment = {
   };
 };
 
+export type AddProjectItemMutationVariables = Exact<{
+  project: Scalars["ID"];
+  item: Scalars["ID"];
+}>;
+
+export type AddProjectItemMutation = {
+  readonly __typename?: "Mutation";
+  readonly addProjectV2ItemById?: {
+    readonly __typename?: "AddProjectV2ItemByIdPayload";
+    readonly item?: {
+      readonly __typename: "ProjectV2Item";
+      readonly id: string;
+      readonly type: ProjectV2ItemType;
+      readonly isArchived: boolean;
+    } | null;
+  } | null;
+};
+
 export type UpdateIssueMutationVariables = Exact<{
   issue: Scalars["ID"];
   milestone?: InputMaybe<Scalars["ID"]>;
@@ -30266,6 +30284,15 @@ export const IssuePropsWithTrackedInIssuesFragmentDoc = `
   }
 }
     `;
+export const AddProjectItemDocument = `
+    mutation addProjectItem($project: ID!, $item: ID!) {
+  addProjectV2ItemById(input: {projectId: $project, contentId: $item}) {
+    item {
+      ...ProjectV2ItemProps
+    }
+  }
+}
+    ${ProjectV2ItemPropsFragmentDoc}`;
 export const UpdateIssueDocument = `
     mutation updateIssue($issue: ID!, $milestone: ID, $labels: [ID!]) {
   updateIssue(input: {id: $issue, milestoneId: $milestone, labelIds: $labels}) {
@@ -30299,6 +30326,16 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
+    addProjectItem(
+      variables: AddProjectItemMutationVariables,
+      options?: C
+    ): Promise<AddProjectItemMutation> {
+      return requester<AddProjectItemMutation, AddProjectItemMutationVariables>(
+        AddProjectItemDocument,
+        variables,
+        options
+      ) as Promise<AddProjectItemMutation>;
+    },
     updateIssue(
       variables: UpdateIssueMutationVariables,
       options?: C

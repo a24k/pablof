@@ -5,12 +5,14 @@ import { Result, ok, err } from "neverthrow";
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
 import { actionErr, actionSkip } from "../";
-import type { ActionResult, Context } from "../";
+import type { ID, ActionResult, Context } from "../";
 
 import type {
   IssuePropsFragment,
   IssuePropsWithTrackedInIssuesFragment,
   IssuePropsWithProjectItemsFragment,
+  ProjectV2ItemPropsFragment,
+  ProjectV2ItemPropsWithProjectAndFieldsFragment,
 } from "./graphql";
 
 import { gql, IssueAction } from "./base";
@@ -64,6 +66,32 @@ export class DeriveIssue extends IssueAction {
     return ok(result.updateIssue.issue);
   }
 
+  protected findProjectItems(
+    issue: IssuePropsWithProjectItemsFragment
+  ): ProjectV2ItemPropsWithProjectAndFieldsFragment[] {
+    const items = issue.projectItems.nodes?.flatMap(item =>
+      item === null || item.project.closed ? [] : item
+    );
+    return items == undefined ? [] : items;
+  }
+
+  protected async addProjectItem(
+    project: ID,
+    item: ID
+  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    const result = await gql.addProjectItem({
+      project,
+      item,
+    });
+    this.dump(result, "addProjectItem");
+
+    if (result.addProjectV2ItemById?.item?.id == undefined) {
+      return err("Fail to add project item.");
+    }
+
+    return ok(result.addProjectV2ItemById.item);
+  }
+
   protected async handle(context: Context): Promise<ActionResult> {
     const payload = context.payload as IssuesEvent;
     this.dump(payload, "payload");
@@ -91,6 +119,13 @@ export class DeriveIssue extends IssueAction {
       );
       if (result.isErr()) {
         return actionErr(result.error);
+      }
+    }
+
+    for (const pitem of this.findProjectItems(parent.value)) {
+      const item = await this.addProjectItem(pitem.project.id, issue.value.id);
+      if (item.isErr()) {
+        return actionErr(item.error);
       }
     }
 

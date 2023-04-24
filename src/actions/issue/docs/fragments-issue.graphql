@@ -30,4 +30,3 @@ fragment IssuePropsWithProjectItems on Issue {
     nodes { ...ProjectV2ItemPropsWithProjectAndFields }
   }
 }
-
