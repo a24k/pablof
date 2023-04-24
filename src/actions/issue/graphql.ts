@@ -29284,6 +29284,7 @@ export type IssuePropsWithTrackedInIssuesFragment = {
                         readonly __typename: "ProjectV2SingleSelectField";
                         readonly id: string;
                         readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
                         readonly options: ReadonlyArray<{
                           readonly __typename?: "ProjectV2SingleSelectFieldOption";
                           readonly id: string;
@@ -29411,6 +29412,7 @@ export type IssuePropsWithProjectItemsFragment = {
                     readonly __typename: "ProjectV2SingleSelectField";
                     readonly id: string;
                     readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
                     readonly options: ReadonlyArray<{
                       readonly __typename?: "ProjectV2SingleSelectFieldOption";
                       readonly id: string;
@@ -29456,6 +29458,7 @@ export type ProjectV2SingleSelectFieldPropsFragment = {
   readonly __typename: "ProjectV2SingleSelectField";
   readonly id: string;
   readonly name: string;
+  readonly dataType: ProjectV2FieldType;
   readonly options: ReadonlyArray<{
     readonly __typename?: "ProjectV2SingleSelectFieldOption";
     readonly id: string;
@@ -29540,6 +29543,7 @@ type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldSingleSelectValue_Fragment =
           readonly __typename: "ProjectV2SingleSelectField";
           readonly id: string;
           readonly name: string;
+          readonly dataType: ProjectV2FieldType;
           readonly options: ReadonlyArray<{
             readonly __typename?: "ProjectV2SingleSelectFieldOption";
             readonly id: string;
@@ -29668,6 +29672,7 @@ export type ProjectV2ItemPropsWithProjectAndFieldsFragment = {
                 readonly __typename: "ProjectV2SingleSelectField";
                 readonly id: string;
                 readonly name: string;
+                readonly dataType: ProjectV2FieldType;
                 readonly options: ReadonlyArray<{
                   readonly __typename?: "ProjectV2SingleSelectFieldOption";
                   readonly id: string;
@@ -29906,6 +29911,7 @@ export type QueryIssueWithTrackedInIssuesQuery = {
                               readonly __typename: "ProjectV2SingleSelectField";
                               readonly id: string;
                               readonly name: string;
+                              readonly dataType: ProjectV2FieldType;
                               readonly options: ReadonlyArray<{
                                 readonly __typename?: "ProjectV2SingleSelectFieldOption";
                                 readonly id: string;
@@ -30167,6 +30173,7 @@ export const ProjectV2SingleSelectFieldPropsFragmentDoc = `
   __typename
   id
   name
+  dataType
   options {
     id
     name

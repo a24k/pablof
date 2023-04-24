@@ -5,7 +5,8 @@ fragment ProjectV2FieldProps on ProjectV2Field {
 
 fragment ProjectV2SingleSelectFieldProps on ProjectV2SingleSelectField {
   __typename
-  id name options { id name }
+  id name dataType
+  options { id name }
 }
 
 fragment ProjectV2ItemFieldValueProps on ProjectV2ItemFieldValue {
