@@ -29220,30 +29220,94 @@ export type IssuePropsWithTrackedInIssuesFragment = {
             readonly id: string;
             readonly title: string;
             readonly closed: boolean;
-            readonly fields: {
-              readonly __typename?: "ProjectV2FieldConfigurationConnection";
-              readonly totalCount: number;
-              readonly nodes?: ReadonlyArray<
-                | {
-                    readonly __typename: "ProjectV2Field";
-                    readonly id: string;
-                    readonly name: string;
-                    readonly dataType: ProjectV2FieldType;
-                  }
-                | { readonly __typename: "ProjectV2IterationField" }
-                | {
-                    readonly __typename: "ProjectV2SingleSelectField";
-                    readonly id: string;
-                    readonly name: string;
-                    readonly options: ReadonlyArray<{
-                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                      readonly id: string;
-                      readonly name: string;
-                    }>;
-                  }
-                | null
-              > | null;
-            };
+          };
+          readonly fieldValues: {
+            readonly __typename?: "ProjectV2ItemFieldValueConnection";
+            readonly totalCount: number;
+            readonly nodes?: ReadonlyArray<
+              | {
+                  readonly __typename: "ProjectV2ItemFieldDateValue";
+                  readonly id: string;
+                  readonly date?: unknown | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly id: string;
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename?: "ProjectV2IterationField" }
+                    | { readonly __typename?: "ProjectV2SingleSelectField" };
+                }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldIterationValue";
+                  readonly id: string;
+                  readonly iterationId: string;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly id: string;
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename?: "ProjectV2IterationField" }
+                    | { readonly __typename?: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+              | { readonly __typename: "ProjectV2ItemFieldMilestoneValue" }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldNumberValue";
+                  readonly id: string;
+                  readonly number?: number | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly id: string;
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename?: "ProjectV2IterationField" }
+                    | { readonly __typename?: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+              | { readonly __typename: "ProjectV2ItemFieldRepositoryValue" }
+              | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+                  readonly id: string;
+                  readonly name?: string | null;
+                  readonly optionId?: string | null;
+                  readonly field:
+                    | { readonly __typename?: "ProjectV2Field" }
+                    | { readonly __typename?: "ProjectV2IterationField" }
+                    | {
+                        readonly __typename: "ProjectV2SingleSelectField";
+                        readonly id: string;
+                        readonly name: string;
+                        readonly options: ReadonlyArray<{
+                          readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                          readonly id: string;
+                          readonly name: string;
+                        }>;
+                      };
+                }
+              | {
+                  readonly __typename: "ProjectV2ItemFieldTextValue";
+                  readonly id: string;
+                  readonly text?: string | null;
+                  readonly field:
+                    | {
+                        readonly __typename: "ProjectV2Field";
+                        readonly id: string;
+                        readonly name: string;
+                        readonly dataType: ProjectV2FieldType;
+                      }
+                    | { readonly __typename?: "ProjectV2IterationField" }
+                    | { readonly __typename?: "ProjectV2SingleSelectField" };
+                }
+              | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+              | null
+            > | null;
           };
         } | null> | null;
       };
@@ -29283,30 +29347,94 @@ export type IssuePropsWithProjectItemsFragment = {
         readonly id: string;
         readonly title: string;
         readonly closed: boolean;
-        readonly fields: {
-          readonly __typename?: "ProjectV2FieldConfigurationConnection";
-          readonly totalCount: number;
-          readonly nodes?: ReadonlyArray<
-            | {
-                readonly __typename: "ProjectV2Field";
-                readonly id: string;
-                readonly name: string;
-                readonly dataType: ProjectV2FieldType;
-              }
-            | { readonly __typename: "ProjectV2IterationField" }
-            | {
-                readonly __typename: "ProjectV2SingleSelectField";
-                readonly id: string;
-                readonly name: string;
-                readonly options: ReadonlyArray<{
-                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                  readonly id: string;
-                  readonly name: string;
-                }>;
-              }
-            | null
-          > | null;
-        };
+      };
+      readonly fieldValues: {
+        readonly __typename?: "ProjectV2ItemFieldValueConnection";
+        readonly totalCount: number;
+        readonly nodes?: ReadonlyArray<
+          | {
+              readonly __typename: "ProjectV2ItemFieldDateValue";
+              readonly id: string;
+              readonly date?: unknown | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename?: "ProjectV2IterationField" }
+                | { readonly __typename?: "ProjectV2SingleSelectField" };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldIterationValue";
+              readonly id: string;
+              readonly iterationId: string;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename?: "ProjectV2IterationField" }
+                | { readonly __typename?: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+          | { readonly __typename: "ProjectV2ItemFieldMilestoneValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldNumberValue";
+              readonly id: string;
+              readonly number?: number | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename?: "ProjectV2IterationField" }
+                | { readonly __typename?: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+          | { readonly __typename: "ProjectV2ItemFieldRepositoryValue" }
+          | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+          | {
+              readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+              readonly id: string;
+              readonly name?: string | null;
+              readonly optionId?: string | null;
+              readonly field:
+                | { readonly __typename?: "ProjectV2Field" }
+                | { readonly __typename?: "ProjectV2IterationField" }
+                | {
+                    readonly __typename: "ProjectV2SingleSelectField";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly options: ReadonlyArray<{
+                      readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                      readonly id: string;
+                      readonly name: string;
+                    }>;
+                  };
+            }
+          | {
+              readonly __typename: "ProjectV2ItemFieldTextValue";
+              readonly id: string;
+              readonly text?: string | null;
+              readonly field:
+                | {
+                    readonly __typename: "ProjectV2Field";
+                    readonly id: string;
+                    readonly name: string;
+                    readonly dataType: ProjectV2FieldType;
+                  }
+                | { readonly __typename?: "ProjectV2IterationField" }
+                | { readonly __typename?: "ProjectV2SingleSelectField" };
+            }
+          | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+          | null
+        > | null;
       };
     } | null> | null;
   };
@@ -29335,32 +29463,122 @@ export type ProjectV2SingleSelectFieldPropsFragment = {
   }>;
 };
 
-type ProjectV2FieldConfigurationProps_ProjectV2Field_Fragment = {
-  readonly __typename: "ProjectV2Field";
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldDateValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldDateValue";
   readonly id: string;
-  readonly name: string;
-  readonly dataType: ProjectV2FieldType;
+  readonly date?: unknown | null;
+  readonly field:
+    | {
+        readonly __typename: "ProjectV2Field";
+        readonly id: string;
+        readonly name: string;
+        readonly dataType: ProjectV2FieldType;
+      }
+    | { readonly __typename?: "ProjectV2IterationField" }
+    | { readonly __typename?: "ProjectV2SingleSelectField" };
 };
 
-type ProjectV2FieldConfigurationProps_ProjectV2IterationField_Fragment = {
-  readonly __typename: "ProjectV2IterationField";
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldIterationValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldIterationValue";
+  readonly id: string;
+  readonly iterationId: string;
+  readonly field:
+    | {
+        readonly __typename: "ProjectV2Field";
+        readonly id: string;
+        readonly name: string;
+        readonly dataType: ProjectV2FieldType;
+      }
+    | { readonly __typename?: "ProjectV2IterationField" }
+    | { readonly __typename?: "ProjectV2SingleSelectField" };
 };
 
-type ProjectV2FieldConfigurationProps_ProjectV2SingleSelectField_Fragment = {
-  readonly __typename: "ProjectV2SingleSelectField";
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldLabelValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldLabelValue";
+};
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldMilestoneValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+};
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldNumberValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldNumberValue";
   readonly id: string;
-  readonly name: string;
-  readonly options: ReadonlyArray<{
-    readonly __typename?: "ProjectV2SingleSelectFieldOption";
+  readonly number?: number | null;
+  readonly field:
+    | {
+        readonly __typename: "ProjectV2Field";
+        readonly id: string;
+        readonly name: string;
+        readonly dataType: ProjectV2FieldType;
+      }
+    | { readonly __typename?: "ProjectV2IterationField" }
+    | { readonly __typename?: "ProjectV2SingleSelectField" };
+};
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldPullRequestValue_Fragment =
+  { readonly __typename: "ProjectV2ItemFieldPullRequestValue" };
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldRepositoryValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+};
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldReviewerValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldReviewerValue";
+};
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldSingleSelectValue_Fragment =
+  {
+    readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
     readonly id: string;
-    readonly name: string;
-  }>;
+    readonly name?: string | null;
+    readonly optionId?: string | null;
+    readonly field:
+      | { readonly __typename?: "ProjectV2Field" }
+      | { readonly __typename?: "ProjectV2IterationField" }
+      | {
+          readonly __typename: "ProjectV2SingleSelectField";
+          readonly id: string;
+          readonly name: string;
+          readonly options: ReadonlyArray<{
+            readonly __typename?: "ProjectV2SingleSelectFieldOption";
+            readonly id: string;
+            readonly name: string;
+          }>;
+        };
+  };
+
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldTextValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldTextValue";
+  readonly id: string;
+  readonly text?: string | null;
+  readonly field:
+    | {
+        readonly __typename: "ProjectV2Field";
+        readonly id: string;
+        readonly name: string;
+        readonly dataType: ProjectV2FieldType;
+      }
+    | { readonly __typename?: "ProjectV2IterationField" }
+    | { readonly __typename?: "ProjectV2SingleSelectField" };
 };
 
-export type ProjectV2FieldConfigurationPropsFragment =
-  | ProjectV2FieldConfigurationProps_ProjectV2Field_Fragment
-  | ProjectV2FieldConfigurationProps_ProjectV2IterationField_Fragment
-  | ProjectV2FieldConfigurationProps_ProjectV2SingleSelectField_Fragment;
+type ProjectV2ItemFieldValueProps_ProjectV2ItemFieldUserValue_Fragment = {
+  readonly __typename: "ProjectV2ItemFieldUserValue";
+};
+
+export type ProjectV2ItemFieldValuePropsFragment =
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldDateValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldIterationValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldLabelValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldMilestoneValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldNumberValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldPullRequestValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldRepositoryValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldReviewerValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldSingleSelectValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldTextValue_Fragment
+  | ProjectV2ItemFieldValueProps_ProjectV2ItemFieldUserValue_Fragment;
 
 export type ProjectV2PropsFragment = {
   readonly __typename: "ProjectV2";
@@ -29386,30 +29604,94 @@ export type ProjectV2ItemPropsWithProjectAndFieldsFragment = {
     readonly id: string;
     readonly title: string;
     readonly closed: boolean;
-    readonly fields: {
-      readonly __typename?: "ProjectV2FieldConfigurationConnection";
-      readonly totalCount: number;
-      readonly nodes?: ReadonlyArray<
-        | {
-            readonly __typename: "ProjectV2Field";
-            readonly id: string;
-            readonly name: string;
-            readonly dataType: ProjectV2FieldType;
-          }
-        | { readonly __typename: "ProjectV2IterationField" }
-        | {
-            readonly __typename: "ProjectV2SingleSelectField";
-            readonly id: string;
-            readonly name: string;
-            readonly options: ReadonlyArray<{
-              readonly __typename?: "ProjectV2SingleSelectFieldOption";
-              readonly id: string;
-              readonly name: string;
-            }>;
-          }
-        | null
-      > | null;
-    };
+  };
+  readonly fieldValues: {
+    readonly __typename?: "ProjectV2ItemFieldValueConnection";
+    readonly totalCount: number;
+    readonly nodes?: ReadonlyArray<
+      | {
+          readonly __typename: "ProjectV2ItemFieldDateValue";
+          readonly id: string;
+          readonly date?: unknown | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename?: "ProjectV2IterationField" }
+            | { readonly __typename?: "ProjectV2SingleSelectField" };
+        }
+      | {
+          readonly __typename: "ProjectV2ItemFieldIterationValue";
+          readonly id: string;
+          readonly iterationId: string;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename?: "ProjectV2IterationField" }
+            | { readonly __typename?: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+      | { readonly __typename: "ProjectV2ItemFieldMilestoneValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldNumberValue";
+          readonly id: string;
+          readonly number?: number | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename?: "ProjectV2IterationField" }
+            | { readonly __typename?: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldPullRequestValue" }
+      | { readonly __typename: "ProjectV2ItemFieldRepositoryValue" }
+      | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+      | {
+          readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+          readonly id: string;
+          readonly name?: string | null;
+          readonly optionId?: string | null;
+          readonly field:
+            | { readonly __typename?: "ProjectV2Field" }
+            | { readonly __typename?: "ProjectV2IterationField" }
+            | {
+                readonly __typename: "ProjectV2SingleSelectField";
+                readonly id: string;
+                readonly name: string;
+                readonly options: ReadonlyArray<{
+                  readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                  readonly id: string;
+                  readonly name: string;
+                }>;
+              };
+        }
+      | {
+          readonly __typename: "ProjectV2ItemFieldTextValue";
+          readonly id: string;
+          readonly text?: string | null;
+          readonly field:
+            | {
+                readonly __typename: "ProjectV2Field";
+                readonly id: string;
+                readonly name: string;
+                readonly dataType: ProjectV2FieldType;
+              }
+            | { readonly __typename?: "ProjectV2IterationField" }
+            | { readonly __typename?: "ProjectV2SingleSelectField" };
+        }
+      | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+      | null
+    > | null;
   };
 };
 
@@ -29548,30 +29830,108 @@ export type QueryIssueWithTrackedInIssuesQuery = {
                   readonly id: string;
                   readonly title: string;
                   readonly closed: boolean;
-                  readonly fields: {
-                    readonly __typename?: "ProjectV2FieldConfigurationConnection";
-                    readonly totalCount: number;
-                    readonly nodes?: ReadonlyArray<
-                      | {
-                          readonly __typename: "ProjectV2Field";
-                          readonly id: string;
-                          readonly name: string;
-                          readonly dataType: ProjectV2FieldType;
-                        }
-                      | { readonly __typename: "ProjectV2IterationField" }
-                      | {
-                          readonly __typename: "ProjectV2SingleSelectField";
-                          readonly id: string;
-                          readonly name: string;
-                          readonly options: ReadonlyArray<{
-                            readonly __typename?: "ProjectV2SingleSelectFieldOption";
-                            readonly id: string;
-                            readonly name: string;
-                          }>;
-                        }
-                      | null
-                    > | null;
-                  };
+                };
+                readonly fieldValues: {
+                  readonly __typename?: "ProjectV2ItemFieldValueConnection";
+                  readonly totalCount: number;
+                  readonly nodes?: ReadonlyArray<
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldDateValue";
+                        readonly id: string;
+                        readonly date?: unknown | null;
+                        readonly field:
+                          | {
+                              readonly __typename: "ProjectV2Field";
+                              readonly id: string;
+                              readonly name: string;
+                              readonly dataType: ProjectV2FieldType;
+                            }
+                          | { readonly __typename?: "ProjectV2IterationField" }
+                          | {
+                              readonly __typename?: "ProjectV2SingleSelectField";
+                            };
+                      }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldIterationValue";
+                        readonly id: string;
+                        readonly iterationId: string;
+                        readonly field:
+                          | {
+                              readonly __typename: "ProjectV2Field";
+                              readonly id: string;
+                              readonly name: string;
+                              readonly dataType: ProjectV2FieldType;
+                            }
+                          | { readonly __typename?: "ProjectV2IterationField" }
+                          | {
+                              readonly __typename?: "ProjectV2SingleSelectField";
+                            };
+                      }
+                    | { readonly __typename: "ProjectV2ItemFieldLabelValue" }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldMilestoneValue";
+                      }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldNumberValue";
+                        readonly id: string;
+                        readonly number?: number | null;
+                        readonly field:
+                          | {
+                              readonly __typename: "ProjectV2Field";
+                              readonly id: string;
+                              readonly name: string;
+                              readonly dataType: ProjectV2FieldType;
+                            }
+                          | { readonly __typename?: "ProjectV2IterationField" }
+                          | {
+                              readonly __typename?: "ProjectV2SingleSelectField";
+                            };
+                      }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldPullRequestValue";
+                      }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldRepositoryValue";
+                      }
+                    | { readonly __typename: "ProjectV2ItemFieldReviewerValue" }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldSingleSelectValue";
+                        readonly id: string;
+                        readonly name?: string | null;
+                        readonly optionId?: string | null;
+                        readonly field:
+                          | { readonly __typename?: "ProjectV2Field" }
+                          | { readonly __typename?: "ProjectV2IterationField" }
+                          | {
+                              readonly __typename: "ProjectV2SingleSelectField";
+                              readonly id: string;
+                              readonly name: string;
+                              readonly options: ReadonlyArray<{
+                                readonly __typename?: "ProjectV2SingleSelectFieldOption";
+                                readonly id: string;
+                                readonly name: string;
+                              }>;
+                            };
+                      }
+                    | {
+                        readonly __typename: "ProjectV2ItemFieldTextValue";
+                        readonly id: string;
+                        readonly text?: string | null;
+                        readonly field:
+                          | {
+                              readonly __typename: "ProjectV2Field";
+                              readonly id: string;
+                              readonly name: string;
+                              readonly dataType: ProjectV2FieldType;
+                            }
+                          | { readonly __typename?: "ProjectV2IterationField" }
+                          | {
+                              readonly __typename?: "ProjectV2SingleSelectField";
+                            };
+                      }
+                    | { readonly __typename: "ProjectV2ItemFieldUserValue" }
+                    | null
+                  > | null;
                 };
               } | null> | null;
             };
@@ -29813,11 +30173,45 @@ export const ProjectV2SingleSelectFieldPropsFragmentDoc = `
   }
 }
     `;
-export const ProjectV2FieldConfigurationPropsFragmentDoc = `
-    fragment ProjectV2FieldConfigurationProps on ProjectV2FieldConfiguration {
+export const ProjectV2ItemFieldValuePropsFragmentDoc = `
+    fragment ProjectV2ItemFieldValueProps on ProjectV2ItemFieldValue {
   __typename
-  ...ProjectV2FieldProps
-  ...ProjectV2SingleSelectFieldProps
+  ... on ProjectV2ItemFieldTextValue {
+    id
+    text
+    field {
+      ...ProjectV2FieldProps
+    }
+  }
+  ... on ProjectV2ItemFieldNumberValue {
+    id
+    number
+    field {
+      ...ProjectV2FieldProps
+    }
+  }
+  ... on ProjectV2ItemFieldDateValue {
+    id
+    date
+    field {
+      ...ProjectV2FieldProps
+    }
+  }
+  ... on ProjectV2ItemFieldSingleSelectValue {
+    id
+    name
+    optionId
+    field {
+      ...ProjectV2SingleSelectFieldProps
+    }
+  }
+  ... on ProjectV2ItemFieldIterationValue {
+    id
+    iterationId
+    field {
+      ...ProjectV2FieldProps
+    }
+  }
 }
     `;
 export const ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc = `
@@ -29825,11 +30219,11 @@ export const ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc = `
   ...ProjectV2ItemProps
   project {
     ...ProjectV2Props
-    fields(first: 100, orderBy: {field: POSITION, direction: ASC}) {
-      totalCount
-      nodes {
-        ...ProjectV2FieldConfigurationProps
-      }
+  }
+  fieldValues(first: 100, orderBy: {field: POSITION, direction: ASC}) {
+    totalCount
+    nodes {
+      ...ProjectV2ItemFieldValueProps
     }
   }
 }
@@ -29888,7 +30282,7 @@ ${LabelPropsFragmentDoc}
 ${ProjectV2ItemPropsWithProjectAndFieldsFragmentDoc}
 ${ProjectV2ItemPropsFragmentDoc}
 ${ProjectV2PropsFragmentDoc}
-${ProjectV2FieldConfigurationPropsFragmentDoc}
+${ProjectV2ItemFieldValuePropsFragmentDoc}
 ${ProjectV2FieldPropsFragmentDoc}
 ${ProjectV2SingleSelectFieldPropsFragmentDoc}`;
 export type Requester<C = {}, E = unknown> = <R, V>(

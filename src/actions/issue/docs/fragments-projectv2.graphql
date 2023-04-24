@@ -12,9 +12,9 @@ fragment ProjectV2ItemPropsWithProjectAndFields on ProjectV2Item {
   ...ProjectV2ItemProps
   project {
     ...ProjectV2Props
-    fields(first: 100, orderBy: { field: POSITION, direction: ASC }) {
-      totalCount
-      nodes { ...ProjectV2FieldConfigurationProps }
-    }
+  }
+  fieldValues(first: 100, orderBy: { field: POSITION, direction: ASC }) {
+    totalCount
+    nodes { ...ProjectV2ItemFieldValueProps }
   }
 }
