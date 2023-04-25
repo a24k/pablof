@@ -7,13 +7,13 @@ import type { MilestoneEvent } from "@octokit/webhooks-types";
 import { actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
 
-import { MilestoneAction } from "./base";
+import { gql, MilestoneAction } from "./base";
 
-import { IssueState } from "../../graphql";
+import { IssueState } from "./graphql";
 import type {
   IssuePropsFragment,
   IssuePropsWithItemsFragment,
-} from "../../graphql";
+} from "./graphql";
 
 export class SyncMilestoneIssue extends MilestoneAction {
   constructor() {
@@ -29,7 +29,7 @@ export class SyncMilestoneIssue extends MilestoneAction {
     title: string,
     state: IssueState
   ): Promise<Result<IssuePropsWithItemsFragment, string>> {
-    const result = await this.sdk().updateIssue({
+    const result = await gql.updateIssue({
       issue: issue.id,
       title,
       state,
@@ -47,7 +47,9 @@ export class SyncMilestoneIssue extends MilestoneAction {
     const payload = context.payload as MilestoneEvent;
     this.dump(payload, "payload");
 
-    const milestone = await this.queryMilestoneById(payload.milestone.node_id);
+    const milestone = await this.queryMilestoneWithIssues(
+      payload.milestone.node_id
+    );
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }

@@ -7,14 +7,16 @@ import type { MilestoneEvent } from "@octokit/webhooks-types";
 import { actionOk, actionErr } from "../";
 import type { ActionResult, Context } from "../";
 
-import { MilestoneAction } from "./base";
+import { gql, MilestoneAction } from "./base";
 
 import type {
-  MilestonePropsWithRepositoryAndIssuesFragment,
+  MilestonePropsWithRepositoryFragment,
   IssuePropsFragment,
   ProjectV2PropsFragment,
   ProjectV2ItemPropsFragment,
-} from "../../graphql";
+  ProjectV2ItemPropsWithProjectFragment,
+  ProjectV2ItemPropsWithProjectAndFieldsFragment,
+} from "./graphql";
 
 export class CreateMilestoneIssue extends MilestoneAction {
   constructor() {
@@ -26,26 +28,26 @@ export class CreateMilestoneIssue extends MilestoneAction {
   }
 
   protected async createIssueWithMilestone(
-    milestone: MilestonePropsWithRepositoryAndIssuesFragment
+    milestone: MilestonePropsWithRepositoryFragment
   ): Promise<Result<IssuePropsFragment, string>> {
-    const issue = await this.sdk().createIssueWithMilestone({
+    const result = await gql.createIssueWithMilestone({
       repository: milestone.repository.id,
       title: milestone.title,
       body: milestone.description,
       milestone: milestone.id,
     });
-    this.dump(issue, "createIssueWithMilestone");
+    this.dump(result, "createIssueWithMilestone");
 
-    if (issue.createIssue?.issue?.id == undefined) {
+    if (result.createIssue?.issue?.id == undefined) {
       return err("Fail to create issue.");
     }
 
-    return ok(issue.createIssue.issue);
+    return ok(result.createIssue.issue);
   }
 
   protected async updateStatusField(
-    item: ProjectV2ItemPropsFragment
-  ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
+    item: ProjectV2ItemPropsWithProjectAndFieldsFragment
+  ): Promise<Result<ProjectV2ItemPropsWithProjectFragment, string>> {
     const fields = item.project.fields.nodes?.flatMap(field =>
       field === null ||
       field.__typename !== "ProjectV2SingleSelectField" ||
@@ -63,7 +65,7 @@ export class CreateMilestoneIssue extends MilestoneAction {
       field.options.find(opt => opt.name === "Project") ||
       field.options[0];
 
-    const result = await this.sdk().updateProjectItemFieldBySingleSelectValue({
+    const result = await gql.updateProjectItemFieldBySingleSelectValue({
       project: item.project.id,
       item: item.id,
       field: field.id,
@@ -83,9 +85,9 @@ export class CreateMilestoneIssue extends MilestoneAction {
   protected async addIssueToProject(
     project: ProjectV2PropsFragment,
     issue: IssuePropsFragment,
-    milestone: MilestonePropsWithRepositoryAndIssuesFragment
+    milestone: MilestonePropsWithRepositoryFragment
   ): Promise<Result<ProjectV2ItemPropsFragment, string>> {
-    const item = await this.sdk().addProjectItem({
+    const item = await gql.addProjectItem({
       project: project.id,
       item: issue.id,
     });
@@ -141,7 +143,9 @@ export class CreateMilestoneIssue extends MilestoneAction {
     const payload = context.payload as MilestoneEvent;
     this.dump(payload, "payload");
 
-    const milestone = await this.queryMilestoneById(payload.milestone.node_id);
+    const milestone = await this.queryMilestoneWithRepository(
+      payload.milestone.node_id
+    );
     if (milestone.isErr()) {
       return actionErr(milestone.error);
     }

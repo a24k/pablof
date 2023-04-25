@@ -1,8 +1,16 @@
 overwrite: true
 schema: https://docs.github.com/public/schema.docs.graphql
-documents: src/graphql/docs/**/*.graphql
+config:
+  documentMode: string
+  immutableTypes: true
+  defaultScalarType: unknown
+  dedupeFragments: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
 generates:
-  src/graphql/index.ts:
+  src/actions/milestone/graphql.ts:
+    documents: src/actions/milestone/docs/**/*.graphql
     plugins:
       - typescript
       - typescript-operations
@@ -13,7 +21,30 @@ generates:
       - add:
           content: "/* eslint-disable @typescript-eslint/array-type, @typescript-eslint/promise-function-async */"
       - add:
-          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type */"
-    config:
-      documentMode: string
-      immutableTypes: true
+          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type */"
+  src/actions/issue/graphql.ts:
+    documents: src/actions/issue/docs/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-generic-sdk
+      - fragment-matcher
+      - add:
+          content: "/* eslint-disable no-undef, no-shadow, no-irregular-whitespace */"
+      - add:
+          content: "/* eslint-disable @typescript-eslint/array-type, @typescript-eslint/promise-function-async */"
+      - add:
+          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type */"
+  src/actions/project/graphql.ts:
+    documents: src/actions/project/docs/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-generic-sdk
+      - fragment-matcher
+      - add:
+          content: "/* eslint-disable no-undef, no-shadow, no-irregular-whitespace */"
+      - add:
+          content: "/* eslint-disable @typescript-eslint/array-type, @typescript-eslint/promise-function-async */"
+      - add:
+          content: "/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type */"

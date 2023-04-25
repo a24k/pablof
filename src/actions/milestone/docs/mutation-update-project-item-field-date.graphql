@@ -3,7 +3,7 @@ mutation updateProjectItemFieldByDate($project: ID!, $item: ID!, $field: ID!, $d
     projectId: $project, itemId: $item, fieldId: $field, value: { date: $date }
   }) {
     projectV2Item {
-      ...ProjectV2ItemProps
+      ...ProjectV2ItemPropsWithProject
     }
   }
 }

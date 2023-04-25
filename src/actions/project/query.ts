@@ -1,14 +1,34 @@
 /* eslint-disable eqeqeq */
 
+import { Result, ok, err } from "neverthrow";
+
 import type { PullRequestEvent } from "@octokit/webhooks-types";
 
-import { actionOk, actionErr } from "../";
-import type { ActionResult, Context } from "../";
+import { actionOk, actionErr, graphql } from "../";
 import { Action } from "../base";
+import type { ActionResult, Context, ID } from "../";
+
+import type { RepositoryPropsFragment } from "./graphql";
+
+import { getSdk } from "./graphql";
+const gql = getSdk(graphql);
 
 export class QueryProject extends Action {
   constructor() {
     super("pull_request");
+  }
+
+  private async _queryRepositoryById(
+    repository: ID
+  ): Promise<Result<RepositoryPropsFragment, string>> {
+    const node = (await gql.queryNode({ id: repository })).node;
+    this.dump(node, "queryNode");
+
+    if (node == undefined || node.__typename !== "Repository") {
+      return err("No repository found.");
+    }
+
+    return ok(node);
   }
 
   description(): string {
@@ -19,7 +39,7 @@ export class QueryProject extends Action {
     const payload = context.payload as PullRequestEvent;
     this.dump(payload, "payload");
 
-    const repository = await this.queryRepositoryById(
+    const repository = await this._queryRepositoryById(
       payload.repository.node_id
     );
     if (repository.isErr()) {

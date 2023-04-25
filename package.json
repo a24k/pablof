@@ -1,6 +1,6 @@
 {
   "name": "pablof",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "a Productive Assistant for a Better Life OF you, your team, your family and our world.",
   "author": "Atsushi KAWASAKI",
   "private": true,
@@ -21,7 +21,7 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "npx eslint --ext .ts src/",
-    "package": "ncc build --source-map --license licenses.txt",
+    "package": "ncc build --minify --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run codegen && npm run build && npm run format && npm run lint && npm run package && npm test"
   },
@@ -36,7 +36,6 @@
     "@graphql-codegen/add": "^4.0.1",
     "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^3.0.0",
-    "@graphql-codegen/client-preset": "^2.1.1",
     "@graphql-codegen/fragment-matcher": "^4.0.1",
     "@graphql-codegen/introspection": "^3.0.1",
     "@graphql-codegen/typescript": "^3.0.4",

@@ -1,0 +1,32 @@
+fragment IssueProps on Issue {
+  __typename
+  id number title body state
+}
+
+fragment LabelProps on Label {
+  __typename
+  id
+}
+
+fragment IssuePropsWithTrackedInIssues on Issue {
+  ...IssueProps
+  trackedInIssues(first: 1) {
+    totalCount
+    nodes { 
+      ...IssuePropsWithProjectItems
+    }
+  }
+}
+
+fragment IssuePropsWithProjectItems on Issue {
+  ...IssueProps
+  milestone { ...MilestoneProps }
+  labels(first: 100) {
+    totalCount
+    nodes { ...LabelProps }
+  }
+  projectItems(first: 100) {
+    totalCount
+    nodes { ...ProjectV2ItemPropsWithProjectAndFields }
+  }
+}

@@ -1,0 +1,34 @@
+fragment ProjectV2FieldProps on ProjectV2Field {
+  __typename
+  id name dataType
+}
+
+fragment ProjectV2SingleSelectFieldProps on ProjectV2SingleSelectField {
+  __typename
+  id name dataType
+  options { id name }
+}
+
+fragment ProjectV2ItemFieldValueProps on ProjectV2ItemFieldValue {
+  __typename
+  ... on ProjectV2ItemFieldTextValue {
+    id text
+    field { ...ProjectV2FieldProps }
+  }
+  ... on ProjectV2ItemFieldNumberValue {
+    id number
+    field { ...ProjectV2FieldProps }
+  }
+  ... on ProjectV2ItemFieldDateValue {
+    id date
+    field { ...ProjectV2FieldProps }
+  }
+  ... on ProjectV2ItemFieldSingleSelectValue {
+    id name optionId
+    field { ...ProjectV2SingleSelectFieldProps }
+  }
+  ... on ProjectV2ItemFieldIterationValue {
+    id iterationId
+    field { ...ProjectV2FieldProps }
+  }
+}

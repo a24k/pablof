@@ -1,0 +1,5 @@
+mutation updateIssue($issue: ID!, $milestone: ID, $labels: [ID!]) {
+  updateIssue(input: { id: $issue, milestoneId: $milestone, labelIds: $labels }) {
+    issue { ...IssueProps }
+  }
+}
