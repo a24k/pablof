@@ -1,6 +1,6 @@
 {
   "name": "pablof",
-  "version": "0.3.1-si.5.0",
+  "version": "0.3.1-si.5.1",
   "description": "a Productive Assistant for a Better Life OF you, your team, your family and our world.",
   "author": "Atsushi KAWASAKI",
   "private": true,
@@ -31,6 +31,8 @@
     "@octokit/webhooks-types": "^6.11.0",
     "graphql": "^16.6.0",
     "mdast-util-from-markdown": "^1.3.0",
+    "mdast-util-gfm": "^2.0.2",
+    "micromark-extension-gfm": "^2.0.1",
     "neverthrow": "^6.0.0"
   },
   "devDependencies": {

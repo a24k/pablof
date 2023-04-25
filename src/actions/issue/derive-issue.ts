@@ -1,7 +1,10 @@
 /* eslint-disable eqeqeq */
 
 import { Result, ok, err } from "neverthrow";
+
 import { fromMarkdown } from "mdast-util-from-markdown";
+import { gfm } from "micromark-extension-gfm";
+import { gfmFromMarkdown } from "mdast-util-gfm";
 
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
@@ -55,7 +58,12 @@ export class DeriveIssue extends IssueAction {
       label === null ? [] : label.id
     );
 
-    const mdast = fromMarkdown(parent.body);
+    // TODO: derive-issue-body
+
+    const mdast = fromMarkdown(parent.body, {
+      extensions: [gfm()],
+      mdastExtensions: [gfmFromMarkdown()],
+    });
     this.dump(mdast, "fromMarkdown");
 
     const result = await gql.updateIssue({
