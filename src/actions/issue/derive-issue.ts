@@ -1,6 +1,7 @@
 /* eslint-disable eqeqeq */
 
 import { Result, ok, err } from "neverthrow";
+import { fromMarkdown } from "mdast-util-from-markdown";
 
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
@@ -53,6 +54,9 @@ export class DeriveIssue extends IssueAction {
     const labels = parent.labels?.nodes?.flatMap(label =>
       label === null ? [] : label.id
     );
+
+    const mdast = fromMarkdown(parent.body);
+    this.dump(mdast, "fromMarkdown");
 
     const result = await gql.updateIssue({
       issue: issue.id,
