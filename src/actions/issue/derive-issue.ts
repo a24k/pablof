@@ -50,7 +50,7 @@ export class DeriveIssue extends IssueAction {
     return ok(parent);
   }
 
-  protected findMarkdownChildlen(parent: Parent, number: number): Parent[] {
+  protected findMarkdownChildlen(parent: Parent, number: number): void {
     const text = `#${number}`;
 
     for (const child of parent.children) {
@@ -73,13 +73,10 @@ export class DeriveIssue extends IssueAction {
           case "tableCell":
           case "delete":
           case "footnote":
-            return this.findMarkdownChildlen(child, number);
-          default:
-            return [];
+            this.findMarkdownChildlen(child, number);
         }
       }
     }
-    return [];
   }
 
   protected async updateIssueWithParent(
