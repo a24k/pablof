@@ -59,9 +59,11 @@ export class DeriveIssue extends IssueAction {
           if (
             child.children[0].type === "paragraph" &&
             child.children[0].children[0].type === "text" &&
-            child.children[0].children[0].value === text
+            child.children[0].children[0].value === text &&
+            child.children[1].type === "list"
           ) {
-            this.dump(child, "found!!!");
+            this.dump(child, "found reference!!!");
+            this.dump(child.children[1], "found task list!!!");
           }
           break;
         case "paragraph":
