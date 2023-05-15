@@ -50,14 +50,36 @@ export class DeriveIssue extends IssueAction {
     return ok(parent);
   }
 
-  protected findMarkdownChildlen(parent: Parent, number: number): void {
+  protected findMarkdownChildlen(parent: Parent, number: number): Parent[] {
     const text = `#${number}`;
 
     for (const child of parent.children) {
       if (child.type == "text" && child.value === text) {
         this.dump(child, "found!!!");
+      } else {
+        switch (child.type) {
+          case "paragraph":
+          case "heading":
+          case "blockquote":
+          case "list":
+          case "listItem":
+          case "emphasis":
+          case "strong":
+          case "link":
+          case "linkReference":
+          case "footnoteDefinition":
+          case "table":
+          case "tableRow":
+          case "tableCell":
+          case "delete":
+          case "footnote":
+            return this.findMarkdownChildlen(child, number);
+          default:
+            return [];
+        }
       }
     }
+    return [];
   }
 
   protected async updateIssueWithParent(
