@@ -16253,9 +16253,9 @@ export type ProjectV2Item = Node & {
   readonly creator?: Maybe<Actor>;
   /** Identifies the primary key from the database. */
   readonly databaseId?: Maybe<Scalars["Int"]>;
-  /** A specific field value given a field name */
+  /** The field value of the first project field which matches the 'name' argument that is set on the item. */
   readonly fieldValueByName?: Maybe<ProjectV2ItemFieldValue>;
-  /** List of field values */
+  /** The field values that are set on the item. */
   readonly fieldValues: ProjectV2ItemFieldValueConnection;
   readonly id: Scalars["ID"];
   /** Whether the item is archived. */
@@ -18615,7 +18615,10 @@ export type Query = {
   readonly organization?: Maybe<Organization>;
   /** The client's rate limit information. */
   readonly rateLimit?: Maybe<RateLimit>;
-  /** Hack to workaround https://github.com/facebook/relay/issues/112 re-exposing the root query object */
+  /**
+   * Workaround for re-exposing the root query object. (Refer to
+   * https://github.com/facebook/relay/issues/112 for more information.)
+   */
   readonly relay: Query;
   /** Lookup a given repository by the owner and repository name. */
   readonly repository?: Maybe<Repository>;
@@ -28225,7 +28228,7 @@ export type User = Actor &
     readonly isDeveloperProgramMember: Scalars["Boolean"];
     /** Whether or not this user is a GitHub employee. */
     readonly isEmployee: Scalars["Boolean"];
-    /** Whether or not this user is following the viewer. Inverse of viewer_is_following */
+    /** Whether or not this user is following the viewer. Inverse of viewerIsFollowing */
     readonly isFollowingViewer: Scalars["Boolean"];
     /** Whether or not this user is a member of the GitHub Stars Program. */
     readonly isGitHubStar: Scalars["Boolean"];
@@ -28350,7 +28353,7 @@ export type User = Actor &
     readonly viewerCanFollow: Scalars["Boolean"];
     /** Whether or not the viewer is able to sponsor this user/organization. */
     readonly viewerCanSponsor: Scalars["Boolean"];
-    /** Whether or not this user is followed by the viewer. Inverse of is_following_viewer. */
+    /** Whether or not this user is followed by the viewer. Inverse of isFollowingViewer. */
     readonly viewerIsFollowing: Scalars["Boolean"];
     /** True if the viewer is sponsoring this user/organization. */
     readonly viewerIsSponsoring: Scalars["Boolean"];

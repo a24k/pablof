@@ -6,6 +6,8 @@ import { fromMarkdown } from "mdast-util-from-markdown";
 import { gfm } from "micromark-extension-gfm";
 import { gfmFromMarkdown } from "mdast-util-gfm";
 
+import type { Parent, Root } from "mdast";
+
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
 import { actionOk, actionErr, actionSkip } from "../";
@@ -48,6 +50,16 @@ export class DeriveIssue extends IssueAction {
     return ok(parent);
   }
 
+  protected findMarkdownChildlen(parent: Parent, number: number): void {
+    const text = `#${number}`;
+
+    for (const child of parent.children) {
+      if (child.type == "text" && child.value === text) {
+        this.dump(child, "found!!!");
+      }
+    }
+  }
+
   protected async updateIssueWithParent(
     issue: IssuePropsFragment,
     parent: IssuePropsWithProjectItemsFragment
@@ -60,11 +72,13 @@ export class DeriveIssue extends IssueAction {
 
     // TODO: derive-issue-body
 
-    const mdast = fromMarkdown(parent.body, {
+    const mdast: Root = fromMarkdown(parent.body, {
       extensions: [gfm()],
       mdastExtensions: [gfmFromMarkdown()],
     });
     this.dump(mdast, "fromMarkdown");
+
+    this.findMarkdownChildlen(mdast, issue.number);
 
     const result = await gql.updateIssue({
       issue: issue.id,
