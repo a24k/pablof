@@ -2,6 +2,12 @@
 
 import { Result, ok, err } from "neverthrow";
 
+import { fromMarkdown } from "mdast-util-from-markdown";
+import { gfm } from "micromark-extension-gfm";
+import { gfmFromMarkdown } from "mdast-util-gfm";
+
+import type { Parent, Root } from "mdast";
+
 import type { IssuesEvent } from "@octokit/webhooks-types";
 
 import { actionOk, actionErr, actionSkip } from "../";
@@ -44,6 +50,44 @@ export class DeriveIssue extends IssueAction {
     return ok(parent);
   }
 
+  protected findMarkdownChildlen(parent: Parent, number: number): void {
+    const text = `#${number}`;
+
+    for (const child of parent.children) {
+      switch (child.type) {
+        case "listItem":
+          if (
+            child.children[0].type === "paragraph" &&
+            child.children[0].children[0].type === "text" &&
+            child.children[0].children[0].value === text &&
+            child.children[1].type === "list"
+          ) {
+            this.dump(child, "found reference!!!");
+            this.dump(child.children[1], "found task list!!!");
+          }
+          break;
+        case "paragraph":
+        case "heading":
+        case "blockquote":
+        case "list":
+        case "emphasis":
+        case "strong":
+        case "link":
+        case "linkReference":
+        case "footnoteDefinition":
+        case "table":
+        case "tableRow":
+        case "tableCell":
+        case "delete":
+        case "footnote":
+          this.findMarkdownChildlen(child, number);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   protected async updateIssueWithParent(
     issue: IssuePropsFragment,
     parent: IssuePropsWithProjectItemsFragment
@@ -53,6 +97,16 @@ export class DeriveIssue extends IssueAction {
     const labels = parent.labels?.nodes?.flatMap(label =>
       label === null ? [] : label.id
     );
+
+    // TODO: derive-issue-body
+
+    const mdast: Root = fromMarkdown(parent.body, {
+      extensions: [gfm()],
+      mdastExtensions: [gfmFromMarkdown()],
+    });
+    this.dump(mdast, "fromMarkdown");
+
+    this.findMarkdownChildlen(mdast, issue.number);
 
     const result = await gql.updateIssue({
       issue: issue.id,
