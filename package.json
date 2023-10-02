@@ -42,7 +42,7 @@
     "@graphql-codegen/typescript-generic-sdk": "^3.1.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@types/node": "^20.4.8",
-    "@typescript-eslint/parser": "^6.3.0",
+    "@typescript-eslint/parser": "^6.7.4",
     "@vercel/ncc": "^0.36.1",
     "eslint": "^8.46.0",
     "eslint-plugin-github": "^4.9.2",
